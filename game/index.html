@@ -3,393 +3,234 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>RAYTANKS // Arena</title>
+<title>RAYTANKS — Arena</title>
 <style>
-:root{--bg:#050608;--panel:#0b0e12;--line:#ffffff16;--text:#f4f6f7;--muted:#8c949b;--cyan:#79f4ff;--pink:#ff5da8;--lime:#b8ff6a}
-*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;font-family:Inter,Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--text)}
-body{overflow:hidden}button,select,input{font:inherit}.hidden{display:none!important}
-button{cursor:pointer}
-.home{position:fixed;inset:0;overflow:auto;background:
-radial-gradient(circle at 12% 18%,#16343c 0,#091013 28%,transparent 52%),
-radial-gradient(circle at 86% 78%,#301225 0,#0b090d 25%,#050608 60%)}
-.home:after{content:"";position:fixed;inset:0;pointer-events:none;background:
-linear-gradient(90deg,transparent 49.8%,#fff1 50%,transparent 50.2%),
-linear-gradient(0deg,transparent 49.8%,#fff1 50%,transparent 50.2%);
-background-size:72px 72px;opacity:.12;mask-image:linear-gradient(#fff,transparent 78%)}
-.nav{height:72px;display:flex;align-items:center;justify-content:space-between;padding:0 28px;border-bottom:1px solid var(--line);background:#050608c9;backdrop-filter:blur(18px);position:sticky;top:0;z-index:10}
-.logo{font-weight:1000;letter-spacing:6px;font-size:20px}.logo b{color:var(--cyan)}.navlinks{display:flex;gap:7px}
-.btn,.primary,.rival{border:1px solid var(--line);border-radius:13px;background:#0c1115;color:#fff;transition:.16s}
-.btn:hover,.rival:hover{transform:translateY(-2px);border-color:#ffffff50;background:#12191e}
-.btn{padding:10px 13px}.primary{padding:14px 20px;background:#e9fdff;color:#071014;border-color:#8ff5ff66;font-weight:1000;box-shadow:0 10px 40px #79f4ff12}
-.primary:hover{transform:translateY(-2px);box-shadow:0 16px 55px #79f4ff22}
-.hero{min-height:calc(100vh - 72px);display:grid;place-items:center;padding:28px 18px 60px}
-.heroGrid{width:min(1180px,96vw);display:grid;grid-template-columns:1.4fr .8fr;gap:16px}
-.mainCard,.sideCard{border:1px solid var(--line);background:#080b0fdd;backdrop-filter:blur(20px);border-radius:30px;box-shadow:0 30px 120px #000b}
-.mainCard{padding:58px}.kicker{font-size:11px;font-weight:1000;letter-spacing:5px;color:var(--cyan)}
-h1{font-size:clamp(70px,11vw,145px);line-height:.78;letter-spacing:-8px;margin:22px 0 28px}
-h1 span{color:var(--pink)}.heroCopy{max-width:650px;color:#aeb5ba;line-height:1.7;font-size:16px}
-.actionRow{display:flex;gap:10px;flex-wrap:wrap;margin-top:30px}
-.sideCard{padding:25px}.sideHead{font-size:11px;letter-spacing:3px;color:#9da6ac;margin-bottom:12px}
-.rivals{display:grid;grid-template-columns:1fr 1fr;gap:9px}.rival{padding:17px;text-align:left}
-.rival.active{border-color:var(--cyan);box-shadow:0 0 32px #79f4ff16}.rival strong{display:block;font-size:15px}.rival small{display:block;color:#777f86;margin-top:5px}
-.personality{margin-top:20px;padding-top:18px;border-top:1px solid var(--line)}
-select{width:100%;padding:12px;border-radius:11px;background:#0c1115;color:#fff;border:1px solid var(--line)}
-.miniStats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:18px}.mini{padding:13px;border:1px solid var(--line);border-radius:12px;background:#0b1014}.mini b{display:block;font-size:18px}.mini span{font-size:10px;color:#7d858b;letter-spacing:2px}
-.page{position:fixed;inset:0;overflow:auto;padding:30px;background:radial-gradient(circle at 50% 0,#17232a,#060708 65%);z-index:3}
-.card{width:min(900px,94vw);margin:20px auto;padding:30px;border:1px solid var(--line);border-radius:24px;background:#090d11ed;box-shadow:0 30px 100px #0008}
-.card h2{font-size:38px;margin:16px 0 6px}.muted{color:var(--muted)}.row{display:flex;justify-content:space-between;gap:20px;padding:16px 0;border-bottom:1px solid #fff10}
-#gamePage{position:fixed;inset:0;background:#f6f6f2;z-index:20}
-#game{position:absolute;inset:0;width:100%;height:100%;background:#f6f6f2}
-.hud{position:absolute;left:14px;right:14px;top:14px;display:flex;justify-content:space-between;z-index:4;pointer-events:none}
-.hudBox{background:#07090cdd;color:#fff;border:1px solid #0002;border-radius:12px;padding:10px 13px;box-shadow:0 8px 30px #0004}
-.bar{width:190px;height:7px;background:#26292c;border-radius:8px;margin-top:7px;overflow:hidden}.fill{height:100%;background:var(--lime);width:100%}
-.gameBtns{position:absolute;right:14px;bottom:14px;z-index:5;display:flex;gap:8px}.gameBtns button{pointer-events:auto}
-#countdown{position:absolute;inset:0;display:grid;place-items:center;z-index:8;pointer-events:none;font-size:min(17vw,160px);font-weight:1000;color:#090a0c;text-shadow:0 5px #fff;opacity:0}
-.countAnim{animation:pop .32s ease-out forwards}@keyframes pop{0%{opacity:0;transform:scale(1.35)}35%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(.94)}}
-#banner{position:absolute;top:92px;left:50%;transform:translateX(-50%);z-index:7;background:#050607dd;color:#fff;border:1px solid #fff2;border-radius:99px;padding:8px 13px;letter-spacing:3px;font-size:10px;font-weight:1000;opacity:0;transition:.2s}.show{opacity:1!important}
-#end{position:fixed;inset:0;display:grid;place-items:center;background:#0009;z-index:40}.endCard{width:min(470px,90vw);padding:30px;border:1px solid #fff2;border-radius:24px;background:#0a0d10f5;text-align:center}.endCard h2{font-size:40px;margin:0 0 8px}
-@media(max-width:850px){.heroGrid{grid-template-columns:1fr}.mainCard{padding:38px}.navlinks{display:none}}
-
-/* RAYTANKS V0.7 HOMEPAGE */
-.rayLogo{font-size:21px;letter-spacing:7px;font-weight:1000}.rayLogo span{color:#79f4ff}
-.navPill{border:0;background:transparent;color:#737b82;padding:10px 13px;font-size:10px;font-weight:900;letter-spacing:2px;border-radius:10px}.navPill:hover,.activeNav{color:#fff;background:#ffffff09}
-.rayHome{width:min(1250px,94vw);margin:0 auto;padding:55px 0 22px}
-.rayEyebrow{font-size:9px;letter-spacing:4px;color:#68727a;display:flex;gap:10px;align-items:center}.rayEyebrow i{width:30px;height:1px;background:#79f4ff;display:block}
-.rayHero{display:grid;grid-template-columns:1fr .9fr;gap:70px;align-items:center;min-height:475px}
-.rayTiny{font-size:10px;letter-spacing:4px;color:#79f4ff;margin-bottom:18px}
-.rayTitle{font-size:clamp(78px,11vw,145px);line-height:.72;letter-spacing:-9px;margin:0;font-weight:1000}.rayTitle span{color:#ff5da8}
-.raySub{color:#90999f;line-height:1.65;margin:28px 0;font-size:15px}
-.rayActions{display:flex;gap:10px}.rayPlay,.rayGhost{border-radius:12px;padding:14px 18px;font-weight:1000;letter-spacing:1px}.rayPlay{border:1px solid #b8fbff;background:#dffcff;color:#071014;box-shadow:0 0 45px #79f4ff18}.rayPlay b{margin-left:22px}.rayGhost{border:1px solid #ffffff18;background:#0b0e12;color:#dbe0e3}
-.arenaPreview{border:1px solid #ffffff14;background:#080b0e;border-radius:22px;padding:15px;box-shadow:0 30px 100px #0008;transform:rotate(1deg)}.previewTop,.previewBottom{display:flex;justify-content:space-between;color:#667077;font-size:8px;letter-spacing:2px;padding:6px}.previewTop b{color:#79f4ff}
-.previewMaze{height:330px;background:#f6f6f2;position:relative;overflow:hidden;border-radius:10px}.pwall{position:absolute;background:#090a0c}.w1{left:8%;top:15%;width:34%;height:13px}.w2{left:48%;top:15%;width:43%;height:13px}.w3{left:29%;top:40%;width:52%;height:13px}.w4{left:8%;top:67%;width:30%;height:13px}.w5{left:54%;top:76%;width:37%;height:13px}.w6{left:39%;top:27%;width:13px;height:47%}
-.ptank{position:absolute;width:30px;height:23px;border-radius:5px;background:#111;box-shadow:0 2px 8px #0004}.ptank:after{content:"";position:absolute;left:14px;top:-7px;width:20px;height:8px;background:#111;border-radius:4px}.pt1{left:14%;top:31%;background:#42d7ff}.pt2{right:14%;bottom:14%;background:#ff5da8}
-.rayControl{border-top:1px solid #ffffff0d;padding-top:18px}.controlLabel{font-size:9px;color:#697279;letter-spacing:3px;margin-bottom:10px}.rayRivals{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.rayRival{background:#080b0e;border:1px solid #ffffff12;color:#fff;text-align:left;border-radius:12px;padding:13px}.rayRival:hover{border-color:#ffffff32;transform:translateY(-1px)}.rayRival.active{border-color:#79f4ff88;background:#0b1418}.rayRival b{font-size:11px;color:#79f4ff;display:block}.rayRival span{display:block;font-weight:1000;font-size:13px;margin-top:3px}.rayRival small{display:block;color:#657078;margin-top:4px;font-size:9px}.rayPersonality{display:flex;align-items:center;gap:12px;margin-top:9px;font-size:9px;letter-spacing:2px;color:#707980}.rayPersonality select{width:170px;padding:8px;font-size:10px}.rayFooter{display:flex;justify-content:space-between;border-top:1px solid #ffffff0d;margin-top:20px;padding-top:13px;color:#4f585e;font-size:8px;letter-spacing:2px}
-@media(max-width:900px){.rayHero{grid-template-columns:1fr;gap:30px}.arenaPreview{display:none}.rayRivals{grid-template-columns:1fr 1fr}.rayHome{padding-top:35px}}
-
+:root{--ink:#111;--muted:#6c7075;--paper:#f3f3ef;--panel:#fff;--line:#d8d8d2}
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;font-family:Inter,Arial,sans-serif;background:var(--paper);color:var(--ink)}
+button{font:inherit}
+.page{display:none;width:100%;height:100%}.page.active{display:block}
+#home{overflow:auto}
+.home-wrap{min-height:100%;padding:28px 34px 34px;display:flex;flex-direction:column}
+.nav{display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid #111;padding-bottom:16px}
+.brand{font-weight:1000;letter-spacing:-.08em;font-size:28px}.brand span{font-weight:400}
+.navlinks{display:flex;gap:8px}.navlinks button,.ghost{border:1px solid #111;background:transparent;padding:9px 13px;cursor:pointer;font-weight:800}
+.navlinks button:hover,.ghost:hover{background:#111;color:#fff}
+.hero{display:grid;grid-template-columns:1.05fr .95fr;gap:30px;align-items:center;flex:1;max-width:1300px;width:100%;margin:auto}
+.kicker{font-size:12px;font-weight:900;letter-spacing:.2em;color:#666}.hero h1{font-size:clamp(70px,11vw,170px);line-height:.78;letter-spacing:-.1em;margin:18px 0 28px}.hero h1 span{font-weight:300}
+.hero p{max-width:520px;color:#555;font-size:17px;line-height:1.5}.hero-actions{display:flex;gap:10px;margin-top:25px;flex-wrap:wrap}
+.primary{border:2px solid #111;background:#111;color:#fff;padding:14px 21px;font-weight:950;cursor:pointer}.secondary{border:2px solid #111;background:#fff;padding:14px 21px;font-weight:950;cursor:pointer}
+.preview{background:#deded8;border:2px solid #111;min-height:430px;position:relative;overflow:hidden}
+.preview canvas{width:100%;height:100%;display:block}
+.hint{position:absolute;left:14px;bottom:12px;font-size:10px;font-weight:900;letter-spacing:.13em}
+#arena{background:#e9e9e4;position:relative}
+#gameCanvas{display:block;width:100%;height:100%;background:#efefe9}
+.hud{position:absolute;top:15px;left:15px;right:15px;display:flex;justify-content:space-between;pointer-events:none}
+.hudbox{background:rgba(255,255,255,.92);border:2px solid #111;padding:10px 13px;min-width:145px}.hudbox b{display:block;font-size:11px;letter-spacing:.1em}.hudbox strong{font-size:18px}
+.hudright{display:flex;gap:8px}.hud button{pointer-events:auto}
+.iconbtn{border:2px solid #111;background:#fff;padding:10px 12px;font-weight:900;cursor:pointer}
+.center-msg{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none}
+.count{font-size:clamp(60px,12vw,150px);font-weight:1000;letter-spacing:-.08em;text-shadow:5px 5px 0 #fff;display:none}
+.overlay{position:absolute;inset:0;background:rgba(243,243,239,.9);display:none;align-items:center;justify-content:center}.overlay.show{display:flex}
+.modal{background:#fff;border:2px solid #111;padding:28px;max-width:520px;width:calc(100% - 40px)}.modal h2{font-size:42px;letter-spacing:-.06em;margin:0 0 8px}.modal p{color:#666}
+.controls{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:20px 0}.key{border:1px solid #bbb;padding:9px;text-align:center;font-size:11px;font-weight:900}
+#training,#garage,#stats,#settings{padding:34px;overflow:auto}.subpage{max-width:1000px;margin:auto}.subhead{display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid #111;padding-bottom:15px}.subhead h2{font-size:55px;letter-spacing:-.07em;margin:0}.cardgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin-top:20px}.card{background:#fff;border:1px solid #bbb;padding:18px}.card h3{margin:0 0 7px}.muted{color:#777}.personality{display:flex;flex-wrap:wrap;gap:8px;margin-top:15px}.personality button{background:#fff;border:1px solid #aaa;padding:9px 12px;font-weight:800;cursor:pointer}.personality button.sel{background:#111;color:#fff;border-color:#111}
+@media(max-width:800px){.hero{grid-template-columns:1fr}.preview{min-height:300px}.navlinks{display:none}.hero h1{font-size:80px}}
 </style>
 </head>
 <body>
 
-<section id="home" class="home">
-<nav class="nav">
-  <div class="logo">RAY<b>TANKS</b></div>
-  <div class="navlinks">
-    <button class="btn" data-page="play">PLAY</button>
-    <button class="btn" data-page="lab">LAB</button>
-    <button class="btn" data-page="garage">GARAGE</button>
-    <button class="btn" data-page="stats">STATS</button>
-    <button class="btn" data-page="settings">SETTINGS</button>
+<section id="home" class="page active">
+<div class="home-wrap">
+  <nav class="nav">
+    <div class="brand">RAY<span>TANKS</span></div>
+    <div class="navlinks">
+      <button onclick="showPage('home')">HOME</button><button onclick="startGame()">ARENA</button>
+      <button onclick="showPage('training')">TRAINING</button><button onclick="showPage('garage')">GARAGE</button>
+      <button onclick="showPage('stats')">STATS</button><button onclick="showPage('settings')">SETTINGS</button>
+    </div>
+  </nav>
+  <div class="hero">
+    <div>
+      <div class="kicker">PROCEDURAL ARENA / ROUND 01</div>
+      <h1>RAY<br><span>TANKS</span></h1>
+      <p>A clean, original arena built around the part that matters: a genuinely carved maze, compact tanks, readable walls and a fresh layout every round.</p>
+      <div class="hero-actions"><button class="primary" onclick="startGame()">ENTER ARENA →</button><button class="secondary" onclick="showPage('training')">TRAINING LAB</button></div>
+      <div style="margin-top:25px"><div class="kicker">SOLO RIVAL</div><div class="personality" id="homePersonality"></div></div>
+    </div>
+    <div class="preview"><canvas id="previewCanvas"></canvas><div class="hint">LIVE PROCEDURAL MAZE PREVIEW</div></div>
   </div>
-</nav>
-<main class="hero">
-<div class="heroGrid">
-<section class="mainCard">
-<div class="kicker">PROCEDURAL ARENAS // RIVAL TRAINING // RAYTANKS</div>
-<h1>RAY<span>TANKS</span></h1>
-<p class="heroCopy">A fast top-down arcade arena with compact tanks, bright ground, heavy black maze walls and a brand-new layout every round. Pick your rival count, choose a personality for solo play, and jump straight in.</p>
-<div class="actionRow">
-<button id="enter" class="primary">PLAY NOW →</button>
-<button class="btn" data-page="lab">OPEN LAB</button>
-</div>
-<div class="miniStats">
-<div class="mini"><b id="homeRounds">0</b><span>ROUNDS</span></div>
-<div class="mini"><b id="homeWins">0</b><span>WINS</span></div>
 </div>
 </section>
-<aside class="sideCard">
-<div class="sideHead">RIVAL COUNT</div>
-<div class="rivals">
-<button class="rival active" data-count="1"><strong>1 RIVAL</strong><small>Solo personality</small></button>
-<button class="rival" data-count="2"><strong>2 RIVALS</strong><small>Compact arena</small></button>
-<button class="rival" data-count="3"><strong>3 RIVALS</strong><small>Expanded arena</small></button>
-<button class="rival" data-count="4"><strong>4 RIVALS</strong><small>Largest arena</small></button>
-</div>
-<div id="singlePersonality" class="personality">
-<div class="sideHead">SOLO PERSONALITY</div>
-<select id="personality">
-<option value="hunter">HUNTER — pressure</option>
-<option value="evasive">GHOST — evasive</option>
-<option value="sentinel">SENTINEL — territory</option>
-<option value="flanker">FLANKER — circling</option>
-<option value="hybrid">HYBRID — blended</option>
-</select>
-</div>
-</aside>
-</div>
-</main>
+
+<section id="arena" class="page">
+<canvas id="gameCanvas"></canvas>
+<div class="hud"><div class="hudbox"><b>RAYTANKS / ARENA</b><strong id="roundLabel">ROUND 01</strong></div><div class="hudright"><div class="hudbox"><b>RIVALS</b><strong id="rivalLabel">1</strong></div><button class="iconbtn" onclick="leaveArena()">EXIT</button></div></div>
+<div class="center-msg"><div id="count" class="count"></div></div>
+<div id="endOverlay" class="overlay"><div class="modal"><div class="kicker">ROUND COMPLETE</div><h2 id="endTitle">CLEAR</h2><p id="endText"></p><button class="primary" onclick="nextRound()">NEW MAZE →</button> <button class="secondary" onclick="leaveArena()">HOME</button></div></div>
 </section>
 
-<section id="playPage" class="page hidden"><div class="card">
-<button class="btn" data-page="home">← HOME</button><h2>PLAY</h2>
-<p class="muted">More rivals = more space and a denser maze. Every new round gets a fresh layout.</p>
-<div class="rivals">
-<button class="rival" data-count="1">1 RIVAL</button><button class="rival" data-count="2">2 RIVALS</button><button class="rival" data-count="3">3 RIVALS</button><button class="rival" data-count="4">4 RIVALS</button>
-</div><br><button id="launch" class="primary">LAUNCH ARENA</button>
-</div></section>
-
-<section id="labPage" class="page hidden"><div class="card">
-<button class="btn" data-page="home">← HOME</button><h2>TRAINING LAB</h2>
-<p class="muted">Optional movement recording for future navigation training. Samples stay in this browser.</p>
-<div class="row"><b>Record movement</b><input id="trainToggle" type="checkbox"></div>
-<div class="row"><b>Stored movement samples</b><b id="samples">0</b></div>
-</div></section>
-
-<section id="garagePage" class="page hidden"><div class="card">
-<button class="btn" data-page="home">← HOME</button><h2>GARAGE</h2>
-<div class="row"><b>Tank body</b><span>Compact arcade chassis</span></div>
-<div class="row"><b>Scale</b><span>Corridor-friendly</span></div>
-<div class="row"><b>Arena style</b><span>White ground / black walls</span></div>
-</div></section>
-
-<section id="statsPage" class="page hidden"><div class="card">
-<button class="btn" data-page="home">← HOME</button><h2>STATS</h2>
-<div class="row"><b>Rounds</b><b id="roundStat">0</b></div>
-<div class="row"><b>Wins</b><b id="winStat">0</b></div>
-</div></section>
-
-<section id="settingsPage" class="page hidden"><div class="card">
-<button class="btn" data-page="home">← HOME</button><h2>SETTINGS</h2>
-<div class="row"><b>Fast inter-round countdown</b><input id="fast" type="checkbox" checked></div>
-<div class="row"><b>Click sounds</b><input id="sound" type="checkbox" checked></div>
-</div></section>
-
-<section id="gamePage" class="hidden">
-<canvas id="game"></canvas>
-<div class="hud">
-  <div class="hudBox"><b>RAYTANKS</b><div>WASD / ARROWS — MOVE</div><div class="bar"><div id="hp" class="fill"></div></div></div>
-  <div class="hudBox" style="text-align:right"><b id="roundText">ROUND 1</b><div id="alive">1 RIVAL</div></div>
-</div>
-<div id="banner">NEW MAZE</div><div id="countdown"></div>
-<div class="gameBtns"><button id="pause" class="btn">PAUSE</button><button id="exit" class="btn">EXIT</button></div>
-</section>
-
-<section id="end" class="hidden"><div class="endCard">
-<h2 id="endTitle">ROUND COMPLETE</h2><p id="endSub" class="muted"></p>
-<button id="next" class="primary">NEXT ROUND</button> <button id="homeBtn" class="btn">HOME</button>
-</div></section>
+<section id="training" class="page"><div class="subpage"><div class="subhead"><h2>TRAINING</h2><button class="ghost" onclick="showPage('home')">HOME</button></div><div class="cardgrid"><div class="card"><h3>Movement Recorder</h3><p class="muted">Practice movement through the procedural maze. RAYTANKS stores normalized movement samples locally for future navigation-learning features.</p><button class="primary" onclick="startTraining()">START SESSION</button></div><div class="card"><h3>Stored Samples</h3><p id="sampleCount" class="muted">0 movement samples</p><button class="secondary" onclick="clearSamples()">CLEAR SAMPLES</button></div></div></div></section>
+<section id="garage" class="page"><div class="subpage"><div class="subhead"><h2>GARAGE</h2><button class="ghost" onclick="showPage('home')">HOME</button></div><div class="cardgrid"><div class="card"><h3>RAY-01</h3><p class="muted">Compact standard chassis.</p></div><div class="card"><h3>Future Slots</h3><p class="muted">Skins, effects and chassis variations can plug into this system without changing the maze core.</p></div></div></div></section>
+<section id="stats" class="page"><div class="subpage"><div class="subhead"><h2>STATS</h2><button class="ghost" onclick="showPage('home')">HOME</button></div><div class="cardgrid"><div class="card"><h3>Rounds</h3><p id="roundStat">0</p></div><div class="card"><h3>Mazes Generated</h3><p id="mazeStat">0</p></div><div class="card"><h3>Training Samples</h3><p id="statsSamples">0</p></div></div></div></section>
+<section id="settings" class="page"><div class="subpage"><div class="subhead"><h2>SETTINGS</h2><button class="ghost" onclick="showPage('home')">HOME</button></div><div class="cardgrid"><div class="card"><h3>Controls</h3><p class="muted">W / ↑ forward · S / ↓ reverse · A / ← turn left · D / → turn right</p></div><div class="card"><h3>Maze Rule</h3><p class="muted">Every round receives a new randomized maze signature. Recent signatures are remembered to avoid immediate repeats.</p></div></div></div></section>
 
 <script>
-(()=>{
-"use strict";
+const TAU=Math.PI*2;
 const $=id=>document.getElementById(id);
-const c=$("game"), ctx=c.getContext("2d");
-let W=0,H=0,rivals=1,personality="hunter",round=1,running=false,paused=false,transition=false,last=0;
-let player=null,bots=[],walls=[],keys=new Set(),training=false,samples=[];
-const colors={hunter:"#ff5252",evasive:"#9b63ff",sentinel:"#ffb84d",flanker:"#39cfff",hybrid:"#ff5da8"};
-const stats=JSON.parse(localStorage.getItem("raytanksStats")||'{"rounds":0,"wins":0}');
-function save(){localStorage.setItem("raytanksStats",JSON.stringify(stats));updateStatsUI()}
-function updateStatsUI(){["roundStat","homeRounds"].forEach(id=>$(id).textContent=stats.rounds);["winStat","homeWins"].forEach(id=>$(id).textContent=stats.wins)}
-function tone(freq=520,dur=.05,type="sine"){
-  if(!$("sound")?.checked)return;
-  try{const A=window.AudioContext||window.webkitAudioContext,ac=tone.ac||(tone.ac=new A);
-  const o=ac.createOscillator(),g=ac.createGain();o.type=type;o.frequency.value=freq;
-  g.gain.setValueAtTime(.0001,ac.currentTime);g.gain.exponentialRampToValueAtTime(.055,ac.currentTime+.006);
-  g.gain.exponentialRampToValueAtTime(.0001,ac.currentTime+dur);o.connect(g);g.connect(ac.destination);
-  o.start();o.stop(ac.currentTime+dur+.01)}catch{}
-}
-document.addEventListener("click",e=>{if(e.target.closest("button,select"))tone(e.target.closest("button")?.classList.contains("primary")?680:440,.045,"triangle")});
+const pages=[...document.querySelectorAll('.page')];
+const personalities=['Hunter','Ghost','Sentinel','Flanker','Hybrid'];
+let selectedPersonality='Hunter';
+let game=null, keys={}, training=false;
 
-/* FIXED ROUTER: gamePage is hidden whenever leaving the arena. */
-function page(name){
-  document.querySelectorAll("body>section").forEach(s=>s.classList.add("hidden"));
-  if(name==="home")$("home").classList.remove("hidden");
-  else if(name==="game")$("gamePage").classList.remove("hidden");
-  else $(name+"Page").classList.remove("hidden");
+function showPage(id){pages.forEach(p=>p.classList.toggle('active',p.id===id));if(id==='training')refreshCounts()}
+function esc(s){return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function personalityUI(){
+  const box=$('homePersonality');box.innerHTML='';
+  personalities.forEach(p=>{const b=document.createElement('button');b.textContent=p;b.className=p===selectedPersonality?'sel':'';b.onclick=()=>{selectedPersonality=p;personalityUI()};box.appendChild(b)})
 }
-document.querySelectorAll("[data-page]").forEach(b=>b.onclick=()=>{running=false;page(b.dataset.page)});
-document.querySelectorAll("[data-count]").forEach(b=>b.onclick=()=>{
-  rivals=+b.dataset.count;
-  document.querySelectorAll("[data-count]").forEach(z=>z.classList.toggle("active",+z.dataset.count===rivals));
-  $("singlePersonality").classList.toggle("hidden",rivals!==1);
-  tone(560);
-});
-$("personality").onchange=e=>personality=e.target.value;
-$("enter").onclick=()=>start();$("launch").onclick=()=>start();
-$("exit").onclick=()=>home();$("homeBtn").onclick=()=>home();
-$("next").onclick=()=>{hideEnd();round++;newRound(true)};
-$("pause").onclick=()=>{paused=!paused;$("pause").textContent=paused?"RESUME":"PAUSE";tone(380)};
-$("trainToggle").onchange=e=>{training=e.target.checked;localStorage.setItem("raytanksTraining",training?"1":"0")};
-training=localStorage.getItem("raytanksTraining")==="1";$("trainToggle").checked=training;
-function home(){running=false;paused=false;transition=false;hideEnd();page("home");tone(300)}
-function hideEnd(){$("end").classList.add("hidden")}
-function resize(){W=c.width=innerWidth;H=c.height=innerHeight}
-addEventListener("resize",resize);resize();
-addEventListener("keydown",e=>keys.add(e.key.toLowerCase()));
-addEventListener("keyup",e=>keys.delete(e.key.toLowerCase()));
+personalityUI();
 
-function mulberry32(a){
-  return function(){let t=a+=0x6D2B79F5;t=Math.imul(t^t>>>15,t|1);t^=t+Math.imul(t^t>>>7,t|61);return((t^t>>>14)>>>0)/4294967296}
+const preview=$('previewCanvas'),pctx=preview.getContext('2d');
+function drawPreview(){
+  const w=preview.clientWidth||500,h=preview.clientHeight||430,d=devicePixelRatio||1;
+  preview.width=w*d;preview.height=h*d;pctx.setTransform(d,0,0,d,0,0);pctx.clearRect(0,0,w,h);
+  pctx.fillStyle='#e7e7e1';pctx.fillRect(0,0,w,h);
+  const cols=13,rows=9, m=8, cw=(w-m*2)/cols,ch=(h-m*2)/rows;
+  for(let x=0;x<cols;x++)for(let y=0;y<rows;y++){if((x*17+y*31)%5<2){pctx.fillStyle='#111';pctx.fillRect(m+x*cw,m+y*ch,cw+2,Math.max(5,ch*.13))}}
+  pctx.strokeStyle='#111';pctx.lineWidth=6;pctx.strokeRect(m,m,w-m*2,h-m*2);
+  for(const [x,y,a] of [[2,2,.2],[8,5,2.1],[10,7,4.1]]){pctx.save();pctx.translate(m+x*cw+cw/2,m+y*ch+ch/2);pctx.rotate(a);pctx.fillStyle='#222';pctx.fillRect(-12,-8,24,16);pctx.fillStyle='#555';pctx.fillRect(0,-3,17,6);pctx.restore()}
 }
-function makeTank(x,y,color,type="player"){
-  return{x,y,r:14,spd:type==="player"?3.0:2.55,angle:0,color,type,vx:0,vy:0,path:[],pi:1,think:0,strafe:Math.random()<.5?-1:1}
-}
-function cellMap(){
-  const sizes={1:[14,10],2:[17,11],3:[20,13],4:[23,15]};
-  const [cols,rows]=sizes[rivals];
-  const cell=Math.max(34,Math.floor(Math.min((W-40)/cols,(H-92)/rows)));
-  const ox=(W-cols*cell)/2,oy=(H-rows*cell)/2+18;
-  const rng=mulberry32((Date.now()^((Math.random()*0xffffffff)>>>0))>>>0);
-  const g=Array.from({length:rows},()=>Array(cols).fill(0));
+addEventListener('resize',drawPreview);drawPreview();
 
-  /* Build a maze-like grid, then carve guaranteed corridors. */
-  for(let y=1;y<rows-1;y++)for(let xx=1;xx<cols-1;xx++)g[y][xx]=rng()<({1:.27,2:.31,3:.34,4:.37}[rivals])?1:0;
-  const safe=[[1,1],[cols-2,1],[1,rows-2],[cols-2,rows-2],[Math.floor(cols/2),Math.floor(rows/2)]];
-  safe.slice(0,rivals+1).forEach(([sx,sy])=>{
-    for(let yy=-1;yy<=1;yy++)for(let xx=-1;xx<=1;xx++)if(g[sy+yy]?.[sx+xx]!==undefined)g[sy+yy][sx+xx]=0;
-  });
-  /* Make horizontal/vertical openings so the map cannot become sealed. */
-  for(let y=2;y<rows-2;y+=2)for(let xx=1;xx<cols-1;xx+=3)g[y][xx]=0;
-  for(let xx=2;xx<cols-2;xx+=4)for(let y=1;y<rows-1;y+=3)g[y][xx]=0;
+function mulberry32(a){return function(){let t=a+=0x6D2B79F5;t=Math.imul(t^t>>>15,t|1);t^=t+Math.imul(t^t>>>7,t|61);return((t^t>>>14)>>>0)/4294967296}}
+function hashMaze(g){return g.flat().join('')}
 
-  const rects=[];
-  for(let y=0;y<rows;y++){
-    for(let xx=0;xx<cols;xx++)if(g[y][xx]){
-      let w=1;
-      while(xx+w<cols&&g[y][xx+w])w++;
-      rects.push({x:ox+xx*cell,y:oy+y*cell+Math.floor(cell*.36),w:w*cell,h:Math.max(12,Math.floor(cell*.28))});
-      for(let k=1;k<w;k++)g[y][xx+k]=0;
-    }
+function makeMaze(rivals){
+  const sizes={1:[15,11],2:[19,13],3:[23,15],4:[27,17]};
+  const [cw,ch]=sizes[Math.max(1,Math.min(4,rivals))];
+  const seed=(Date.now() ^ Math.floor(Math.random()*0xffffffff))>>>0,rand=mulberry32(seed);
+  const g=Array.from({length:ch},()=>Array(cw).fill(1));
+  const stack=[[1,1]];g[1][1]=0;
+  while(stack.length){
+    const [x,y]=stack[stack.length-1];
+    const dirs=[[2,0],[-2,0],[0,2],[0,-2]];
+    for(let i=dirs.length-1;i>0;i--){const j=Math.floor(rand()*(i+1));[dirs[i],dirs[j]]=[dirs[j],dirs[i]]}
+    let carved=false;
+    for(const [dx,dy] of dirs){const nx=x+dx,ny=y+dy;if(nx>0&&nx<cw-1&&ny>0&&ny<ch-1&&g[ny][nx]===1){g[y+dy/2][x+dx/2]=0;g[ny][nx]=0;stack.push([nx,ny]);carved=true;break}}
+    if(!carved)stack.pop();
   }
-  /* Extra vertical segments make the maze read as real enclosed corridors. */
-  for(let xx=1;xx<cols-1;xx+=3){
-    for(let y=1;y<rows-1;y++){
-      if((y+xx)%4===0 && g[y][xx]){
-        rects.push({x:ox+xx*cell+Math.floor(cell*.36),y:oy+y*cell,w:Math.max(12,Math.floor(cell*.28)),h:cell});
-      }
-    }
+  // A few deterministic openings keep long runs interesting while preserving connectivity.
+  for(let i=0;i<Math.floor((cw*ch)/24);i++){
+    const x=1+2*Math.floor(rand()*((cw-2)/2)),y=1+2*Math.floor(rand()*((ch-2)/2));
+    const candidates=[[x+1,y],[x-1,y],[x,y+1],[x,y-1]].filter(([a,b])=>a>0&&a<cw-1&&b>0&&b<ch-1&&g[b][a]===1);
+    if(candidates.length){const [a,b]=candidates[Math.floor(rand()*candidates.length)];g[b][a]=0}
   }
-  return {cols,rows,cell,ox,oy,g,rects,signature:g.map(r=>r.join("")).join("|")};
+  return {g,cw,ch,seed,signature:hashMaze(g)};
 }
-let usedMaps=new Set();
-function generateUniqueMap(){
-  let m,tries=0;
-  do{m=cellMap();tries++}while(usedMaps.has(m.signature)&&tries<500);
-  usedMaps.add(m.signature);walls=m.rects;return m;
+const recentKey='raytanks_maze_signatures_v1';
+function freshMaze(rivals){
+  let recent=JSON.parse(localStorage.getItem(recentKey)||'[]'),m;
+  for(let tries=0;tries<30;tries++){m=makeMaze(rivals);if(!recent.includes(m.signature))break}
+  recent=[m.signature,...recent].slice(0,100);localStorage.setItem(recentKey,JSON.stringify(recent));return m;
 }
-function blocked(t,nx,ny){
-  if(nx<t.r+4||nx>W-t.r-4||ny<t.r+30||ny>H-t.r-4)return true;
-  return walls.some(q=>nx+t.r>q.x&&nx-t.r<q.x+q.w&&ny+t.r>q.y&&ny-t.r<q.y+q.h);
-}
-function move(t,dx,dy,s){
-  const len=Math.hypot(dx,dy)||1;dx/=len;dy/=len;
-  const nx=t.x+dx*t.spd*s,ny=t.y+dy*t.spd*s;
-  if(!blocked(t,nx,t.y))t.x=nx;
-  if(!blocked(t,t.x,ny))t.y=ny;
-  t.vx=dx;t.vy=dy;
-}
-function spawnPositions(m){
-  const candidates=[];
-  for(let y=1;y<m.rows-1;y++)for(let xx=1;xx<m.cols-1;xx++){
-    const px=m.ox+xx*m.cell+m.cell/2,py=m.oy+y*m.cell+m.cell/2,t={r:14};
-    if(!blocked(t,px,py))candidates.push({x:px,y:py});
-  }
-  const out=[];
-  for(let i=0;i<500&&out.length<rivals+1;i++){
-    const p=candidates[Math.floor(Math.random()*candidates.length)];
-    if(p&&out.every(q=>Math.hypot(q.x-p.x,q.y-p.y)>m.cell*2.5))out.push(p);
-  }
+function reachableCells(m){
+  const out=[],q=[[1,1]],seen=new Set(['1,1']);
+  while(q.length){const [x,y]=q.shift();out.push([x,y]);for(const [dx,dy] of [[1,0],[-1,0],[0,1],[0,-1]]){const nx=x+dx,ny=y+dy,k=nx+','+ny;if(nx>=0&&nx<m.cw&&ny>=0&&ny<m.ch&&m.g[ny][nx]===0&&!seen.has(k)){seen.add(k);q.push([nx,ny])}}}
   return out;
 }
-function newRound(withCountdown){
-  transition=withCountdown;
-  const m=generateUniqueMap(),spots=spawnPositions(m);
-  if(spots.length<rivals+1){ /* regenerate until enough safe spawn cells exist */
-    usedMaps.delete(m.signature);return newRound(withCountdown);
+function makeSpawns(m,n){
+  const cells=reachableCells(m), chosen=[];
+  for(let i=0;i<n+1;i++){
+    let best=null,score=-1;
+    for(let tries=0;tries<150;tries++){const c=cells[Math.floor(Math.random()*cells.length)];if(chosen.some(p=>Math.hypot(p[0]-c[0],p[1]-c[1])<Math.max(4,Math.min(m.cw,m.ch)/3)))continue;let s=chosen.length?Math.min(...chosen.map(p=>Math.hypot(p[0]-c[0],p[1]-c[1]))):999; if(s>score){score=s;best=c}}
+    if(best)chosen.push(best);
   }
-  player=makeTank(spots[0].x,spots[0].y,"#111216","player");
-  bots=[];
-  const types=rivals===1?[personality]:["hunter","evasive","sentinel","hybrid"].slice(0,rivals);
-  for(let i=0;i<rivals;i++)bots.push(makeTank(spots[i+1].x,spots[i+1].y,colors[types[i]],types[i]));
-  $("roundText").textContent="ROUND "+round;$("alive").textContent=rivals+" RIVAL"+(rivals>1?"S":"");
-  $("hp").style.width="100%";
-  if(withCountdown)countdown();else transition=false;
+  return chosen;
 }
-function countdown(){
-  const vals=["3","2","1","GO"],el=$("countdown"),ban=$("banner");
-  ban.textContent="NEW MAZE";ban.classList.add("show");
-  let i=0,delay=$("fast").checked?260:520;
-  const step=()=>{el.textContent=vals[i++];el.className="countAnim";void el.offsetWidth;
-    if(i<vals.length)setTimeout(step,delay);
-    else setTimeout(()=>{ban.classList.remove("show");transition=false},delay)};
-  step();
+
+function startGame(rivals=1){
+  game={rivals,round:1,rounds:0,mazes:0,movedSamples:0,last:performance.now(),counting:false,started:false};
+  showPage('arena');$('rivalLabel').textContent=rivals;newRound(false);
 }
-function start(){
-  page("game");running=true;paused=false;round=1;stats.rounds++;save();
-  usedMaps.clear();newRound(false);tone(700,.08);
+function newRound(countdown){
+  const m=freshMaze(game.rivals);game.maze=m;game.mazes++;game.rounds++;game.started=false;
+  const cvs=$('gameCanvas');resizeCanvas();
+  const sp=makeSpawns(m,game.rivals),tankR=13;
+  const scale=Math.min(cvs.width/(m.cw+2),cvs.height/(m.ch+2));
+  game.scale=Math.max(30,Math.floor(scale));game.ox=(cvs.width-m.cw*game.scale)/2;game.oy=(cvs.height-m.ch*game.scale)/2;
+  const pos=c=>({x:game.ox+(c[0]+.5)*game.scale,y:game.oy+(c[1]+.5)*game.scale});
+  const pp=pos(sp[0]||[1,1]);
+  game.player={x:pp.x,y:pp.y,a:0,r:tankR,spd:0};
+  game.bots=[];
+  for(let i=1;i<sp.length;i++){const q=pos(sp[i]);game.bots.push({x:q.x,y:q.y,a:Math.random()*TAU,r:tankR,spd:0,phase:Math.random()*10,personality:personalities[(i-1)%personalities.length]})}
+  $('roundLabel').textContent='ROUND '+String(game.round).padStart(2,'0');$('endOverlay').classList.remove('show');
+  if(countdown)runCountdown();else{$('count').style.display='none';game.started=true}
 }
-function aiUpdate(b,s){
-  if(b.think<=0){b.think=120+Math.random()*140;b.path=[]}
-  b.think-=s*16.67;
-  let dx=player.x-b.x,dy=player.y-b.y;
-  /* Simple wall-aware navigation: probe alternatives when forward motion is blocked. */
-  const a=Math.atan2(dy,dx),side=b.strafe;
-  if(b.type==="evasive"){dx+=Math.cos(a+Math.PI/2)*side*90;dy+=Math.sin(a+Math.PI/2)*side*90}
-  if(b.type==="flanker"){dx+=Math.cos(a+Math.PI/2)*side*130;dy+=Math.sin(a+Math.PI/2)*side*130}
-  if(b.type==="sentinel"){dx*=.55;dy*=.55}
-  if(b.type==="hybrid"){dx+=Math.cos(a+Math.PI/2)*Math.sin(performance.now()/500)*80;dy+=Math.sin(a+Math.PI/2)*Math.sin(performance.now()/500)*80}
-  const nx=b.x+(dx/(Math.hypot(dx,dy)||1))*b.spd*s;
-  const ny=b.y+(dy/(Math.hypot(dx,dy)||1))*b.spd*s;
-  if(blocked(b,nx,b.y)||blocked(b,b.x,ny)){
-    const turn=b.strafe>0?Math.PI/2:-Math.PI/2;
-    dx=Math.cos(a+turn)*100;dy=Math.sin(a+turn)*100;
-    b.strafe*=-1;
+function runCountdown(){game.counting=true;const c=$('count');c.style.display='block';let n=3;c.textContent=n;const t=setInterval(()=>{n--;if(n<=0){clearInterval(t);c.style.display='none';game.counting=false;game.started=true}else c.textContent=n},650)}
+function resizeCanvas(){const c=$('gameCanvas'),d=devicePixelRatio||1;c.width=innerWidth*d;c.height=innerHeight*d;c.style.width=innerWidth+'px';c.style.height=innerHeight+'px';c.getContext('2d').setTransform(d,0,0,d,0,0)}
+addEventListener('resize',()=>{if(game&&document.getElementById('arena').classList.contains('active'))resizeCanvas()});
+
+function blockedCircle(x,y,r){
+  const m=game.maze,s=game.scale,ox=game.ox,oy=game.oy;
+  const minX=Math.floor((x-r-ox)/s),maxX=Math.floor((x+r-ox)/s),minY=Math.floor((y-r-oy)/s),maxY=Math.floor((y+r-oy)/s);
+  for(let gy=minY;gy<=maxY;gy++)for(let gx=minX;gx<=maxX;gx++){
+    if(gx<0||gy<0||gx>=m.cw||gy>=m.ch||m.g[gy][gx]===1){
+      const rx=ox+gx*s,ry=oy+gy*s,nx=Math.max(rx,Math.min(x,rx+s)),ny=Math.max(ry,Math.min(y,ry+s));
+      if((x-nx)**2+(y-ny)**2<r*r)return true;
+    }
+  }return false;
+}
+function moveTank(t,dt,throttle,turn){
+  t.a+=turn*dt;
+  const target=throttle*2.7;t.spd+=(target-t.spd)*Math.min(1,dt*.012);t.spd*=Math.pow(.94,dt/16);
+  const nx=t.x+Math.cos(t.a)*t.spd*dt/16,ny=t.y+Math.sin(t.a)*t.spd*dt/16;
+  if(!blockedCircle(nx,t.y,t.r))t.x=nx;else t.spd*=.25;
+  if(!blockedCircle(t.x,ny,t.r))t.y=ny;else t.spd*=.25;
+}
+function botThink(b,dt){
+  const dx=game.player.x-b.x,dy=game.player.y-b.y,desired=Math.atan2(dy,dx);
+  let diff=Math.atan2(Math.sin(desired-b.a),Math.cos(desired-b.a)),turn=Math.max(-1,Math.min(1,diff*2.2));
+  let throttle=1;
+  if(blockedCircle(b.x+Math.cos(b.a)*game.scale*.7,b.y+Math.sin(b.a)*game.scale*.7,b.r+2))turn=diff>=0?1:-1;
+  if(b.personality==='Ghost')turn*=1.35;
+  if(b.personality==='Sentinel')throttle=.65;
+  if(b.personality==='Flanker')turn*=.75;
+  if(b.personality==='Hybrid')turn*=1.15;
+  moveTank(b,dt,throttle,turn*.055);
+}
+function drawTank(ctx,t,isPlayer){
+  ctx.save();ctx.translate(t.x,t.y);ctx.rotate(t.a);ctx.fillStyle=isPlayer?'#111':'#555';ctx.fillRect(-14,-10,28,20);
+  ctx.fillStyle=isPlayer?'#333':'#777';ctx.fillRect(-4,-7,11,14);ctx.fillStyle='#111';ctx.fillRect(3,-3,15,6);ctx.restore();
+}
+function drawGame(){
+  if(!game)return;const c=$('gameCanvas'),ctx=c.getContext('2d');ctx.clearRect(0,0,innerWidth,innerHeight);ctx.fillStyle='#efefe9';ctx.fillRect(0,0,innerWidth,innerHeight);
+  const m=game.maze,s=game.scale;
+  ctx.fillStyle='#111';
+  for(let y=0;y<m.ch;y++)for(let x=0;x<m.cw;x++)if(m.g[y][x])ctx.fillRect(game.ox+x*s,game.oy+y*s,s+1,s+1);
+  ctx.strokeStyle='#050505';ctx.lineWidth=3;ctx.strokeRect(game.ox,game.oy,m.cw*s,m.ch*s);
+  drawTank(ctx,game.player,true);game.bots.forEach(b=>drawTank(ctx,b,false));
+}
+let last=performance.now();
+function loop(now){
+  const dt=Math.min(40,now-last);last=now;
+  if(game&&game.started&&!game.counting){
+    let th=(keys.w||keys.ArrowUp?1:0)-(keys.s||keys.ArrowDown?1:0),tr=(keys.d||keys.ArrowRight?1:0)-(keys.a||keys.ArrowLeft?1:0);
+    moveTank(game.player,dt,th,tr*.075);
+    if(training&&Math.abs(th)+Math.abs(tr)>0)recordSample(game.player,th,tr);
+    game.bots.forEach(b=>botThink(b,dt));
   }
-  const target=Math.atan2(dy,dx);
-  let delta=Math.atan2(Math.sin(target-b.angle),Math.cos(target-b.angle));
-  b.angle += Math.max(-b.turn*s,Math.min(b.turn*s,delta));
-  const drive=Math.cos(delta)>-0.2 ? 1 : -0.45;
-  move(b,Math.cos(b.angle)*drive,Math.sin(b.angle)*drive,s);
+  drawGame();requestAnimationFrame(loop)
 }
-function record(){
-  if(!training||!player)return;
-  samples.push({t:Date.now(),x:+(player.x/W).toFixed(3),y:+(player.y/H).toFixed(3),vx:+player.vx.toFixed(2),vy:+player.vy.toFixed(2)});
-  if(samples.length>=30){
-    const old=JSON.parse(localStorage.getItem("raytanksSamples")||"[]");
-    const all=old.concat(samples).slice(-6000);localStorage.setItem("raytanksSamples",JSON.stringify(all));
-    samples=[];$("samples").textContent=all.length;
-  }
-}
-function drawTank(t){
-  ctx.save();ctx.translate(t.x,t.y);ctx.rotate(t.angle);
-  ctx.fillStyle="#08090b";ctx.fillRect(-17,-12,34,24);
-  ctx.fillStyle=t.color;ctx.fillRect(-13,-9,26,18);
-  ctx.fillStyle="#090a0c";ctx.fillRect(-5,-4,25,8);
-  ctx.fillStyle="#fff";ctx.globalAlpha=.28;ctx.fillRect(-8,-6,13,4);ctx.globalAlpha=1;
-  ctx.restore();
-}
-function draw(){
-  ctx.clearRect(0,0,W,H);ctx.fillStyle="#f6f6f2";ctx.fillRect(0,0,W,H);
-  ctx.fillStyle="#090a0c";
-  walls.forEach(w=>ctx.fillRect(w.x,w.y,w.w,w.h));
-  ctx.fillStyle="#16181a";
-  walls.forEach(w=>ctx.fillRect(w.x,w.y,w.w,Math.min(3,w.h)));
-  ctx.strokeStyle="#000";ctx.lineWidth=2;
-  walls.forEach(w=>ctx.strokeRect(w.x+1,w.y+1,w.w-2,w.h-2));
-  bots.forEach(drawTank);if(player)drawTank(player);
-}
-function finish(win){
-  running=false;if(win)stats.wins++;save();
-  $("endTitle").textContent=win?"ROUND CLEARED":"ROUND OVER";
-  $("endSub").textContent=win?"All rival positions reached. Fresh maze ready.":"Arena stopped.";
-  $("end").classList.remove("hidden");
-}
-function update(dt){
-  if(!running||paused||transition||!player)return;
-  const s=Math.min(2,dt/16.67);
-  /* Tank-style controls: forward/back + rotate left/right. */
-  const throttle=(keys.has("w")||keys.has("arrowup")?1:0)-(keys.has("s")||keys.has("arrowdown")?1:0);
-  const steer=(keys.has("d")||keys.has("arrowright")?1:0)-(keys.has("a")||keys.has("arrowleft")?1:0);
-  player.angle += steer*player.turn*s;
-  const dx=Math.cos(player.angle)*throttle,dy=Math.sin(player.angle)*throttle;
-  move(player,dx,dy,s);player.vx=dx;player.vy=dy;
-  bots.forEach(b=>aiUpdate(b,s));record();
-  if(bots.every(b=>Math.hypot(b.x-player.x,b.y-player.y)<34))finish(true);
-}
-function loop(t){
-  const dt=Math.min(40,t-(last||t-16));last=t;update(dt);draw();requestAnimationFrame(loop)
-}
-updateStatsUI();requestAnimationFrame(loop);
-})();
+requestAnimationFrame(loop);
+
+addEventListener('keydown',e=>{keys[e.key]=true;if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight',' '].includes(e.key))e.preventDefault()});
+addEventListener('keyup',e=>keys[e.key]=false);
+function leaveArena(){if(game){game=null}showPage('home');refreshCounts()}
+function nextRound(){if(!game)return;game.round++;newRound(true)}
+function startTraining(){training=true;startGame(1)}
+function recordSample(t,th,tr){const a={x:+((t.x-game.ox)/(game.maze.cw*game.scale)).toFixed(4),y:+((t.y-game.oy)/(game.maze.ch*game.scale)).toFixed(4),th,tr,time:Date.now()};const arr=JSON.parse(localStorage.getItem('raytanks_training_v1')||'[]');arr.push(a);localStorage.setItem('raytanks_training_v1',JSON.stringify(arr.slice(-5000)));game.movedSamples++}
+function clearSamples(){localStorage.removeItem('raytanks_training_v1');refreshCounts()}
+function refreshCounts(){const n=JSON.parse(localStorage.getItem('raytanks_training_v1')||'[]').length;$('sampleCount').textContent=n+' movement samples';$('statsSamples').textContent=n;$('roundStat').textContent=game?game.rounds:0;$('mazeStat').textContent=game?game.mazes:0}
 </script>
 </body>
 </html>
