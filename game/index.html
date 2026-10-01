@@ -1,57 +1,358 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>TankForge — Arena</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TankForge — AI Arena</title>
 <style>
-:root{--bg:#070a10;--panel:#101722cc;--panel2:#151d29ee;--line:#ffffff14;--text:#eef6ff;--muted:#91a0b5;--accent:#58b9ff;--danger:#ff6b8a;--good:#62e7a4;--shadow:0 24px 80px #0009}
-*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
-button{font:inherit;border:0;cursor:pointer;color:inherit}.shell{position:fixed;inset:0;display:grid;place-items:center;background:radial-gradient(circle at 50% 0,#15304a 0,transparent 38%),#070a10}
-#game{width:min(1180px,100vw);height:min(720px,100vh);display:block;background:#0b1018;box-shadow:var(--shadow);border:1px solid var(--line);border-radius:24px}
-.hud{position:fixed;top:18px;left:50%;transform:translateX(-50%);width:min(1140px,calc(100% - 32px));display:flex;align-items:center;justify-content:space-between;gap:12px;pointer-events:none}.pill,.hud button{pointer-events:auto;background:#0e1621cc;border:1px solid var(--line);backdrop-filter:blur(18px);border-radius:14px;padding:10px 14px;box-shadow:0 8px 30px #0005}.brand{font-weight:850;letter-spacing:-.5px}.brand span{color:var(--accent)}.stats{display:flex;gap:8px}.stat b{font-size:15px}.stat small{color:var(--muted);margin-left:4px}.hud button{padding:10px 12px}
-.overlay{position:fixed;inset:0;background:#03060bb8;backdrop-filter:blur(18px);display:none;align-items:center;justify-content:center;padding:20px;z-index:10}.overlay.show{display:flex}.modal{width:min(700px,100%);background:#101722f2;border:1px solid #ffffff18;border-radius:28px;padding:30px;box-shadow:0 30px 110px #000b}.modal h1{margin:0;font-size:42px;letter-spacing:-2px}.modal p{color:var(--muted);line-height:1.6}.row{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px}.btn{padding:13px 17px;border-radius:14px;background:#1a2533;border:1px solid var(--line);font-weight:750}.btn.primary{background:#f5f9ff;color:#07101a}.btn.danger{background:#321722;color:#ff9bb0}.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:20px}.card{padding:18px;border-radius:18px;background:#0b111a;border:1px solid var(--line)}.card.active{border-color:#58b9ff88;box-shadow:0 0 0 1px #58b9ff22 inset}.card b{display:block;margin-bottom:5px}.card small{color:var(--muted);line-height:1.4}.bar{height:6px;background:#1b2634;border-radius:99px;overflow:hidden;margin-top:10px}.bar i{display:block;height:100%;background:var(--accent);width:50%}
-.countdown{position:fixed;inset:0;display:none;place-items:center;z-index:20;pointer-events:none;text-align:center;background:radial-gradient(circle,#07111dcc,#02050bcc);backdrop-filter:blur(10px)}.countdown.show{display:grid}.countNum{font-size:clamp(96px,18vw,190px);font-weight:900;letter-spacing:-12px;line-height:.8;text-shadow:0 0 45px #58b9ff88;animation:countPop .65s cubic-bezier(.2,.8,.2,1)}.countSub{margin-top:-70px;letter-spacing:7px;font-size:12px;color:#91a0b5;font-weight:800}.controls{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);color:#738399;font-size:12px;background:#0b111acc;border:1px solid var(--line);padding:8px 13px;border-radius:999px;backdrop-filter:blur(15px)}
-@keyframes countPop{0%{opacity:0;transform:scale(.55)}55%{opacity:1;transform:scale(1.08)}100%{opacity:1;transform:scale(1)}}
-@media(max-width:700px){#game{border-radius:0;width:100vw;height:100vh}.hud{top:10px;width:calc(100% - 20px)}.stats{display:none}.modal h1{font-size:34px}.cards{grid-template-columns:1fr}.controls{bottom:10px}}
-</style></head>
+:root{--bg:#06090f;--panel:#0b111b;--line:#24344a;--text:#edf5ff;--muted:#8c9bb0;--cyan:#56c9ff;--pink:#ff4f9d;--green:#59f0aa}
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;background:var(--bg);color:var(--text);font-family:Inter,Segoe UI,Arial,sans-serif}
+body{overflow:hidden}.hidden{display:none!important}button{font:inherit}
+.screen{position:fixed;inset:0}.home{overflow:auto;background:radial-gradient(circle at 50% 15%,#172844 0,#080c14 48%,#04060a 100%)}
+.nav{height:74px;display:flex;align-items:center;justify-content:space-between;padding:0 30px;border-bottom:1px solid #ffffff12;background:#070b12cc;backdrop-filter:blur(18px);position:sticky;top:0;z-index:5}
+.logo{font-weight:900;letter-spacing:4px}.logo span{color:var(--cyan)}.navlinks{display:flex;gap:8px;flex-wrap:wrap}
+.navbtn,.primary,.secondary,.aiCard{border:1px solid var(--line);background:#0c1421;color:var(--text);border-radius:12px;cursor:pointer;transition:.18s}
+.navbtn{padding:9px 13px}.navbtn:hover,.secondary:hover,.aiCard:hover{border-color:#4c759f;transform:translateY(-1px)}
+.hero{min-height:calc(100vh - 74px);display:grid;place-items:center;padding:45px 20px}.heroCard{width:min(920px,94vw);padding:52px 42px;border:1px solid #ffffff16;border-radius:28px;background:#080d16d9;box-shadow:0 30px 100px #0008;text-align:center}
+.kicker{color:var(--cyan);letter-spacing:5px;font-size:12px;font-weight:800}.hero h1{font-size:clamp(50px,9vw,100px);line-height:.9;margin:14px 0 12px;letter-spacing:7px}.hero h1 span{color:var(--pink)}.hero p{color:var(--muted);max-width:650px;margin:0 auto 28px;line-height:1.6}
+.primary{padding:14px 25px;background:linear-gradient(135deg,#12334b,#171b35);border-color:#3e6f91;font-weight:800}.primary:hover{transform:translateY(-2px);box-shadow:0 12px 40px #0008}
+.aiPicker{margin:30px auto 0;max-width:760px}.aiPickerTitle{font-size:12px;letter-spacing:2px;color:var(--muted);margin-bottom:10px}.aiGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.aiCard{padding:14px;text-align:left}.aiCard.active{border-color:var(--cyan);box-shadow:0 0 25px #56c9ff18}.aiCard b{display:block}.aiCard small{color:var(--muted)}
+.page{position:fixed;inset:0;padding:32px;overflow:auto;background:radial-gradient(circle at 50% 0,#142238,#06090f 65%)}.pageCard{max-width:900px;margin:30px auto;padding:30px;border:1px solid #ffffff12;border-radius:24px;background:#0a1019e8}.page h2{margin-top:0}.muted{color:var(--muted)}.row{display:flex;justify-content:space-between;align-items:center;gap:18px;padding:15px 0;border-bottom:1px solid #ffffff0c}.back{margin-bottom:18px}
+.switch{appearance:none;width:48px;height:26px;border-radius:20px;background:#26364b;position:relative;cursor:pointer}.switch:checked{background:#2e9cd0}.switch:before{content:"";position:absolute;width:20px;height:20px;left:3px;top:3px;border-radius:50%;background:white;transition:.2s}.switch:checked:before{transform:translateX(22px)}
+
+#gameScreen{background:#05080d}canvas{display:block;width:100%;height:100%}
+.hud{position:fixed;left:14px;right:14px;top:14px;display:flex;justify-content:space-between;pointer-events:none;z-index:3}.hudBox{background:#070b12dd;border:1px solid #ffffff18;border-radius:13px;padding:10px 13px;backdrop-filter:blur(10px);box-shadow:0 8px 30px #0007}.bar{width:210px;height:8px;background:#1c2735;border-radius:10px;overflow:hidden;margin-top:6px}.fill{height:100%;background:var(--green);width:100%}.roundText{text-align:right}.gameBtns{position:fixed;right:14px;bottom:14px;display:flex;gap:8px;z-index:4}.gameBtn{pointer-events:auto;border:1px solid #ffffff18;background:#0a1019e8;color:#fff;padding:9px 12px;border-radius:10px;cursor:pointer}
+#countdown{position:fixed;inset:0;display:grid;place-items:center;pointer-events:none;z-index:5;font-size:min(15vw,150px);font-weight:1000;letter-spacing:6px;text-shadow:0 0 45px #56c9ff66;opacity:0;transform:scale(.8)}
+#countdown.show{animation:count .34s ease-out forwards}@keyframes count{0%{opacity:0;transform:scale(1.35)}30%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(.94)}}
+#roundBanner{position:fixed;left:50%;top:18%;transform:translateX(-50%);z-index:4;color:#b9c8d9;letter-spacing:4px;font-size:12px;font-weight:900;opacity:0;transition:.2s}
+#roundBanner.show{opacity:1}
+#endModal{position:fixed;inset:0;display:grid;place-items:center;background:#0009;z-index:10}.endCard{width:min(480px,90vw);padding:30px;border:1px solid #ffffff18;border-radius:22px;background:#0b111bdc;text-align:center;box-shadow:0 20px 90px #000}.endCard h2{font-size:38px;margin:0 0 8px}
+.legend{display:flex;gap:14px;flex-wrap:wrap;color:var(--muted);font-size:13px;margin-top:12px}.dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px}
+@media(max-width:720px){.nav{padding:0 14px}.navlinks{display:none}.heroCard{padding:35px 20px}.aiGrid{grid-template-columns:repeat(2,1fr)}.hudBox{font-size:12px}.bar{width:150px}}
+</style>
+</head>
 <body>
-<div class="shell"><canvas id="game"></canvas></div>
-<div class="hud"><div class="pill brand">TANK<span>FORGE</span></div><div class="stats"><div class="pill stat"><b id="score">0</b><small>kills</small></div><div class="pill stat"><b id="alive">0</b><small>AI alive</small></div><div class="pill stat"><b id="time">0:00</b><small>time</small></div></div><button class="pill" id="pauseBtn">Ⅱ</button></div>
-<div class="controls">W/S move · A/D turn · Q action · P pause · ESC menu</div><div class="countdown" id="countdown"><div class="countNum" id="countNum">3</div><div class="countSub">GET READY</div></div>
-<div class="overlay show" id="menu"><div class="modal"><h1 id="menuTitle">Choose your fight.</h1><p id="menuText">Three original AI personalities share the same physics as you. Survive the arena.</p><div class="cards" id="aiCards"><button class="card active" data-ai="4"><b>⚔️ Full Arena</b><small>Scout + Sentinel + Hybrid + Viper</small><div class="bar"><i style="width:100%"></i></div></button><button class="card" data-ai="1"><b>🟢 Scout</b><small>One opponent.</small><div class="bar"><i style="width:45%"></i></div></button><button class="card" data-ai="2"><b>🔵 Sentinel</b><small>Two opponents.</small><div class="bar"><i style="width:70%"></i></div></button><button class="card" data-ai="3"><b>🔴 Hybrid</b><small>Three opponents.</small><div class="bar"><i style="width:88%"></i></div></button></div><div class="row"><button class="btn primary" id="startBtn">START ARENA →</button><button class="btn" id="homeBtn">← Home</button></div></div></div>
+
+<section id="home" class="screen home">
+  <nav class="nav">
+    <div class="logo">TANK<span>FORGE</span></div>
+    <div class="navlinks">
+      <button class="navbtn" data-page="play">PLAY</button>
+      <button class="navbtn" data-page="lab">AI LAB</button>
+      <button class="navbtn" data-page="garage">GARAGE</button>
+      <button class="navbtn" data-page="stats">STATS</button>
+      <button class="navbtn" data-page="settings">SETTINGS</button>
+    </div>
+  </nav>
+  <main class="hero">
+    <div class="heroCard">
+      <div class="kicker">AI ARENA // TANK COMBAT</div>
+      <h1>TANK<span>FORGE</span></h1>
+      <p>Build your own arena. Fight smarter bots. Then train them on how you move. The current combat core is built around maze-aware movement, predictive aim, projectile collision and round-based battles.</p>
+      <button class="primary" id="heroPlay">ENTER ARENA</button>
+      <div class="aiPicker">
+        <div class="aiPickerTitle">AI OPPONENTS — <b id="aiCountLabel">3</b></div>
+        <div class="aiGrid">
+          <button class="aiCard" data-count="1"><b>1 AI</b><small>Solo duel</small></button>
+          <button class="aiCard" data-count="2"><b>2 AI</b><small>Two targets</small></button>
+          <button class="aiCard active" data-count="3"><b>3 AI</b><small>Full squad</small></button>
+          <button class="aiCard" data-count="4"><b>4 AI</b><small>Full chaos</small></button>
+        </div>
+      </div>
+    </div>
+  </main>
+</section>
+
+<section id="playPage" class="screen page hidden">
+  <div class="pageCard">
+    <button class="secondary back" data-page="home">← HOME</button>
+    <h2>PLAY</h2><p class="muted">Choose how many opponents you want. This setting is actually used by the arena now.</p>
+    <div class="aiGrid">
+      <button class="aiCard" data-count="1"><b>1 AI</b><small>Scout duel</small></button>
+      <button class="aiCard" data-count="2"><b>2 AI</b><small>Scout + Evasive</small></button>
+      <button class="aiCard active" data-count="3"><b>3 AI</b><small>Scout + Evasive + Sentinel</small></button>
+      <button class="aiCard" data-count="4"><b>4 AI</b><small>Scout + Evasive + Sentinel + Hybrid</small></button>
+    </div>
+    <br><button class="primary" id="launchArena">LAUNCH ARENA</button>
+  </div>
+</section>
+
+<section id="labPage" class="screen page hidden">
+  <div class="pageCard">
+    <button class="secondary back" data-page="home">← HOME</button>
+    <h2>AI LAB</h2>
+    <p class="muted">Training mode is wired into the project so we can add persistent imitation learning next. Your training data will stay local to this browser.</p>
+    <div class="row"><div><b>Training Mode</b><div class="muted">Record your movement + aim decisions during a training match.</div></div><input id="trainingToggle" class="switch" type="checkbox"></div>
+    <div class="row"><div><b>Saved training samples</b><div class="muted">Stored locally for future learning passes.</div></div><b id="sampleCount">0</b></div>
+    <div class="legend"><span>Next pass: state → action dataset, replay, imitation model, evaluation, then continuous improvement.</span></div>
+  </div>
+</section>
+
+<section id="garagePage" class="screen page hidden">
+  <div class="pageCard"><button class="secondary back" data-page="home">← HOME</button><h2>GARAGE</h2>
+  <p class="muted">Tank appearance settings are ready for the visual pass.</p>
+  <div class="row"><b>Tank body</b><span>TankForge Mk-I</span></div><div class="row"><b>Accent</b><span>CYAN / MAGENTA</span></div><div class="row"><b>Effects</b><span>Standard combat glow</span></div></div>
+</section>
+
+<section id="statsPage" class="screen page hidden">
+  <div class="pageCard"><button class="secondary back" data-page="home">← HOME</button><h2>STATS</h2>
+  <div class="row"><b>Rounds played</b><b id="statRounds">0</b></div><div class="row"><b>Rounds won</b><b id="statWins">0</b></div><div class="row"><b>AI defeated</b><b id="statKills">0</b></div><div class="row"><b>Shots fired</b><b id="statShots">0</b></div></div>
+</section>
+
+<section id="settingsPage" class="screen page hidden">
+  <div class="pageCard"><button class="secondary back" data-page="home">← HOME</button><h2>SETTINGS</h2>
+  <div class="row"><div><b>Screen shake</b><div class="muted">Combat impact feedback.</div></div><input id="shakeToggle" class="switch" type="checkbox" checked></div>
+  <div class="row"><div><b>AI aim assist</b><div class="muted">Keep AI predictive aiming enabled.</div></div><input id="aimToggle" class="switch" type="checkbox" checked></div>
+  <div class="row"><div><b>Fast round countdown</b><div class="muted">Short inter-round 3 → 2 → 1 → GO sequence.</div></div><input id="fastCountdown" class="switch" type="checkbox" checked></div>
+  </div>
+</section>
+
+<section id="gameScreen" class="screen hidden">
+  <canvas id="game"></canvas>
+  <div class="hud">
+    <div class="hudBox"><b>TANKFORGE</b><div>WASD / arrows • Mouse aim • Click / Space fire</div><div class="bar"><div id="hpFill" class="fill"></div></div></div>
+    <div class="hudBox roundText"><b id="roundLabel">ROUND 1</b><div id="aliveLabel">3 AI ALIVE</div></div>
+  </div>
+  <div id="roundBanner">ROUND STARTING</div>
+  <div id="countdown"></div>
+  <div class="gameBtns"><button class="gameBtn" id="pauseBtn">PAUSE</button><button class="gameBtn" id="exitBtn">EXIT</button></div>
+</section>
+
+<div id="endModal" class="hidden"><div class="endCard"><h2 id="endTitle">ROUND OVER</h2><p id="endSub" class="muted"></p><button class="primary" id="nextRoundBtn">NEXT ROUND</button> <button class="gameBtn" id="endExitBtn">HOME</button></div></div>
+
 <script>
-const canvas=document.getElementById('game'),ctx=canvas.getContext('2d');let W=1100,H=650,dpr=1;
-function resize(){dpr=Math.min(devicePixelRatio||1,2);W=Math.min(1180,innerWidth);H=Math.min(720,innerHeight);canvas.width=W*dpr;canvas.height=H*dpr;canvas.style.width=W+'px';canvas.style.height=H+'px';ctx.setTransform(dpr,0,0,dpr,0,0)}addEventListener('resize',resize);resize();
-const keys=new Set();addEventListener('keydown',e=>{keys.add(e.key.toLowerCase());if(['q','w','a','s','d'].includes(e.key.toLowerCase()))e.preventDefault();if(e.key.toLowerCase()==='p')togglePause();if(e.key==='Escape')openMenu('Paused')});addEventListener('keyup',e=>keys.delete(e.key.toLowerCase()));
-const menu=document.getElementById('menu'),scoreEl=document.getElementById('score'),aliveEl=document.getElementById('alive'),timeEl=document.getElementById('time');let paused=true,started=false,selected=4,startTime=0,kills=0,round=0,countdownTimer=null,aiPaths=new Map();
-document.querySelectorAll('[data-ai]').forEach(c=>c.onclick=()=>{selected=+c.dataset.ai;document.querySelectorAll('[data-ai]').forEach(x=>x.classList.toggle('active',x===c))});
-document.getElementById('startBtn').onclick=()=>start();document.getElementById('homeBtn').onclick=()=>location.href='../index.html';document.getElementById('pauseBtn').onclick=togglePause;
-function openMenu(title='Choose your fight.'){document.getElementById('menuTitle').textContent=title;document.getElementById('menuText').textContent=title==='Paused'?'Take a breath. Resume when ready.':'Three original AI personalities share the same physics as you. Survive the arena.';menu.classList.add('show');paused=true}
-function closeMenu(){menu.classList.remove('show');paused=false}
-function togglePause(){if(!started)return;paused=!paused;menu.classList.toggle('show',paused);if(paused){document.getElementById('menuTitle').textContent='Paused';document.getElementById('menuText').textContent='Take a breath. Resume when ready.'}else{menu.classList.remove('show');last=performance.now()}}
-const walls=[];let mazeCells=[],mazeAdj=[];const MAZE_COLS=15,MAZE_ROWS=9;function makeMap(){walls.length=0;const cw=W/MAZE_COLS,ch=H/MAZE_ROWS;const seen=Array.from({length:MAZE_ROWS},()=>Array(MAZE_COLS).fill(false));const edges=Array.from({length:MAZE_ROWS},()=>Array.from({length:MAZE_COLS},()=>({r:1,b:1})));const stack=[[0,0]];seen[0][0]=true;while(stack.length){const [c,r]=stack[stack.length-1],opts=[];if(c>0&&!seen[r][c-1])opts.push([-1,0,'l']);if(c<MAZE_COLS-1&&!seen[r][c+1])opts.push([1,0,'r']);if(r>0&&!seen[r-1][c])opts.push([0,-1,'t']);if(r<MAZE_ROWS-1&&!seen[r+1][c])opts.push([0,1,'b']);if(!opts.length){stack.pop();continue}const [dx,dy,dir]=opts[Math.floor(Math.random()*opts.length)],nc=c+dx,nr=r+dy;seen[nr][nc]=true;if(dir==='r')edges[r][c].r=0;else if(dir==='b')edges[r][c].b=0;else if(dir==='l')edges[r][c-1].r=0;else edges[r-1][c].b=0;stack.push([nc,nr])}const gap=Math.max(8,Math.min(14,Math.min(cw,ch)*.14));for(let r=0;r<MAZE_ROWS;r++)for(let c=0;c<MAZE_COLS;c++){const x=c*cw,y=r*ch;if(edges[r][c].r)walls.push({x:x+cw-gap/2,y,w:gap,h:ch+gap/2});if(edges[r][c].b)walls.push({x,y:y+ch-gap/2,w:cw+gap/2,h:gap})}walls.push({x:0,y:0,w:W,h:gap/2},{x:0,y:H-gap/2,w:W,h:gap/2},{x:0,y:0,w:gap/2,h:H},{x:W-gap/2,y:0,w:gap/2,h:H});mazeCells=Array.from({length:MAZE_ROWS},(_,r)=>Array.from({length:MAZE_COLS},(_,c)=>({x:c*cw+cw/2,y:r*ch+ch/2})));mazeAdj=Array.from({length:MAZE_ROWS*MAZE_COLS},()=>[]);for(let r=0;r<MAZE_ROWS;r++)for(let c=0;c<MAZE_COLS;c++){const i=r*MAZE_COLS+c;if(c<MAZE_COLS-1&&edges[r][c].r===0){mazeAdj[i].push(i+1);mazeAdj[i+1].push(i)}if(r<MAZE_ROWS-1&&edges[r][c].b===0){mazeAdj[i].push(i+MAZE_COLS);mazeAdj[i+MAZE_COLS].push(i)}}}makeMap();addEventListener('resize',()=>{makeMap();if(started)spawn()});
-const clamp=(v,a,b)=>Math.max(a,Math.min(b,v)),dist=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y),angDiff=(a,b)=>Math.atan2(Math.sin(a-b),Math.cos(a-b));
-function circleRect(c,r,q){const x=clamp(c.x,q.x,q.x+q.w),y=clamp(c.y,q.y,q.y+q.h);return Math.hypot(c.x-x,c.y-y)<r}
-function blocked(x,y,r){return x<r||x>W-r||y<r||y>H-r||walls.some(q=>circleRect({x,y},r,q))}
-class Bullet{constructor(t){this.x=t.x+Math.cos(t.a)*25;this.y=t.y+Math.sin(t.a)*25;this.vx=Math.cos(t.a)*480;this.vy=Math.sin(t.a)*480;this.owner=t;this.life=4;this.r=4;this.bounces=0}update(dt){this.x+=this.vx*dt;this.y+=this.vy*dt;this.life-=dt;if(this.x<this.r||this.x>W-this.r){this.vx*=-1;this.x=clamp(this.x,this.r,W-this.r);this.bounces++}if(this.y<this.r||this.y>H-this.r){this.vy*=-1;this.y=clamp(this.y,this.r,H-this.r);this.bounces++}for(const q of walls){if(circleRect(this,this.r,q)){const cx=clamp(this.x,q.x,q.x+q.w),cy=clamp(this.y,q.y,q.y+q.h);if(Math.abs(this.x-cx)>Math.abs(this.y-cy))this.vx*=-1;else this.vy*=-1;this.bounces++;this.x+=this.vx*dt*2;this.y+=this.vy*dt*2}}return this.life>0&&this.bounces<8}}
-function cellIndexAt(x,y){const cw=W/MAZE_COLS,ch=H/MAZE_ROWS;return clamp(Math.floor(y/ch),0,MAZE_ROWS-1)*MAZE_COLS+clamp(Math.floor(x/cw),0,MAZE_COLS-1)}
-function nextCellToward(from,to){if(from===to)return from;const q=[from],prev=new Map([[from,-1]]);for(let h=0;h<q.length;h++){const cur=q[h];if(cur===to)break;for(const n of (mazeAdj[cur]||[])){if(!prev.has(n)){prev.set(n,cur);q.push(n)}}}if(!prev.has(to))return from;let cur=to;while(prev.get(cur)!==-1&&prev.get(cur)!==from)cur=prev.get(cur);return cur}
-function wallAvoidance(t){const rays=[-0.7,-0.35,0,0.35,0.7],look=58;let steer=0,blockedCount=0;for(const off of rays){const a=t.a+off;const x=t.x+Math.cos(a)*look,y=t.y+Math.sin(a)*look;if(blocked(x,y,t.r+5)){blockedCount++;steer+=off>0?-1:1}}return blockedCount?clamp(steer,-1,1):0}
-class Tank{constructor(x,y,color,name,role,player=false){this.x=x;this.y=y;this.a=player?0:Math.random()*Math.PI*2;this.color=color;this.name=name;this.role=role;this.player=player;this.r=17;this.speed=185;this.turn=4.4;this.cool=0;this.alive=true;this.hp=1;this.aiThink=0;this.targetA=0;this.strafe=1;this.shots=0}
-fire(){if(this.cool>0||!this.alive)return;bullets.push(new Bullet(this));this.cool=.45;this.shots++}
-move(dt,forward){const nx=this.x+Math.cos(this.a)*this.speed*forward*dt,ny=this.y+Math.sin(this.a)*this.speed*forward*dt;if(!blocked(nx,this.y,this.r))this.x=nx;if(!blocked(this.x,ny,this.r))this.y=ny}
-update(dt){if(!this.alive)return;this.cool-=dt;if(this.player){let f=(keys.has('w')?1:0)-(keys.has('s')?1:0);let t=(keys.has('d')?1:0)-(keys.has('a')?1:0);this.a+=t*this.turn*dt;this.move(dt,f);if(keys.has('q'))this.fire();return}this.ai(dt)}
-ai(dt){const target=player;if(!target.alive)return;this.aiThink-=dt;const myCell=cellIndexAt(this.x,this.y),targetCell=cellIndexAt(target.x,target.y);if(this.aiThink<=0){this.aiThink=.22;const next=nextCellToward(myCell,targetCell);const pt=mazeCells[Math.floor(next/MAZE_COLS)][next%MAZE_COLS];this.navA=Math.atan2(pt.y-this.y,pt.x-this.x);aiPaths.set(this, next)}const dx=target.x-this.x,dy=target.y-this.y;const desired=Math.atan2(dy,dx);if(this.role==='hybrid'){const lead=clamp(dist(this,target)/430,0,.7);this.targetA=desired+lead*(Math.sin(target.a)*.3)}else this.targetA=desired;const navTurn=angDiff(this.navA||this.targetA,this.a);const avoid=wallAvoidance(this);let d=Math.abs(navTurn)>.35?navTurn:this.targetA-this.a;d=angDiff(this.targetA,this.a);if(avoid){this.a+=avoid*this.turn*.8*dt;this.move(dt,.8);return}this.a+=clamp(d,-this.turn*dt,this.turn*dt);const danger=bullets.some(b=>b.owner!==this&&dist(this,b)<110);if(danger){this.strafe=dist(this,target)>300?1:-1;this.a+=this.strafe*this.turn*.35*dt;this.move(dt,.9)}else if(this.role==='scout'){this.move(dt,dist(this,target)>260?1:.45);if(Math.abs(d)<.12)this.fire()}else if(this.role==='sentinel'){if(dist(this,target)<260)this.move(dt,-.25);else if(dist(this,target)>430)this.move(dt,.45);if(Math.abs(d)<.08)this.fire()}else if(this.role==='hybrid'){this.move(dt,dist(this,target)>310?1:.5);if(Math.abs(d)<.08)this.fire()}else{this.move(dt,dist(this,target)>360?1:.6);if(Math.abs(d)<.1)this.fire()}}
-draw(){if(!this.alive)return;ctx.save();ctx.translate(this.x,this.y);ctx.rotate(this.a);ctx.shadowBlur=18;ctx.shadowColor=this.color;ctx.fillStyle=this.color;ctx.globalAlpha=.18;ctx.beginPath();ctx.arc(0,0,23,0,7);ctx.fill();ctx.globalAlpha=1;ctx.fillStyle='#101722';ctx.fillRect(-15,-12,30,24);ctx.fillStyle=this.color;ctx.fillRect(-11,-9,22,18);ctx.fillStyle='#dff5ff';ctx.fillRect(3,-3,25,6);ctx.restore()}}
-let player,bots=[],bullets=[],particles=[];function spawn(){const starts=[mazeCells[0][0],mazeCells[MAZE_ROWS-1][MAZE_COLS-1],mazeCells[0][MAZE_COLS-1],mazeCells[MAZE_ROWS-1][0],mazeCells[Math.floor(MAZE_ROWS/2)][Math.floor(MAZE_COLS/2)]];player=new Tank(starts[0].x,starts[0].y,'#58b9ff','YOU','player',true);player.a=0;bots=[];const specs=[['#69e7a7','SCOUT','scout'],['#8f9dff','SENTINEL','sentinel'],['#ff6f93','HYBRID','hybrid'],['#ffc857','VIPER','viper']];for(let i=0;i<selected;i++){const s=specs[i],pos=starts[i+1];const b=new Tank(pos.x,pos.y,s[0],s[1],s[2]);b.a=Math.atan2(player.y-b.y,player.x-b.x);bots.push(b)}bullets=[];particles=[];kills=0;startTime=performance.now();started=true;closeMenu();paused=true;round++;saveStat('matches',1);beginCountdown()}
-function burst(x,y,color){for(let i=0;i<14;i++)particles.push({x,y,vx:(Math.random()-.5)*180,vy:(Math.random()-.5)*180,l:.45,c:color})}
-function update(dt){if(paused)return;player.update(dt);bots.forEach(b=>b.update(dt));bullets=bullets.filter(b=>{if(!b.update(dt))return false;const tanks=[player,...bots];for(const t of tanks){if(t.alive&&t!==b.owner&&dist(t,b.x?b:{x:b.x,y:b.y})<t.r+b.r){t.alive=false;burst(t.x,t.y,t.color);if(b.owner===player){kills++;saveStat('kills',1)}else if(t===player)saveStat('deaths',1);return false}}return true});particles=particles.filter(p=>(p.x+=p.vx*dt,p.y+=p.vy*dt,p.l-=dt,p.l>0));const alive=bots.filter(b=>b.alive).length;scoreEl.textContent=kills;aliveEl.textContent=alive;timeEl.textContent=fmt((performance.now()-startTime)/1000);if(!player.alive||alive===0)endRound()}
-function endRound(){if(paused&&countdownTimer)return;paused=true;const won=player.alive;saveStat(won?'wins':'losses',1);setTimeout(()=>{spawn()},650)}
-function beginCountdown(){const el=document.getElementById('countdown'),num=document.getElementById('countNum'),sub=el.querySelector('.countSub');clearInterval(countdownTimer);el.classList.add('show');let n=3;num.textContent=n;sub.textContent='GET READY · ROUND '+round;countdownTimer=setInterval(()=>{n--;if(n>0){num.textContent=n;num.style.animation='none';void num.offsetWidth;num.style.animation='countPop .65s cubic-bezier(.2,.8,.2,1)'}else{num.textContent='GO';sub.textContent='ROUND '+round;num.style.animation='none';void num.offsetWidth;num.style.animation='countPop .65s cubic-bezier(.2,.8,.2,1)';setTimeout(()=>{el.classList.remove('show');paused=false;last=performance.now();clearInterval(countdownTimer);countdownTimer=null},520)}},720)}
-function fmt(s){s=Math.floor(s);return Math.floor(s/60)+':'+String(s%60).padStart(2,'0')}
-function saveStat(k,n){const o=JSON.parse(localStorage.getItem('tankforge_stats')||'{}');o[k]=(o[k]||0)+n;localStorage.setItem('tankforge_stats',JSON.stringify(o))}
-function draw(){ctx.clearRect(0,0,W,H);const g=ctx.createLinearGradient(0,0,W,H);g.addColorStop(0,'#0b131e');g.addColorStop(1,'#080c13');ctx.fillStyle=g;ctx.fillRect(0,0,W,H);ctx.fillStyle='#0b1118';ctx.fillRect(0,0,W,H);walls.forEach(q=>{ctx.fillStyle='#263443';ctx.shadowBlur=8;ctx.shadowColor='#000';ctx.fillRect(q.x,q.y,q.w,q.h);ctx.shadowBlur=0;ctx.strokeStyle='#52627455';ctx.strokeRect(q.x,q.y,q.w,q.h)});bullets.forEach(b=>{ctx.fillStyle=b.owner.color;ctx.shadowBlur=15;ctx.shadowColor=b.owner.color;ctx.beginPath();ctx.arc(b.x,b.y,b.r,0,7);ctx.fill()});particles.forEach(p=>{ctx.globalAlpha=Math.max(0,p.l/.45);ctx.fillStyle=p.c;ctx.fillRect(p.x,p.y,3,3)});ctx.globalAlpha=1;player?.draw();bots.forEach(b=>b.draw())}
-let last=performance.now();function loop(now){const dt=Math.min(.033,(now-last)/1000);last=now;update(dt);draw();requestAnimationFrame(loop)}requestAnimationFrame(loop);
-function start(){selected=clamp(selected||4,1,4);spawn();localStorage.setItem('tankforge_ai_count',selected)}
-const saved=+(new URLSearchParams(location.search).get('ai')||localStorage.getItem('tankforge_ai_count')||3);selected=clamp(saved,1,4);document.querySelectorAll('[data-ai]').forEach(x=>x.classList.toggle('active',+x.dataset.ai===selected));
-</script></body></html>
+(() => {
+"use strict";
+const $=id=>document.getElementById(id), canvas=$("game"),ctx=canvas.getContext("2d");
+let W=0,H=0,mode="arena",running=false,paused=false,last=0,round=1;
+let keys=new Set(),mouse={x:0,y:0,down:false},player=null,bots=[],bullets=[],particles=[],walls=[];
+let selectedAI=3,roundTransition=false,countdownBusy=false,training=false,trainingSamples=[];
+const COLORS={player:"#56c9ff",scout:"#ffd45b",evasive:"#b878ff",sentinel:"#ff5c75",hybrid:"#ff3ea4"};
+
+let stats=JSON.parse(localStorage.getItem("tankforgeStats")||'{"rounds":0,"wins":0,"kills":0,"shots":0}');
+const saveStats=()=>localStorage.setItem("tankforgeStats",JSON.stringify(stats));
+function refreshStats(){const m={Rounds:"rounds",Wins:"wins",Kills:"kills",Shots:"shots"};Object.entries(m).forEach(([a,b])=>{let e=$("stat"+a);if(e)e.textContent=stats[b]})}
+function setPage(name){
+  document.querySelectorAll(".screen").forEach(e=>e.classList.add("hidden"));
+  if(name==="home")$("home").classList.remove("hidden");
+  else if(name==="play")$("playPage").classList.remove("hidden");
+  else if(name==="lab"){refreshSamples();$("labPage").classList.remove("hidden")}
+  else if(name==="garage")$("garagePage").classList.remove("hidden");
+  else if(name==="stats"){refreshStats();$("statsPage").classList.remove("hidden")}
+  else if(name==="settings")$("settingsPage").classList.remove("hidden");
+  else if(name==="game")$("gameScreen").classList.remove("hidden");
+}
+document.querySelectorAll("[data-page]").forEach(b=>b.addEventListener("click",()=>setPage(b.dataset.page)));
+document.querySelectorAll("[data-count]").forEach(b=>b.addEventListener("click",()=>{selectedAI=+b.dataset.count;document.querySelectorAll("[data-count]").forEach(x=>x.classList.toggle("active",+x.dataset.count===selectedAI));$("aiCountLabel").textContent=selectedAI}));
+$("heroPlay").onclick=()=>setPage("play");
+$("launchArena").onclick=()=>startArena();
+$("exitBtn").onclick=()=>exitArena();
+$("endExitBtn").onclick=()=>{hideEnd();exitArena()};
+$("nextRoundBtn").onclick=()=>{hideEnd();round++;startRound(false)};
+$("pauseBtn").onclick=()=>{paused=!paused;$("pauseBtn").textContent=paused?"RESUME":"PAUSE"};
+$("trainingToggle").onchange=e=>{training=e.target.checked;localStorage.setItem("tankforgeTraining",training?"1":"0")};
+training=localStorage.getItem("tankforgeTraining")==="1";$("trainingToggle").checked=training;
+
+addEventListener("keydown",e=>{keys.add(e.key.toLowerCase());if(e.code==="Space")e.preventDefault();if(e.key.toLowerCase()==="p"&&running)paused=!paused});
+addEventListener("keyup",e=>keys.delete(e.key.toLowerCase()));
+canvas.addEventListener("mousemove",e=>{const r=canvas.getBoundingClientRect();mouse.x=(e.clientX-r.left)*W/r.width;mouse.y=(e.clientY-r.top)*H/r.height});
+canvas.addEventListener("mousedown",()=>mouse.down=true);addEventListener("mouseup",()=>mouse.down=false);
+addEventListener("resize",resize);resize();
+
+function resize(){W=canvas.width=Math.max(800,innerWidth);H=canvas.height=Math.max(500,innerHeight);makeMaze();if(player){player.x=Math.min(player.x,W-player.r);player.y=Math.min(player.y,H-player.r)}}
+function makeMaze(){
+  const t=Math.max(18,Math.min(30,Math.floor(Math.min(W,H)/28)));
+  walls=[
+    {x:W*.12,y:H*.20,w:W*.25,h:t},{x:W*.63,y:H*.20,w:W*.25,h:t},
+    {x:W*.12,y:H*.78,w:W*.25,h:t},{x:W*.63,y:H*.78,w:W*.25,h:t},
+    {x:W*.38,y:H*.35,w:t,h:H*.30},{x:W*.60,y:H*.35,w:t,h:H*.30},
+    {x:W*.30,y:H*.48,w:W*.14,h:t},{x:W*.56,y:H*.48,w:W*.14,h:t}
+  ];
+}
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const d=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
+const angle=(a,b)=>Math.atan2(b.y-a.y,b.x-a.x);
+function tank(o){return Object.assign({r:17,hp:100,max:100,spd:2.4,angle:0,cool:0,dead:false,color:"#fff",type:"scout",vx:0,vy:0,think:0,path:[],pathIndex:0,strafe:1,dodge:0},o)}
+function circleHitsRect(cx,cy,r,q){return cx+r>q.x&&cx-r<q.x+q.w&&cy+r>q.y&&cy-r<q.y+q.h}
+function blocked(o,nx,ny){if(nx<o.r||nx>W-o.r||ny<o.r||ny>H-o.r)return true;return walls.some(q=>circleHitsRect(nx,ny,o.r,q))}
+function moveTank(t,dx,dy,s){
+  const len=Math.hypot(dx,dy)||1;dx/=len;dy/=len;
+  const step=t.spd*s;
+  let nx=t.x+dx*step,ny=t.y+dy*step;
+  if(!blocked(t,nx,t.y))t.x=nx;
+  if(!blocked(t,t.x,ny))t.y=ny;
+}
+function segmentWall(x1,y1,x2,y2){
+  const steps=Math.ceil(Math.hypot(x2-x1,y2-y1)/6);
+  for(let i=1;i<=steps;i++){const k=i/steps,x=x1+(x2-x1)*k,y=y1+(y2-y1)*k;if(walls.some(q=>x>q.x&&x<q.x+q.w&&y>q.y&&y<q.y+q.h))return true}
+  return false;
+}
+function lineOfSight(a,b){return !segmentWall(a.x,a.y,b.x,b.y)}
+function reflectBullet(b,q){
+  const cx=clamp(b.x,q.x,q.x+q.w),cy=clamp(b.y,q.y,q.y+q.h);
+  const dx=b.x-cx,dy=b.y-cy;
+  if(Math.abs(dx)>Math.abs(dy))b.vx*=-1;else b.vy*=-1;
+  b.bounces++;b.x-=b.vx*.9;b.y-=b.vy*.9;
+}
+function shoot(t){
+  if(t.dead||t.cool>0)return;
+  const cd=t===player?240:t.type==="sentinel"?650:t.type==="hybrid"?190:330;
+  t.cool=cd;
+  const a=t.angle, speed=t===player?7.2:t.type==="hybrid"?7.4:t.type==="sentinel"?7.8:6.8;
+  bullets.push({x:t.x+Math.cos(a)*(t.r+11),y:t.y+Math.sin(a)*(t.r+11),vx:Math.cos(a)*speed,vy:Math.sin(a)*speed,owner:t,life:145,bounces:0,maxBounces:8,dmg:t===player?28:(t.type==="sentinel"?25:22)});
+  if(t===player)stats.shots++;
+}
+function hurt(t,damage){
+  if(t.dead)return;
+  t.hp-=damage;
+  for(let i=0;i<7;i++)particles.push({x:t.x,y:t.y,vx:(Math.random()-.5)*3.8,vy:(Math.random()-.5)*3.8,life:24});
+  if(t.hp<=0){t.hp=0;t.dead=true;if(t!==player)stats.kills++;for(let i=0;i<35;i++)particles.push({x:t.x,y:t.y,vx:(Math.random()-.5)*7,vy:(Math.random()-.5)*7,life:50})}
+}
+function predictiveAim(b){
+  const lead=Math.min(35,d(b,player)/7);
+  return Math.atan2((player.y+player.vy*lead)-b.y,(player.x+player.vx*lead)-b.x);
+}
+function bulletDanger(b,t){
+  const px=b.x-t.x,py=b.y-t.y,den=b.vx*b.vx+b.vy*b.vy||1;
+  const u=clamp(-(px*b.vx+py*b.vy)/den,0,35),x=b.x+b.vx*u,y=b.y+b.vy*u;
+  return Math.hypot(x-t.x,y-t.y)<75;
+}
+function buildGridPath(start,target){
+  const cell=38,cols=Math.ceil(W/cell),rows=Math.ceil(H/cell);
+  const node=(x,y)=>({x:clamp(Math.floor(x/cell),0,cols-1),y:clamp(Math.floor(y/cell),0,rows-1)});
+  const s=node(start.x,start.y),g=node(target.x,target.y),key=n=>n.x+","+n.y;
+  const blockedCell=n=>{
+    const cx=n.x*cell+cell/2,cy=n.y*cell+cell/2;
+    return walls.some(q=>cx+18>q.x&&cx-18<q.x+q.w&&cy+18>q.y&&cy-18<q.y+q.h);
+  };
+  if(blockedCell(s)||blockedCell(g))return [];
+  const open=[s],came=new Map(),cost=new Map([[key(s),0]]);let guard=0;
+  while(open.length&&guard++<700){
+    open.sort((a,b)=>(cost.get(key(a))+Math.abs(a.x-g.x)+Math.abs(a.y-g.y))-(cost.get(key(b))+Math.abs(b.x-g.x)+Math.abs(b.y-g.y)));
+    const cur=open.shift();if(cur.x===g.x&&cur.y===g.y){
+      const out=[];let z=cur;while(z){out.push({x:z.x*cell+cell/2,y:z.y*cell+cell/2});z=came.get(key(z))}return out.reverse()
+    }
+    for(const [dx,dy] of [[1,0],[-1,0],[0,1],[0,-1]]){
+      const n={x:cur.x+dx,y:cur.y+dy};if(n.x<0||n.y<0||n.x>=cols||n.y>=rows||blockedCell(n))continue;
+      const nk=key(n),nc=(cost.get(key(cur))||0)+1;
+      if(!cost.has(nk)||nc<cost.get(nk)){cost.set(nk,nc);came.set(nk,cur);if(!open.some(q=>q.x===n.x&&q.y===n.y))open.push(n)}
+    }
+  }
+  return [];
+}
+function updateAI(b,s){
+  if(b.dead)return;
+  b.cool=Math.max(0,b.cool-s*16.67);b.think-=s*16.67;
+  if(b.think<=0){b.think=120+Math.random()*100;b.path=buildGridPath(b,player);b.pathIndex=1}
+  let desiredX=0,desiredY=0;
+  const dist=d(b,player),los=lineOfSight(b,player);
+  if(b.path.length&&b.pathIndex<b.path.length){
+    const p=b.path[b.pathIndex];if(Math.hypot(p.x-b.x,p.y-b.y)<28)b.pathIndex++;else{desiredX=p.x-b.x;desiredY=p.y-b.y}
+  } else {desiredX=player.x-b.x;desiredY=player.y-b.y}
+  // local wall repulsion stops the classic "AI drives into wall" issue.
+  for(const q of walls){
+    const cx=clamp(b.x,q.x,q.x+q.w),cy=clamp(b.y,q.y,q.y+q.h),rx=b.x-cx,ry=b.y-cy,dd=Math.hypot(rx,ry);
+    if(dd<90&&dd>0){const f=(90-dd)/90;desiredX+=rx/dd*f*2.5;desiredY+=ry/dd*f*2.5}
+  }
+  for(const q of bullets)if(q.owner!==b&&bulletDanger(q,b)){desiredX+=-q.vy*.9;desiredY+=q.vx*.9;b.dodge=300}
+  b.dodge=Math.max(0,b.dodge-s*16.67);
+  const a=Math.atan2(player.y-b.y,player.x-b.x);
+  if(b.type==="scout"){if(dist<210){desiredX-=Math.cos(a)*1.5;desiredY-=Math.sin(a)*1.5}}
+  if(b.type==="evasive"){const side=b.strafe*(b.dodge>0?2.5:1.3);desiredX+=Math.cos(a+Math.PI/2)*side;desiredY+=Math.sin(a+Math.PI/2)*side}
+  if(b.type==="sentinel"){if(dist<330){desiredX-=Math.cos(a)*2;desiredY-=Math.sin(a)*2}}
+  if(b.type==="hybrid"){const side=Math.sin(performance.now()/550);desiredX+=Math.cos(a+Math.PI/2)*side*2;desiredY+=Math.sin(a+Math.PI/2)*side*2}
+  moveTank(b,desiredX,desiredY,s);
+  b.vx=desiredX;b.vy=desiredY;
+  b.angle=$("aimToggle").checked?predictiveAim(b):a;
+  const range=b.type==="sentinel"?950:760;
+  if(dist<range&&los&&Math.random()<s*.045)shoot(b);
+}
+function recordTraining(){
+  if(!training||!player)return;
+  const action=[keys.has("w")||keys.has("arrowup")?1:0,keys.has("s")||keys.has("arrowdown")?1:0,keys.has("a")||keys.has("arrowleft")?1:0,keys.has("d")||keys.has("arrowright")?1:0,mouse.down?1:0];
+  trainingSamples.push({t:Date.now(),x:+(player.x/W).toFixed(3),y:+(player.y/H).toFixed(3),ax:+Math.cos(player.angle).toFixed(3),ay:+Math.sin(player.angle).toFixed(3),action});
+  if(trainingSamples.length>=20){const old=JSON.parse(localStorage.getItem("tankforgeTrainingSamples")||"[]");localStorage.setItem("tankforgeTrainingSamples",JSON.stringify(old.concat(trainingSamples).slice(-5000)));trainingSamples=[]}
+}
+function refreshSamples(){const n=JSON.parse(localStorage.getItem("tankforgeTrainingSamples")||"[]").length+$("sampleCount")?.textContent*0; if($("sampleCount"))$("sampleCount").textContent=n}
+function startArena(){mode="arena";setPage("game");running=true;paused=false;round=1;stats.rounds++;saveStats();startRound(true)}
+function startRound(first){
+  bullets=[];particles=[];makeMaze();
+  player=tank({x:W*.5,y:H*.88,color:COLORS.player,spd:3.0});
+  const types=["scout","evasive","sentinel","hybrid"],positions=[
+    [.15,.14],[.85,.14],[.18,.72],[.82,.72]
+  ];
+  bots=[];
+  for(let i=0;i<selectedAI;i++){const [px,py]=positions[i];const type=types[i];const hp=type==="hybrid"?150:type==="sentinel"?120:100;bots.push(tank({x:W*px,y:H*py,type,hp,max:hp,color:COLORS[type],spd:type==="sentinel"?2.15:type==="hybrid"?2.7:type==="evasive"?2.55:2.4,strafe:i%2?1:-1}))}
+  $("roundLabel").textContent="ROUND "+round;$("aliveLabel").textContent=selectedAI+" AI ALIVE";$("hpFill").style.width="100%";
+  if(first){running=true;roundTransition=false;return}
+  fastCountdown();
+}
+function fastCountdown(){
+  countdownBusy=true;roundTransition=true;
+  const el=$("countdown"),banner=$("roundBanner");banner.classList.add("show");
+  let vals=["3","2","1","GO!"],i=0,delay=$("fastCountdown").checked?340:700;
+  const step=()=>{el.textContent=vals[i];el.classList.remove("show");void el.offsetWidth;el.classList.add("show");i++;if(i<vals.length)setTimeout(step,delay);else{setTimeout(()=>{banner.classList.remove("show");countdownBusy=false;roundTransition=false},delay)}};step();
+}
+function endRound(win){
+  running=false;stats.rounds++;if(win)stats.wins++;saveStats();
+  $("endTitle").textContent=win?"ROUND CLEARED 🔥":"ROUND LOST ☠️";
+  $("endSub").textContent=win?`You cleared ${selectedAI} AI. Round ${round} complete.`:"The AI got the better of this round.";
+  $("nextRoundBtn").textContent=win?"NEXT ROUND":"TRY AGAIN";
+  $("endModal").classList.remove("hidden");refreshStats();
+}
+function hideEnd(){$("endModal").classList.add("hidden")}
+function exitArena(){running=false;paused=false;hideEnd();setPage("home")}
+function update(dt){
+  if(!running||paused||roundTransition)return;
+  const s=Math.min(2.2,dt/16.67);
+  let dx=(keys.has("d")||keys.has("arrowright")?1:0)-(keys.has("a")||keys.has("arrowleft")?1:0);
+  let dy=(keys.has("s")||keys.has("arrowdown")?1:0)-(keys.has("w")||keys.has("arrowup")?1:0);
+  player.vx=dx;player.vy=dy;moveTank(player,dx,dy,s);player.angle=Math.atan2(mouse.y-player.y,mouse.x-player.x);player.cool=Math.max(0,player.cool-dt);
+  if(mouse.down||keys.has(" "))shoot(player);
+  bots.forEach(b=>updateAI(b,s));
+  bullets.forEach(b=>{
+    const oldx=b.x,oldy=b.y;
+    const sub=Math.max(1,Math.ceil(Math.hypot(b.vx,b.vy)/5));
+    let hit=false;
+    for(let i=0;i<sub;i++){
+      b.x+=b.vx/sub;b.y+=b.vy/sub;
+      const wall=walls.find(q=>b.x>q.x-1&&b.x<q.x+q.w+1&&b.y>q.y-1&&b.y<q.y+q.h+1);
+      if(wall){reflectBullet(b,wall);hit=true;break}
+      if(b.x<2||b.x>W-2){b.vx*=-1;b.x=clamp(b.x,2,W-2);b.bounces++;hit=true;break}
+      if(b.y<2||b.y>H-2){b.vy*=-1;b.y=clamp(b.y,2,H-2);b.bounces++;hit=true;break}
+    }
+    b.life-=s;if(hit&&b.bounces>b.maxBounces)b.life=0;
+    const targets=b.owner===player?bots:[player];
+    for(const t of targets)if(!t.dead&&d(b,t)<t.r+5){hurt(t,b.dmg);b.life=0;break}
+  });
+  bullets=bullets.filter(b=>b.life>0);
+  particles.forEach(p=>{p.x+=p.vx*s;p.y+=p.vy*s;p.life-=s});particles=particles.filter(p=>p.life>0);
+  recordTraining();
+  player.hp=clamp(player.hp,0,player.max);$("hpFill").style.width=(player.hp/player.max*100)+"%";
+  const alive=bots.filter(b=>!b.dead).length;$("aliveLabel").textContent=alive+" AI ALIVE";
+  if(player.dead||player.hp<=0){endRound(false);return}
+  if(alive===0){endRound(true);return}
+}
+function drawTank(t){
+  if(t.dead)return;ctx.save();ctx.translate(t.x,t.y);ctx.rotate(t.angle);
+  ctx.shadowBlur=12;ctx.shadowColor=t.color;ctx.fillStyle=t.color;
+  // Tank Trouble-inspired compact top-down body + tracks + turret.
+  ctx.fillRect(-17,-14,34,28);ctx.fillStyle="#0a0e15";ctx.fillRect(-18,-15,7,30);ctx.fillRect(11,-15,7,30);
+  ctx.fillStyle=t.color;ctx.fillRect(1,-5,30,10);ctx.fillStyle="#101722";ctx.fillRect(4,-3,24,6);
+  ctx.restore();ctx.shadowBlur=0;
+}
+function draw(){
+  ctx.clearRect(0,0,W,H);ctx.fillStyle="#080c13";ctx.fillRect(0,0,W,H);
+  ctx.strokeStyle="#101b29";ctx.lineWidth=1;
+  for(let gx=0;gx<W;gx+=38){ctx.beginPath();ctx.moveTo(gx,0);ctx.lineTo(gx,H);ctx.stroke()}
+  for(let gy=0;gy<H;gy+=38){ctx.beginPath();ctx.moveTo(0,gy);ctx.lineTo(W,gy);ctx.stroke()}
+  walls.forEach(q=>{ctx.fillStyle="#162131";ctx.fillRect(q.x,q.y,q.w,q.h);ctx.strokeStyle="#38506b";ctx.strokeRect(q.x,q.y,q.w,q.h)});
+  bullets.forEach(b=>{ctx.save();ctx.translate(b.x,b.y);ctx.rotate(Math.atan2(b.vy,b.vx));ctx.shadowBlur=12;ctx.shadowColor=b.owner===player?COLORS.player:COLORS.hybrid;ctx.fillStyle=b.owner===player?COLORS.player:"#ff5b9d";ctx.fillRect(-5,-2,10,4);ctx.restore()});
+  bots.forEach(drawTank);drawTank(player);
+  particles.forEach(p=>{ctx.globalAlpha=Math.max(0,p.life/50);ctx.fillStyle="#fff";ctx.fillRect(p.x,p.y,3,3);ctx.globalAlpha=1});
+}
+function loop(t){const dt=Math.min(40,t-last||16);last=t;update(dt);draw();requestAnimationFrame(loop)}requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>
