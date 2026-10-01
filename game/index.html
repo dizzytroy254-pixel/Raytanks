@@ -49,6 +49,23 @@ select{width:100%;padding:12px;border-radius:11px;background:#0c1115;color:#fff;
 #banner{position:absolute;top:92px;left:50%;transform:translateX(-50%);z-index:7;background:#050607dd;color:#fff;border:1px solid #fff2;border-radius:99px;padding:8px 13px;letter-spacing:3px;font-size:10px;font-weight:1000;opacity:0;transition:.2s}.show{opacity:1!important}
 #end{position:fixed;inset:0;display:grid;place-items:center;background:#0009;z-index:40}.endCard{width:min(470px,90vw);padding:30px;border:1px solid #fff2;border-radius:24px;background:#0a0d10f5;text-align:center}.endCard h2{font-size:40px;margin:0 0 8px}
 @media(max-width:850px){.heroGrid{grid-template-columns:1fr}.mainCard{padding:38px}.navlinks{display:none}}
+
+/* RAYTANKS V0.7 HOMEPAGE */
+.rayLogo{font-size:21px;letter-spacing:7px;font-weight:1000}.rayLogo span{color:#79f4ff}
+.navPill{border:0;background:transparent;color:#737b82;padding:10px 13px;font-size:10px;font-weight:900;letter-spacing:2px;border-radius:10px}.navPill:hover,.activeNav{color:#fff;background:#ffffff09}
+.rayHome{width:min(1250px,94vw);margin:0 auto;padding:55px 0 22px}
+.rayEyebrow{font-size:9px;letter-spacing:4px;color:#68727a;display:flex;gap:10px;align-items:center}.rayEyebrow i{width:30px;height:1px;background:#79f4ff;display:block}
+.rayHero{display:grid;grid-template-columns:1fr .9fr;gap:70px;align-items:center;min-height:475px}
+.rayTiny{font-size:10px;letter-spacing:4px;color:#79f4ff;margin-bottom:18px}
+.rayTitle{font-size:clamp(78px,11vw,145px);line-height:.72;letter-spacing:-9px;margin:0;font-weight:1000}.rayTitle span{color:#ff5da8}
+.raySub{color:#90999f;line-height:1.65;margin:28px 0;font-size:15px}
+.rayActions{display:flex;gap:10px}.rayPlay,.rayGhost{border-radius:12px;padding:14px 18px;font-weight:1000;letter-spacing:1px}.rayPlay{border:1px solid #b8fbff;background:#dffcff;color:#071014;box-shadow:0 0 45px #79f4ff18}.rayPlay b{margin-left:22px}.rayGhost{border:1px solid #ffffff18;background:#0b0e12;color:#dbe0e3}
+.arenaPreview{border:1px solid #ffffff14;background:#080b0e;border-radius:22px;padding:15px;box-shadow:0 30px 100px #0008;transform:rotate(1deg)}.previewTop,.previewBottom{display:flex;justify-content:space-between;color:#667077;font-size:8px;letter-spacing:2px;padding:6px}.previewTop b{color:#79f4ff}
+.previewMaze{height:330px;background:#f6f6f2;position:relative;overflow:hidden;border-radius:10px}.pwall{position:absolute;background:#090a0c}.w1{left:8%;top:15%;width:34%;height:13px}.w2{left:48%;top:15%;width:43%;height:13px}.w3{left:29%;top:40%;width:52%;height:13px}.w4{left:8%;top:67%;width:30%;height:13px}.w5{left:54%;top:76%;width:37%;height:13px}.w6{left:39%;top:27%;width:13px;height:47%}
+.ptank{position:absolute;width:30px;height:23px;border-radius:5px;background:#111;box-shadow:0 2px 8px #0004}.ptank:after{content:"";position:absolute;left:14px;top:-7px;width:20px;height:8px;background:#111;border-radius:4px}.pt1{left:14%;top:31%;background:#42d7ff}.pt2{right:14%;bottom:14%;background:#ff5da8}
+.rayControl{border-top:1px solid #ffffff0d;padding-top:18px}.controlLabel{font-size:9px;color:#697279;letter-spacing:3px;margin-bottom:10px}.rayRivals{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.rayRival{background:#080b0e;border:1px solid #ffffff12;color:#fff;text-align:left;border-radius:12px;padding:13px}.rayRival:hover{border-color:#ffffff32;transform:translateY(-1px)}.rayRival.active{border-color:#79f4ff88;background:#0b1418}.rayRival b{font-size:11px;color:#79f4ff;display:block}.rayRival span{display:block;font-weight:1000;font-size:13px;margin-top:3px}.rayRival small{display:block;color:#657078;margin-top:4px;font-size:9px}.rayPersonality{display:flex;align-items:center;gap:12px;margin-top:9px;font-size:9px;letter-spacing:2px;color:#707980}.rayPersonality select{width:170px;padding:8px;font-size:10px}.rayFooter{display:flex;justify-content:space-between;border-top:1px solid #ffffff0d;margin-top:20px;padding-top:13px;color:#4f585e;font-size:8px;letter-spacing:2px}
+@media(max-width:900px){.rayHero{grid-template-columns:1fr;gap:30px}.arenaPreview{display:none}.rayRivals{grid-template-columns:1fr 1fr}.rayHome{padding-top:35px}}
+
 </style>
 </head>
 <body>
@@ -229,8 +246,16 @@ function cellMap(){
     for(let xx=0;xx<cols;xx++)if(g[y][xx]){
       let w=1;
       while(xx+w<cols&&g[y][xx+w])w++;
-      rects.push({x:ox+xx*cell,y:oy+y*cell,w:w*cell,h:Math.max(8,Math.floor(cell*.13))});
+      rects.push({x:ox+xx*cell,y:oy+y*cell+Math.floor(cell*.36),w:w*cell,h:Math.max(12,Math.floor(cell*.28))});
       for(let k=1;k<w;k++)g[y][xx+k]=0;
+    }
+  }
+  /* Extra vertical segments make the maze read as real enclosed corridors. */
+  for(let xx=1;xx<cols-1;xx+=3){
+    for(let y=1;y<rows-1;y++){
+      if((y+xx)%4===0 && g[y][xx]){
+        rects.push({x:ox+xx*cell+Math.floor(cell*.36),y:oy+y*cell,w:Math.max(12,Math.floor(cell*.28)),h:cell});
+      }
     }
   }
   return {cols,rows,cell,ox,oy,g,rects,signature:g.map(r=>r.join("")).join("|")};
@@ -309,7 +334,11 @@ function aiUpdate(b,s){
     dx=Math.cos(a+turn)*100;dy=Math.sin(a+turn)*100;
     b.strafe*=-1;
   }
-  move(b,dx,dy,s);b.angle=Math.atan2(player.y-b.y,player.x-b.x);
+  const target=Math.atan2(dy,dx);
+  let delta=Math.atan2(Math.sin(target-b.angle),Math.cos(target-b.angle));
+  b.angle += Math.max(-b.turn*s,Math.min(b.turn*s,delta));
+  const drive=Math.cos(delta)>-0.2 ? 1 : -0.45;
+  move(b,Math.cos(b.angle)*drive,Math.sin(b.angle)*drive,s);
 }
 function record(){
   if(!training||!player)return;
@@ -332,8 +361,10 @@ function draw(){
   ctx.clearRect(0,0,W,H);ctx.fillStyle="#f6f6f2";ctx.fillRect(0,0,W,H);
   ctx.fillStyle="#090a0c";
   walls.forEach(w=>ctx.fillRect(w.x,w.y,w.w,w.h));
-  /* subtle wall edge */
-  ctx.strokeStyle="#000";ctx.lineWidth=1;walls.forEach(w=>ctx.strokeRect(w.x+.5,w.y+.5,w.w-1,w.h-1));
+  ctx.fillStyle="#16181a";
+  walls.forEach(w=>ctx.fillRect(w.x,w.y,w.w,Math.min(3,w.h)));
+  ctx.strokeStyle="#000";ctx.lineWidth=2;
+  walls.forEach(w=>ctx.strokeRect(w.x+1,w.y+1,w.w-2,w.h-2));
   bots.forEach(drawTank);if(player)drawTank(player);
 }
 function finish(win){
@@ -345,9 +376,13 @@ function finish(win){
 function update(dt){
   if(!running||paused||transition||!player)return;
   const s=Math.min(2,dt/16.67);
-  const dx=(keys.has("d")||keys.has("arrowright")?1:0)-(keys.has("a")||keys.has("arrowleft")?1:0);
-  const dy=(keys.has("s")||keys.has("arrowdown")?1:0)-(keys.has("w")||keys.has("arrowup")?1:0);
-  move(player,dx,dy,s);bots.forEach(b=>aiUpdate(b,s));record();
+  /* Tank-style controls: forward/back + rotate left/right. */
+  const throttle=(keys.has("w")||keys.has("arrowup")?1:0)-(keys.has("s")||keys.has("arrowdown")?1:0);
+  const steer=(keys.has("d")||keys.has("arrowright")?1:0)-(keys.has("a")||keys.has("arrowleft")?1:0);
+  player.angle += steer*player.turn*s;
+  const dx=Math.cos(player.angle)*throttle,dy=Math.sin(player.angle)*throttle;
+  move(player,dx,dy,s);player.vx=dx;player.vy=dy;
+  bots.forEach(b=>aiUpdate(b,s));record();
   if(bots.every(b=>Math.hypot(b.x-player.x,b.y-player.y)<34))finish(true);
 }
 function loop(t){
