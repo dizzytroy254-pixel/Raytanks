@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>RAYTANKS — Arena</title>
+<title>RAYTANKS — Arena V1.1</title>
 <style>
 :root{--ink:#111;--muted:#6c7075;--paper:#f3f3ef;--panel:#fff;--line:#d8d8d2}
 *{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;font-family:Inter,Arial,sans-serif;background:var(--paper);color:var(--ink)}
@@ -53,7 +53,7 @@ button{font:inherit}
     <div>
       <div class="kicker">PROCEDURAL ARENA / ROUND 01</div>
       <h1>RAY<br><span>TANKS</span></h1>
-      <p>A clean, original arena built around the part that matters: a genuinely carved maze, compact tanks, readable walls and a fresh layout every round.</p>
+      <p>A clean original arena focused on tight tank steering, carved mazes, compact silhouettes and a fresh layout every round.</p>
       <div class="hero-actions"><button class="primary" onclick="startGame()">ENTER ARENA →</button><button class="secondary" onclick="showPage('training')">TRAINING LAB</button></div>
       <div style="margin-top:25px"><div class="kicker">SOLO RIVAL</div><div class="personality" id="homePersonality"></div></div>
     </div>
@@ -64,7 +64,7 @@ button{font:inherit}
 
 <section id="arena" class="page">
 <canvas id="gameCanvas"></canvas>
-<div class="hud"><div class="hudbox"><b>RAYTANKS / ARENA</b><strong id="roundLabel">ROUND 01</strong></div><div class="hudright"><div class="hudbox"><b>RIVALS</b><strong id="rivalLabel">1</strong></div><button class="iconbtn" onclick="leaveArena()">EXIT</button></div></div>
+<div class="hud"><div class="hudbox"><b>RAYTANKS / ARENA V1.1</b><strong id="roundLabel">ROUND 01</strong></div><div class="hudright"><div class="hudbox"><b>RIVALS</b><strong id="rivalLabel">1</strong></div><button class="iconbtn" onclick="leaveArena()">EXIT</button></div></div>
 <div class="center-msg"><div id="count" class="count"></div></div>
 <div id="endOverlay" class="overlay"><div class="modal"><div class="kicker">ROUND COMPLETE</div><h2 id="endTitle">CLEAR</h2><p id="endText"></p><button class="primary" onclick="nextRound()">NEW MAZE →</button> <button class="secondary" onclick="leaveArena()">HOME</button></div></div>
 </section>
@@ -72,7 +72,7 @@ button{font:inherit}
 <section id="training" class="page"><div class="subpage"><div class="subhead"><h2>TRAINING</h2><button class="ghost" onclick="showPage('home')">HOME</button></div><div class="cardgrid"><div class="card"><h3>Movement Recorder</h3><p class="muted">Practice movement through the procedural maze. RAYTANKS stores normalized movement samples locally for future navigation-learning features.</p><button class="primary" onclick="startTraining()">START SESSION</button></div><div class="card"><h3>Stored Samples</h3><p id="sampleCount" class="muted">0 movement samples</p><button class="secondary" onclick="clearSamples()">CLEAR SAMPLES</button></div></div></div></section>
 <section id="garage" class="page"><div class="subpage"><div class="subhead"><h2>GARAGE</h2><button class="ghost" onclick="showPage('home')">HOME</button></div><div class="cardgrid"><div class="card"><h3>RAY-01</h3><p class="muted">Compact standard chassis.</p></div><div class="card"><h3>Future Slots</h3><p class="muted">Skins, effects and chassis variations can plug into this system without changing the maze core.</p></div></div></div></section>
 <section id="stats" class="page"><div class="subpage"><div class="subhead"><h2>STATS</h2><button class="ghost" onclick="showPage('home')">HOME</button></div><div class="cardgrid"><div class="card"><h3>Rounds</h3><p id="roundStat">0</p></div><div class="card"><h3>Mazes Generated</h3><p id="mazeStat">0</p></div><div class="card"><h3>Training Samples</h3><p id="statsSamples">0</p></div></div></div></section>
-<section id="settings" class="page"><div class="subpage"><div class="subhead"><h2>SETTINGS</h2><button class="ghost" onclick="showPage('home')">HOME</button></div><div class="cardgrid"><div class="card"><h3>Controls</h3><p class="muted">W / ↑ forward · S / ↓ reverse · A / ← turn left · D / → turn right</p></div><div class="card"><h3>Maze Rule</h3><p class="muted">Every round receives a new randomized maze signature. Recent signatures are remembered to avoid immediate repeats.</p></div></div></div></section>
+<section id="settings" class="page"><div class="subpage"><div class="subhead"><h2>SETTINGS</h2><button class="ghost" onclick="showPage('home')">HOME</button></div><div class="cardgrid"><div class="card"><h3>Controls</h3><p class="muted">W / ↑ drive forward · S / ↓ reverse · A / ← rotate left · D / → rotate right</p></div><div class="card"><h3>Maze Rule</h3><p class="muted">Every round receives a new randomized maze signature. Recent signatures are remembered to avoid immediate repeats.</p></div></div></div></section>
 
 <script>
 const TAU=Math.PI*2;
@@ -181,11 +181,18 @@ function blockedCircle(x,y,r){
   }return false;
 }
 function moveTank(t,dt,throttle,turn){
-  t.a+=turn*dt;
-  const target=throttle*2.7;t.spd+=(target-t.spd)*Math.min(1,dt*.012);t.spd*=Math.pow(.94,dt/16);
-  const nx=t.x+Math.cos(t.a)*t.spd*dt/16,ny=t.y+Math.sin(t.a)*t.spd*dt/16;
-  if(!blockedCircle(nx,t.y,t.r))t.x=nx;else t.spd*=.25;
-  if(!blockedCircle(t.x,ny,t.r))t.y=ny;else t.spd*=.25;
+  // RAYTANKS 1.1 steering: immediate drive, independent rotation, no floaty acceleration.
+  const frame=dt/16.6667;
+  const TURN=0.064;
+  const FORWARD=2.55;
+  const REVERSE=1.92;
+  t.a += turn * TURN * frame;
+  const speed = throttle > 0 ? FORWARD : throttle < 0 ? -REVERSE : 0;
+  const nx=t.x + Math.cos(t.a)*speed*frame;
+  const ny=t.y + Math.sin(t.a)*speed*frame;
+  // Axis-separated collision gives the characteristic tight wall sliding.
+  if(!blockedCircle(nx,t.y,t.r)) t.x=nx;
+  if(!blockedCircle(t.x,ny,t.r)) t.y=ny;
 }
 function botThink(b,dt){
   const dx=game.player.x-b.x,dy=game.player.y-b.y,desired=Math.atan2(dy,dx);
@@ -199,8 +206,29 @@ function botThink(b,dt){
   moveTank(b,dt,throttle,turn*.055);
 }
 function drawTank(ctx,t,isPlayer){
-  ctx.save();ctx.translate(t.x,t.y);ctx.rotate(t.a);ctx.fillStyle=isPlayer?'#111':'#555';ctx.fillRect(-14,-10,28,20);
-  ctx.fillStyle=isPlayer?'#333':'#777';ctx.fillRect(-4,-7,11,14);ctx.fillStyle='#111';ctx.fillRect(3,-3,15,6);ctx.restore();
+  ctx.save();
+  ctx.translate(t.x,t.y);
+  ctx.rotate(t.a);
+  const body=isPlayer?'#111':'#555';
+  const body2=isPlayer?'#2b2b2b':'#777';
+  // Compact, original toy-tank silhouette: rounded chassis + two side runners + short turret.
+  ctx.lineJoin='round';
+  ctx.fillStyle=body;
+  ctx.beginPath();
+  ctx.roundRect(-13,-9,26,18,4);
+  ctx.fill();
+  ctx.fillStyle=body2;
+  ctx.fillRect(-11,-10,8,20);
+  ctx.fillRect(3,-10,8,20);
+  ctx.fillStyle=isPlayer?'#444':'#8a8a8a';
+  ctx.beginPath();
+  ctx.roundRect(-4,-6,11,12,3);
+  ctx.fill();
+  ctx.fillStyle=body;
+  ctx.fillRect(3,-2,16,4);
+  ctx.fillStyle='rgba(255,255,255,.18)';
+  ctx.fillRect(-8,-7,4,2);
+  ctx.restore();
 }
 function drawGame(){
   if(!game)return;const c=$('gameCanvas'),ctx=c.getContext('2d');ctx.clearRect(0,0,innerWidth,innerHeight);ctx.fillStyle='#efefe9';ctx.fillRect(0,0,innerWidth,innerHeight);
@@ -211,13 +239,19 @@ function drawGame(){
   drawTank(ctx,game.player,true);game.bots.forEach(b=>drawTank(ctx,b,false));
 }
 let last=performance.now();
+let simCarry=0;
 function loop(now){
   const dt=Math.min(40,now-last);last=now;
-  if(game&&game.started&&!game.counting){
+  simCarry+=dt;
+  const step=16.6667;
+  while(simCarry>=step){
+    simCarry-=step;
+    if(game&&game.started&&!game.counting){
     let th=(keys.w||keys.ArrowUp?1:0)-(keys.s||keys.ArrowDown?1:0),tr=(keys.d||keys.ArrowRight?1:0)-(keys.a||keys.ArrowLeft?1:0);
     moveTank(game.player,dt,th,tr*.075);
     if(training&&Math.abs(th)+Math.abs(tr)>0)recordSample(game.player,th,tr);
-    game.bots.forEach(b=>botThink(b,dt));
+      game.bots.forEach(b=>botThink(b,step));
+    }
   }
   drawGame();requestAnimationFrame(loop)
 }
