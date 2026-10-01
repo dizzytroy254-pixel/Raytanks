@@ -3,69 +3,98 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>RAYTANKS — Arena</title>
+<title>RAYTANKS // Arena</title>
 <style>
-:root{--bg:#050607;--ink:#090a0c;--white:#f4f5f2;--muted:#8a8e91;--cyan:#8ff5ff;--pink:#ff75b7;--lime:#b7ff68}
-*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;font-family:Inter,Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--white)}
-body{overflow:hidden}button{font:inherit}.hidden{display:none!important}
+:root{--bg:#050608;--panel:#0b0e12;--line:#ffffff16;--text:#f4f6f7;--muted:#8c949b;--cyan:#79f4ff;--pink:#ff5da8;--lime:#b8ff6a}
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;font-family:Inter,Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--text)}
+body{overflow:hidden}button,select,input{font:inherit}.hidden{display:none!important}
+button{cursor:pointer}
 .home{position:fixed;inset:0;overflow:auto;background:
-radial-gradient(circle at 20% 20%,#1a2830 0,#090b0d 34%,#050607 72%),
-linear-gradient(135deg,#0a0d0f,#050607)}
-.home:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.16;background-image:linear-gradient(#fff 1px,transparent 1px),linear-gradient(90deg,#fff 1px,transparent 1px);background-size:70px 70px;mask-image:linear-gradient(to bottom,#fff,transparent 70%)}
-.nav{height:76px;display:flex;align-items:center;justify-content:space-between;padding:0 30px;border-bottom:1px solid #fff1;background:#050607cc;backdrop-filter:blur(16px);position:sticky;top:0;z-index:5}
-.brand{font-weight:1000;letter-spacing:5px;font-size:20px}.brand i{font-style:normal;color:var(--cyan)}
-.navlinks{display:flex;gap:7px;flex-wrap:wrap}.navbtn,.ghost,.primary,.rival{border:1px solid #ffffff18;background:#0d1115;color:#fff;border-radius:12px;cursor:pointer;transition:transform .16s,border-color .16s,background .16s,box-shadow .16s}
-.navbtn{padding:9px 13px}.navbtn:hover,.ghost:hover,.rival:hover{border-color:#ffffff55;transform:translateY(-1px);background:#12171c}
-.hero{min-height:calc(100vh - 76px);display:grid;place-items:center;padding:34px 18px}.heroGrid{width:min(1120px,95vw);display:grid;grid-template-columns:1.35fr .85fr;gap:20px;align-items:stretch}
-.heroMain,.heroSide{border:1px solid #ffffff17;background:#080b0edb;box-shadow:0 30px 100px #0009;backdrop-filter:blur(18px);border-radius:28px}
-.heroMain{padding:52px}.eyebrow{font-size:11px;letter-spacing:5px;color:var(--cyan);font-weight:900}.hero h1{font-size:clamp(62px,10vw,126px);line-height:.82;letter-spacing:-5px;margin:18px 0}.hero h1 span{color:var(--pink)}.hero p{max-width:650px;color:#a8adb1;line-height:1.65;font-size:16px}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:28px}.primary{padding:14px 22px;border-color:#79dbe555;background:#dffcff;color:#071014;font-weight:1000}.primary:hover{transform:translateY(-2px);box-shadow:0 12px 45px #8ff5ff22}
-.heroSide{padding:24px}.sideTitle{font-size:12px;letter-spacing:3px;color:#9ba2a7;margin-bottom:15px}.rivals{display:grid;grid-template-columns:1fr 1fr;gap:9px}.rival{padding:15px;text-align:left}.rival.active{border-color:var(--cyan);box-shadow:0 0 30px #8ff5ff12}.rival strong{display:block;font-size:15px}.rival small{display:block;color:#777e84;margin-top:4px}.personality{margin-top:20px;border-top:1px solid #fff1;padding-top:18px}.select{width:100%;padding:12px;background:#0d1115;color:#fff;border:1px solid #ffffff1c;border-radius:11px}
-.page{position:fixed;inset:0;padding:32px;overflow:auto;background:radial-gradient(circle at 50% 0,#172126,#060708 65%)}.card{max-width:900px;margin:20px auto;padding:30px;border:1px solid #fff1;border-radius:24px;background:#090d10ec}.row{display:flex;justify-content:space-between;align-items:center;gap:20px;padding:16px 0;border-bottom:1px solid #fff0d}.muted{color:#858c91}.ghost{padding:10px 13px}
-#game{position:fixed;inset:0;background:#fff;cursor:crosshair}.hud{position:fixed;left:14px;right:14px;top:14px;display:flex;justify-content:space-between;z-index:4;pointer-events:none}.hudBox{background:#050607dd;color:#fff;border:1px solid #0003;border-radius:12px;padding:10px 13px;box-shadow:0 8px 30px #0003}.bar{width:190px;height:7px;background:#26292c;border-radius:8px;margin-top:7px;overflow:hidden}.fill{height:100%;background:var(--lime);width:100%}
-.gameBtns{position:fixed;right:14px;bottom:14px;z-index:5;display:flex;gap:8px}.gameBtns button{pointer-events:auto}
-#countdown{position:fixed;inset:0;display:grid;place-items:center;z-index:8;pointer-events:none;font-size:min(17vw,160px);font-weight:1000;color:#090a0c;text-shadow:0 5px 0 #fff;opacity:0}.countAnim{animation:pop .32s ease-out forwards}@keyframes pop{0%{opacity:0;transform:scale(1.35)}35%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(.94)}}
-#banner{position:fixed;top:92px;left:50%;transform:translateX(-50%);z-index:7;background:#050607dd;color:#fff;border:1px solid #fff2;border-radius:99px;padding:8px 13px;letter-spacing:3px;font-size:10px;font-weight:1000;opacity:0;transition:.2s}.show{opacity:1!important}
-#end{position:fixed;inset:0;display:grid;place-items:center;background:#0009;z-index:20}.endCard{width:min(470px,90vw);padding:30px;border:1px solid #fff2;border-radius:24px;background:#0a0d10f5;text-align:center}.endCard h2{font-size:40px;margin:0 0 8px}
-@media(max-width:800px){.heroGrid{grid-template-columns:1fr}.heroMain{padding:35px}.navlinks{display:none}}
+radial-gradient(circle at 12% 18%,#16343c 0,#091013 28%,transparent 52%),
+radial-gradient(circle at 86% 78%,#301225 0,#0b090d 25%,#050608 60%)}
+.home:after{content:"";position:fixed;inset:0;pointer-events:none;background:
+linear-gradient(90deg,transparent 49.8%,#fff1 50%,transparent 50.2%),
+linear-gradient(0deg,transparent 49.8%,#fff1 50%,transparent 50.2%);
+background-size:72px 72px;opacity:.12;mask-image:linear-gradient(#fff,transparent 78%)}
+.nav{height:72px;display:flex;align-items:center;justify-content:space-between;padding:0 28px;border-bottom:1px solid var(--line);background:#050608c9;backdrop-filter:blur(18px);position:sticky;top:0;z-index:10}
+.logo{font-weight:1000;letter-spacing:6px;font-size:20px}.logo b{color:var(--cyan)}.navlinks{display:flex;gap:7px}
+.btn,.primary,.rival{border:1px solid var(--line);border-radius:13px;background:#0c1115;color:#fff;transition:.16s}
+.btn:hover,.rival:hover{transform:translateY(-2px);border-color:#ffffff50;background:#12191e}
+.btn{padding:10px 13px}.primary{padding:14px 20px;background:#e9fdff;color:#071014;border-color:#8ff5ff66;font-weight:1000;box-shadow:0 10px 40px #79f4ff12}
+.primary:hover{transform:translateY(-2px);box-shadow:0 16px 55px #79f4ff22}
+.hero{min-height:calc(100vh - 72px);display:grid;place-items:center;padding:28px 18px 60px}
+.heroGrid{width:min(1180px,96vw);display:grid;grid-template-columns:1.4fr .8fr;gap:16px}
+.mainCard,.sideCard{border:1px solid var(--line);background:#080b0fdd;backdrop-filter:blur(20px);border-radius:30px;box-shadow:0 30px 120px #000b}
+.mainCard{padding:58px}.kicker{font-size:11px;font-weight:1000;letter-spacing:5px;color:var(--cyan)}
+h1{font-size:clamp(70px,11vw,145px);line-height:.78;letter-spacing:-8px;margin:22px 0 28px}
+h1 span{color:var(--pink)}.heroCopy{max-width:650px;color:#aeb5ba;line-height:1.7;font-size:16px}
+.actionRow{display:flex;gap:10px;flex-wrap:wrap;margin-top:30px}
+.sideCard{padding:25px}.sideHead{font-size:11px;letter-spacing:3px;color:#9da6ac;margin-bottom:12px}
+.rivals{display:grid;grid-template-columns:1fr 1fr;gap:9px}.rival{padding:17px;text-align:left}
+.rival.active{border-color:var(--cyan);box-shadow:0 0 32px #79f4ff16}.rival strong{display:block;font-size:15px}.rival small{display:block;color:#777f86;margin-top:5px}
+.personality{margin-top:20px;padding-top:18px;border-top:1px solid var(--line)}
+select{width:100%;padding:12px;border-radius:11px;background:#0c1115;color:#fff;border:1px solid var(--line)}
+.miniStats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:18px}.mini{padding:13px;border:1px solid var(--line);border-radius:12px;background:#0b1014}.mini b{display:block;font-size:18px}.mini span{font-size:10px;color:#7d858b;letter-spacing:2px}
+.page{position:fixed;inset:0;overflow:auto;padding:30px;background:radial-gradient(circle at 50% 0,#17232a,#060708 65%);z-index:3}
+.card{width:min(900px,94vw);margin:20px auto;padding:30px;border:1px solid var(--line);border-radius:24px;background:#090d11ed;box-shadow:0 30px 100px #0008}
+.card h2{font-size:38px;margin:16px 0 6px}.muted{color:var(--muted)}.row{display:flex;justify-content:space-between;gap:20px;padding:16px 0;border-bottom:1px solid #fff10}
+#gamePage{position:fixed;inset:0;background:#f6f6f2;z-index:20}
+#game{position:absolute;inset:0;width:100%;height:100%;background:#f6f6f2}
+.hud{position:absolute;left:14px;right:14px;top:14px;display:flex;justify-content:space-between;z-index:4;pointer-events:none}
+.hudBox{background:#07090cdd;color:#fff;border:1px solid #0002;border-radius:12px;padding:10px 13px;box-shadow:0 8px 30px #0004}
+.bar{width:190px;height:7px;background:#26292c;border-radius:8px;margin-top:7px;overflow:hidden}.fill{height:100%;background:var(--lime);width:100%}
+.gameBtns{position:absolute;right:14px;bottom:14px;z-index:5;display:flex;gap:8px}.gameBtns button{pointer-events:auto}
+#countdown{position:absolute;inset:0;display:grid;place-items:center;z-index:8;pointer-events:none;font-size:min(17vw,160px);font-weight:1000;color:#090a0c;text-shadow:0 5px #fff;opacity:0}
+.countAnim{animation:pop .32s ease-out forwards}@keyframes pop{0%{opacity:0;transform:scale(1.35)}35%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(.94)}}
+#banner{position:absolute;top:92px;left:50%;transform:translateX(-50%);z-index:7;background:#050607dd;color:#fff;border:1px solid #fff2;border-radius:99px;padding:8px 13px;letter-spacing:3px;font-size:10px;font-weight:1000;opacity:0;transition:.2s}.show{opacity:1!important}
+#end{position:fixed;inset:0;display:grid;place-items:center;background:#0009;z-index:40}.endCard{width:min(470px,90vw);padding:30px;border:1px solid #fff2;border-radius:24px;background:#0a0d10f5;text-align:center}.endCard h2{font-size:40px;margin:0 0 8px}
+@media(max-width:850px){.heroGrid{grid-template-columns:1fr}.mainCard{padding:38px}.navlinks{display:none}}
 </style>
 </head>
 <body>
 
 <section id="home" class="home">
 <nav class="nav">
-  <div class="brand">RAY<span>TANKS</span></div>
+  <div class="logo">RAY<b>TANKS</b></div>
   <div class="navlinks">
-    <button class="navbtn" data-page="play">PLAY</button>
-    <button class="navbtn" data-page="lab">TRAINING LAB</button>
-    <button class="navbtn" data-page="garage">GARAGE</button>
-    <button class="navbtn" data-page="stats">STATS</button>
-    <button class="navbtn" data-page="settings">SETTINGS</button>
+    <button class="btn" data-page="play">PLAY</button>
+    <button class="btn" data-page="lab">LAB</button>
+    <button class="btn" data-page="garage">GARAGE</button>
+    <button class="btn" data-page="stats">STATS</button>
+    <button class="btn" data-page="settings">SETTINGS</button>
   </div>
 </nav>
 <main class="hero">
 <div class="heroGrid">
-<section class="heroMain">
-<div class="eyebrow">RANDOM ARENAS // ADAPTIVE RIVALS</div>
+<section class="mainCard">
+<div class="kicker">PROCEDURAL ARENAS // RIVAL TRAINING // RAYTANKS</div>
 <h1>RAY<span>TANKS</span></h1>
-<p>A clean top-down arena built around the classic maze-tank feel: bright open ground, strong dark walls, compact corridors, tiny tanks and a fresh battlefield every round.</p>
-<div class="actions"><button id="enter" class="primary">ENTER THE ARENA →</button><button class="ghost" data-page="lab">OPEN TRAINING LAB</button></div>
+<p class="heroCopy">A fast top-down arcade arena with compact tanks, bright ground, heavy black maze walls and a brand-new layout every round. Pick your rival count, choose a personality for solo play, and jump straight in.</p>
+<div class="actionRow">
+<button id="enter" class="primary">PLAY NOW →</button>
+<button class="btn" data-page="lab">OPEN LAB</button>
+</div>
+<div class="miniStats">
+<div class="mini"><b id="homeRounds">0</b><span>ROUNDS</span></div>
+<div class="mini"><b id="homeWins">0</b><span>WINS</span></div>
+</div>
 </section>
-<aside class="heroSide">
-<div class="sideTitle">CHOOSE YOUR RIVALS</div>
+<aside class="sideCard">
+<div class="sideHead">RIVAL COUNT</div>
 <div class="rivals">
-<button class="rival active" data-count="1"><strong>1 RIVAL</strong><small>Pick a personality</small></button>
-<button class="rival" data-count="2"><strong>2 RIVALS</strong><small>Split pressure</small></button>
-<button class="rival" data-count="3"><strong>3 RIVALS</strong><small>Full arena</small></button>
-<button class="rival" data-count="4"><strong>4 RIVALS</strong><small>Maximum crowd</small></button>
+<button class="rival active" data-count="1"><strong>1 RIVAL</strong><small>Solo personality</small></button>
+<button class="rival" data-count="2"><strong>2 RIVALS</strong><small>Compact arena</small></button>
+<button class="rival" data-count="3"><strong>3 RIVALS</strong><small>Expanded arena</small></button>
+<button class="rival" data-count="4"><strong>4 RIVALS</strong><small>Largest arena</small></button>
 </div>
 <div id="singlePersonality" class="personality">
-<div class="sideTitle">SINGLE-RIVAL PERSONALITY</div>
-<select id="personality" class="select">
-<option value="hunter">HUNTER — direct pressure</option>
-<option value="evasive">GHOST — evasive movement</option>
-<option value="sentinel">SENTINEL — holds territory</option>
-<option value="flanker">FLANKER — circles and relocates</option>
-<option value="hybrid">HYBRID — blended behavior</option>
+<div class="sideHead">SOLO PERSONALITY</div>
+<select id="personality">
+<option value="hunter">HUNTER — pressure</option>
+<option value="evasive">GHOST — evasive</option>
+<option value="sentinel">SENTINEL — territory</option>
+<option value="flanker">FLANKER — circling</option>
+<option value="hybrid">HYBRID — blended</option>
 </select>
 </div>
 </aside>
@@ -74,161 +103,257 @@ linear-gradient(135deg,#0a0d0f,#050607)}
 </section>
 
 <section id="playPage" class="page hidden"><div class="card">
-<button class="ghost back" data-page="home">← HOME</button><h2>PLAY</h2><p class="muted">Arena size and maze density scale with the number of rivals.</p>
+<button class="btn" data-page="home">← HOME</button><h2>PLAY</h2>
+<p class="muted">More rivals = more space and a denser maze. Every new round gets a fresh layout.</p>
 <div class="rivals">
 <button class="rival" data-count="1">1 RIVAL</button><button class="rival" data-count="2">2 RIVALS</button><button class="rival" data-count="3">3 RIVALS</button><button class="rival" data-count="4">4 RIVALS</button>
-</div><br><button id="launch" class="primary">LAUNCH</button>
+</div><br><button id="launch" class="primary">LAUNCH ARENA</button>
 </div></section>
 
 <section id="labPage" class="page hidden"><div class="card">
-<button class="ghost back" data-page="home">← HOME</button><h2>TRAINING LAB</h2>
-<p class="muted">The lab can record your movement decisions locally so later passes can study your routes and timing.</p>
-<div class="row"><div><b>Training recorder</b><div class="muted">Save movement samples during a match.</div></div><input id="trainToggle" type="checkbox"></div>
-<div class="row"><b>Saved samples</b><b id="samples">0</b></div>
+<button class="btn" data-page="home">← HOME</button><h2>TRAINING LAB</h2>
+<p class="muted">Optional movement recording for future navigation training. Samples stay in this browser.</p>
+<div class="row"><b>Record movement</b><input id="trainToggle" type="checkbox"></div>
+<div class="row"><b>Stored movement samples</b><b id="samples">0</b></div>
 </div></section>
 
-<section id="garagePage" class="page hidden"><div class="card"><button class="ghost back" data-page="home">← HOME</button><h2>GARAGE</h2><div class="row"><b>Body</b><span>Classic compact tank</span></div><div class="row"><b>Scale</b><span>Corridor-friendly</span></div><div class="row"><b>Style</b><span>Clean arcade</span></div></div></section>
+<section id="garagePage" class="page hidden"><div class="card">
+<button class="btn" data-page="home">← HOME</button><h2>GARAGE</h2>
+<div class="row"><b>Tank body</b><span>Compact arcade chassis</span></div>
+<div class="row"><b>Scale</b><span>Corridor-friendly</span></div>
+<div class="row"><b>Arena style</b><span>White ground / black walls</span></div>
+</div></section>
 
-<section id="statsPage" class="page hidden"><div class="card"><button class="ghost back" data-page="home">← HOME</button><h2>STATS</h2><div class="row"><b>Rounds</b><b id="roundStat">0</b></div><div class="row"><b>Wins</b><b id="winStat">0</b></div><div class="row"><b>Rivals cleared</b><b id="killStat">0</b></div></div></section>
+<section id="statsPage" class="page hidden"><div class="card">
+<button class="btn" data-page="home">← HOME</button><h2>STATS</h2>
+<div class="row"><b>Rounds</b><b id="roundStat">0</b></div>
+<div class="row"><b>Wins</b><b id="winStat">0</b></div>
+</div></section>
 
-<section id="settingsPage" class="page hidden"><div class="card"><button class="ghost back" data-page="home">← HOME</button><h2>SETTINGS</h2><div class="row"><b>Fast inter-round countdown</b><input id="fast" type="checkbox" checked></div><div class="row"><b>Click sounds</b><input id="sound" type="checkbox" checked></div></div></section>
+<section id="settingsPage" class="page hidden"><div class="card">
+<button class="btn" data-page="home">← HOME</button><h2>SETTINGS</h2>
+<div class="row"><b>Fast inter-round countdown</b><input id="fast" type="checkbox" checked></div>
+<div class="row"><b>Click sounds</b><input id="sound" type="checkbox" checked></div>
+</div></section>
 
 <section id="gamePage" class="hidden">
 <canvas id="game"></canvas>
-<div class="hud"><div class="hudBox"><b>RAYTANKS</b><div>WASD / arrows to drive</div><div class="bar"><div id="hp" class="fill"></div></div></div><div class="hudBox" style="text-align:right"><b id="roundText">ROUND 1</b><div id="alive">1 RIVAL</div></div></div>
+<div class="hud">
+  <div class="hudBox"><b>RAYTANKS</b><div>WASD / ARROWS — MOVE</div><div class="bar"><div id="hp" class="fill"></div></div></div>
+  <div class="hudBox" style="text-align:right"><b id="roundText">ROUND 1</b><div id="alive">1 RIVAL</div></div>
+</div>
 <div id="banner">NEW MAZE</div><div id="countdown"></div>
-<div class="gameBtns"><button id="pause" class="ghost">PAUSE</button><button id="exit" class="ghost">EXIT</button></div>
+<div class="gameBtns"><button id="pause" class="btn">PAUSE</button><button id="exit" class="btn">EXIT</button></div>
 </section>
 
-<section id="end" class="hidden"><div class="endCard"><h2 id="endTitle">ROUND COMPLETE</h2><p id="endSub" class="muted"></p><button id="next" class="primary">NEXT ROUND</button> <button id="homeBtn" class="ghost">HOME</button></div></section>
+<section id="end" class="hidden"><div class="endCard">
+<h2 id="endTitle">ROUND COMPLETE</h2><p id="endSub" class="muted"></p>
+<button id="next" class="primary">NEXT ROUND</button> <button id="homeBtn" class="btn">HOME</button>
+</div></section>
 
 <script>
 (()=>{
 "use strict";
-const $=id=>document.getElementById(id), c=$("game"),x=c.getContext("2d");
+const $=id=>document.getElementById(id);
+const c=$("game"), ctx=c.getContext("2d");
 let W=0,H=0,rivals=1,personality="hunter",round=1,running=false,paused=false,transition=false,last=0;
-let player=null,bots=[],walls=[],mapKey="",usedMaps=new Set(),keys=new Set(),training=false,samples=[],mouse={x:0,y:0};
-const personalities={hunter:"#ff5252",evasive:"#b36cff",sentinel:"#ffb84d",flanker:"#51d8ff",hybrid:"#ff65b7"};
-const stats=JSON.parse(localStorage.getItem("raytanksStats")||'{"rounds":0,"wins":0,"kills":0}');
-function save(){localStorage.setItem("raytanksStats",JSON.stringify(stats))}
-function tone(freq=520,dur=.055,type="sine"){if(!$("sound").checked)return;try{const A=window.AudioContext||window.webkitAudioContext;const ac=tone.ac||(tone.ac=new A);const o=ac.createOscillator(),g=ac.createGain();o.type=type;o.frequency.value=freq;g.gain.setValueAtTime(.0001,ac.currentTime);g.gain.exponentialRampToValueAtTime(.06,ac.currentTime+.006);g.gain.exponentialRampToValueAtTime(.0001,ac.currentTime+dur);o.connect(g);g.connect(ac.destination);o.start();o.stop(ac.currentTime+dur+.01)}catch{}}
+let player=null,bots=[],walls=[],keys=new Set(),training=false,samples=[];
+const colors={hunter:"#ff5252",evasive:"#9b63ff",sentinel:"#ffb84d",flanker:"#39cfff",hybrid:"#ff5da8"};
+const stats=JSON.parse(localStorage.getItem("raytanksStats")||'{"rounds":0,"wins":0}');
+function save(){localStorage.setItem("raytanksStats",JSON.stringify(stats));updateStatsUI()}
+function updateStatsUI(){["roundStat","homeRounds"].forEach(id=>$(id).textContent=stats.rounds);["winStat","homeWins"].forEach(id=>$(id).textContent=stats.wins)}
+function tone(freq=520,dur=.05,type="sine"){
+  if(!$("sound")?.checked)return;
+  try{const A=window.AudioContext||window.webkitAudioContext,ac=tone.ac||(tone.ac=new A);
+  const o=ac.createOscillator(),g=ac.createGain();o.type=type;o.frequency.value=freq;
+  g.gain.setValueAtTime(.0001,ac.currentTime);g.gain.exponentialRampToValueAtTime(.055,ac.currentTime+.006);
+  g.gain.exponentialRampToValueAtTime(.0001,ac.currentTime+dur);o.connect(g);g.connect(ac.destination);
+  o.start();o.stop(ac.currentTime+dur+.01)}catch{}
+}
 document.addEventListener("click",e=>{if(e.target.closest("button,select"))tone(e.target.closest("button")?.classList.contains("primary")?680:440,.045,"triangle")});
-function page(name){document.querySelectorAll("body>section").forEach(s=>{if(!["gamePage","end"].includes(s.id))s.classList.add("hidden")});if(name==="home")$("home").classList.remove("hidden");else $(name+"Page").classList.remove("hidden")}
-document.querySelectorAll("[data-page]").forEach(b=>b.onclick=()=>page(b.dataset.page));
-document.querySelectorAll("[data-count]").forEach(b=>b.onclick=()=>{rivals=+b.dataset.count;document.querySelectorAll("[data-count]").forEach(z=>z.classList.toggle("active",+z.dataset.count===rivals));$("singlePersonality").classList.toggle("hidden",rivals!==1);tone(560)});
+
+/* FIXED ROUTER: gamePage is hidden whenever leaving the arena. */
+function page(name){
+  document.querySelectorAll("body>section").forEach(s=>s.classList.add("hidden"));
+  if(name==="home")$("home").classList.remove("hidden");
+  else if(name==="game")$("gamePage").classList.remove("hidden");
+  else $(name+"Page").classList.remove("hidden");
+}
+document.querySelectorAll("[data-page]").forEach(b=>b.onclick=()=>{running=false;page(b.dataset.page)});
+document.querySelectorAll("[data-count]").forEach(b=>b.onclick=()=>{
+  rivals=+b.dataset.count;
+  document.querySelectorAll("[data-count]").forEach(z=>z.classList.toggle("active",+z.dataset.count===rivals));
+  $("singlePersonality").classList.toggle("hidden",rivals!==1);
+  tone(560);
+});
 $("personality").onchange=e=>personality=e.target.value;
 $("enter").onclick=()=>start();$("launch").onclick=()=>start();
-$("exit").onclick=()=>home();$("homeBtn").onclick=()=>home();$("next").onclick=()=>{hideEnd();round++;newRound(true)};
+$("exit").onclick=()=>home();$("homeBtn").onclick=()=>home();
+$("next").onclick=()=>{hideEnd();round++;newRound(true)};
 $("pause").onclick=()=>{paused=!paused;$("pause").textContent=paused?"RESUME":"PAUSE";tone(380)};
-$("trainToggle").onchange=e=>training=e.target.checked;
+$("trainToggle").onchange=e=>{training=e.target.checked;localStorage.setItem("raytanksTraining",training?"1":"0")};
 training=localStorage.getItem("raytanksTraining")==="1";$("trainToggle").checked=training;
-$("trainToggle").addEventListener("change",e=>localStorage.setItem("raytanksTraining",e.target.checked?"1":"0"));
-function home(){running=false;page("home");hideEnd()}
+function home(){running=false;paused=false;transition=false;hideEnd();page("home");tone(300)}
 function hideEnd(){$("end").classList.add("hidden")}
 function resize(){W=c.width=innerWidth;H=c.height=innerHeight}
 addEventListener("resize",resize);resize();
-addEventListener("keydown",e=>keys.add(e.key.toLowerCase()));addEventListener("keyup",e=>keys.delete(e.key.toLowerCase()));
-function makeTank(x,y,color,type="player"){return{x,y,r:17,hp:100,max:100,spd:type==="player"?3.1:2.45,angle:0,color,type,vx:0,vy:0,path:[],pi:1,think:0,strafe:Math.random()<.5?-1:1,dead:false}}
+addEventListener("keydown",e=>keys.add(e.key.toLowerCase()));
+addEventListener("keyup",e=>keys.delete(e.key.toLowerCase()));
+
+function mulberry32(a){
+  return function(){let t=a+=0x6D2B79F5;t=Math.imul(t^t>>>15,t|1);t^=t+Math.imul(t^t>>>7,t|61);return((t^t>>>14)>>>0)/4294967296}
+}
+function makeTank(x,y,color,type="player"){
+  return{x,y,r:14,spd:type==="player"?3.0:2.55,angle:0,color,type,vx:0,vy:0,path:[],pi:1,think:0,strafe:Math.random()<.5?-1:1}
+}
 function cellMap(){
-  const sizes={1:[14,10],2:[16,11],3:[19,12],4:[22,14]},[cols,rows]=sizes[rivals];
-  const cell=Math.floor(Math.min((W-50)/cols,(H-100)/rows));const ox=(W-cols*cell)/2,oy=(H-rows*cell)/2+20;
+  const sizes={1:[14,10],2:[17,11],3:[20,13],4:[23,15]};
+  const [cols,rows]=sizes[rivals];
+  const cell=Math.max(34,Math.floor(Math.min((W-40)/cols,(H-92)/rows)));
+  const ox=(W-cols*cell)/2,oy=(H-rows*cell)/2+18;
+  const rng=mulberry32((Date.now()^((Math.random()*0xffffffff)>>>0))>>>0);
   const g=Array.from({length:rows},()=>Array(cols).fill(0));
-  // Start with open cells, then place sparse, non-symmetric wall segments.
-  const density={1:.20,2:.25,3:.29,4:.32}[rivals];
-  const rng=mulberry32((Date.now()^Math.floor(Math.random()*1e9))>>>0);
-  for(let y=0;y<rows;y++)for(let xx=0;xx<cols;xx++)if(rng()<density)g[y][xx]=1;
-  // clear a broad spawn-safe ring and ensure connectivity through carving.
-  const starts=[[1,1],[cols-2,1],[1,rows-2],[cols-2,rows-2],[Math.floor(cols/2),Math.floor(rows/2)]];
-  starts.slice(0,rivals+1).forEach(([sx,sy])=>{for(let yy=-1;yy<=1;yy++)for(let xx=-1;xx<=1;xx++)if(g[sy+yy]?.[sx+xx]!==undefined)g[sy+yy][sx+xx]=0});
-  // remove isolated cells so the battlefield never becomes a fake/empty maze.
-  for(let pass=0;pass<3;pass++)for(let y=1;y<rows-1;y++)for(let xx=1;xx<cols-1;xx++){
-    if(g[y][xx]===0)continue;let n=0;for(const [dx,dy] of [[1,0],[-1,0],[0,1],[0,-1]])n+=g[y+dy][xx+dx]===0; if(n>=3)g[y][xx]=0;
+
+  /* Build a maze-like grid, then carve guaranteed corridors. */
+  for(let y=1;y<rows-1;y++)for(let xx=1;xx<cols-1;xx++)g[y][xx]=rng()<({1:.27,2:.31,3:.34,4:.37}[rivals])?1:0;
+  const safe=[[1,1],[cols-2,1],[1,rows-2],[cols-2,rows-2],[Math.floor(cols/2),Math.floor(rows/2)]];
+  safe.slice(0,rivals+1).forEach(([sx,sy])=>{
+    for(let yy=-1;yy<=1;yy++)for(let xx=-1;xx<=1;xx++)if(g[sy+yy]?.[sx+xx]!==undefined)g[sy+yy][sx+xx]=0;
+  });
+  /* Make horizontal/vertical openings so the map cannot become sealed. */
+  for(let y=2;y<rows-2;y+=2)for(let xx=1;xx<cols-1;xx+=3)g[y][xx]=0;
+  for(let xx=2;xx<cols-2;xx+=4)for(let y=1;y<rows-1;y+=3)g[y][xx]=0;
+
+  const rects=[];
+  for(let y=0;y<rows;y++){
+    for(let xx=0;xx<cols;xx++)if(g[y][xx]){
+      let w=1;
+      while(xx+w<cols&&g[y][xx+w])w++;
+      rects.push({x:ox+xx*cell,y:oy+y*cell,w:w*cell,h:Math.max(8,Math.floor(cell*.13))});
+      for(let k=1;k<w;k++)g[y][xx+k]=0;
+    }
   }
-  const rects=[];for(let y=0;y<rows;y++)for(let xx=0;xx<cols;xx++)if(g[y][xx])rects.push({x:ox+xx*cell,y:oy+y*cell,w:cell+1,h:cell+1});
-  // merge adjacent cells into clean black wall bars.
-  const merged=[];const seen=new Set();
-  for(let y=0;y<rows;y++)for(let xx=0;xx<cols;xx++)if(g[y][xx]&&!seen.has(xx+","+y)){
-    let w=1;while(xx+w<cols&&g[y][xx+w]&&!seen.has((xx+w)+","+y))w++;
-    for(let k=0;k<w;k++)seen.add((xx+k)+","+y);
-    merged.push({x:ox+xx*cell,y:oy+y*cell,w:w*cell,h:Math.max(8,Math.floor(cell*.12))});
-  }
-  return {cols,rows,cell,ox,oy,g,rects:merged,signature:g.map(r=>r.join("")).join("|")};
+  return {cols,rows,cell,ox,oy,g,rects,signature:g.map(r=>r.join("")).join("|")};
 }
+let usedMaps=new Set();
 function generateUniqueMap(){
-  let m,tries=0;do{m=cellMap();tries++}while(usedMaps.has(m.signature)&&tries<100);
-  usedMaps.add(m.signature);mapKey=m.signature;walls=m.rects;return m;
+  let m,tries=0;
+  do{m=cellMap();tries++}while(usedMaps.has(m.signature)&&tries<500);
+  usedMaps.add(m.signature);walls=m.rects;return m;
 }
-function blocked(t,nx,ny){if(nx<t.r||nx>W-t.r||ny<t.r+25||ny>H-t.r)return true;return walls.some(q=>nx+t.r>q.x&&nx-t.r<q.x+q.w&&ny+t.r>q.y&&ny-t.r<q.y+q.h)}
-function move(t,dx,dy,s){let l=Math.hypot(dx,dy)||1;dx/=l;dy/=l;let nx=t.x+dx*t.spd*s,ny=t.y+dy*t.spd*s;if(!blocked(t,nx,t.y))t.x=nx;if(!blocked(t,t.x,ny))t.y=ny;t.vx=dx;t.vy=dy}
-function los(a,b){const n=Math.ceil(Math.hypot(a.x-b.x,a.y-b.y)/5);for(let i=1;i<n;i++){const q=i/n,px=a.x+(b.x-a.x)*q,py=a.y+(b.y-a.y)*q;if(walls.some(w=>px>w.x&&px<w.x+w.w&&py>w.y&&py<w.y+w.h))return false}return true}
-function path(t,target){
-  // lightweight grid search over the current wall layout.
-  const step=Math.max(34,Math.min(48,Math.floor(Math.min(W,H)/18))),cols=Math.ceil(W/step),rows=Math.ceil(H/step);
-  const node=o=>({x:Math.floor(o.x/step),y:Math.floor(o.y/step)}),s=node(t),g=node(target),K=n=>n.x+","+n.y;
-  const bad=n=>walls.some(w=>n.x*step+step/2>w.x-18&&n.x*step+step/2<w.x+w.w+18&&n.y*step+step/2>w.y-18&&n.y*step+step/2<w.y+w.h+18);
-  if(bad(s)||bad(g))return[];let q=[s],came=new Map(),dist=new Map([[K(s),0]]),guard=0;
-  while(q.length&&guard++<900){q.sort((a,b)=>(dist.get(K(a))+Math.abs(a.x-g.x)+Math.abs(a.y-g.y))-(dist.get(K(b))+Math.abs(b.x-g.x)+Math.abs(b.y-g.y)));let u=q.shift();if(u.x===g.x&&u.y===g.y){let out=[],z=u;while(z){out.push({x:z.x*step+step/2,y:z.y*step+step/2});z=came.get(K(z))}return out.reverse()}for(const [dx,dy] of [[1,0],[-1,0],[0,1],[0,-1]]){let n={x:u.x+dx,y:u.y+dy};if(n.x<0||n.y<0||n.x>=cols||n.y>=rows||bad(n))continue;let nk=K(n),nd=dist.get(K(u))+1;if(!dist.has(nk)||nd<dist.get(nk)){dist.set(nk,nd);came.set(nk,u);if(!q.some(z=>z.x===n.x&&z.y===n.y))q.push(n)}}}return[]
+function blocked(t,nx,ny){
+  if(nx<t.r+4||nx>W-t.r-4||ny<t.r+30||ny>H-t.r-4)return true;
+  return walls.some(q=>nx+t.r>q.x&&nx-t.r<q.x+q.w&&ny+t.r>q.y&&ny-t.r<q.y+q.h);
+}
+function move(t,dx,dy,s){
+  const len=Math.hypot(dx,dy)||1;dx/=len;dy/=len;
+  const nx=t.x+dx*t.spd*s,ny=t.y+dy*t.spd*s;
+  if(!blocked(t,nx,t.y))t.x=nx;
+  if(!blocked(t,t.x,ny))t.y=ny;
+  t.vx=dx;t.vy=dy;
 }
 function spawnPositions(m){
-  const spots=[];const tries=400;
-  for(let i=0;i<tries&&spots.length<rivals+1;i++){
-    const xx=m.ox+m.cell*(1+Math.floor(Math.random()*(m.cols-2)))+m.cell/2;
-    const yy=m.oy+m.cell*(1+Math.floor(Math.random()*(m.rows-2)))+m.cell/2;
-    const t={r:17};if(blocked(t,xx,yy))continue;
-    if(spots.every(p=>Math.hypot(p.x-xx,p.y-yy)>m.cell*3))spots.push({x:xx,y:yy});
+  const candidates=[];
+  for(let y=1;y<m.rows-1;y++)for(let xx=1;xx<m.cols-1;xx++){
+    const px=m.ox+xx*m.cell+m.cell/2,py=m.oy+y*m.cell+m.cell/2,t={r:14};
+    if(!blocked(t,px,py))candidates.push({x:px,y:py});
   }
-  return spots;
+  const out=[];
+  for(let i=0;i<500&&out.length<rivals+1;i++){
+    const p=candidates[Math.floor(Math.random()*candidates.length)];
+    if(p&&out.every(q=>Math.hypot(q.x-p.x,q.y-p.y)>m.cell*2.5))out.push(p);
+  }
+  return out;
 }
 function newRound(withCountdown){
   transition=withCountdown;
   const m=generateUniqueMap(),spots=spawnPositions(m);
-  player=makeTank(spots[0]?.x||W*.5,spots[0]?.y||H*.8,"#121212");
+  if(spots.length<rivals+1){ /* regenerate until enough safe spawn cells exist */
+    usedMaps.delete(m.signature);return newRound(withCountdown);
+  }
+  player=makeTank(spots[0].x,spots[0].y,"#111216","player");
   bots=[];
   const types=rivals===1?[personality]:["hunter","evasive","sentinel","hybrid"].slice(0,rivals);
-  for(let i=0;i<rivals;i++){const s=spots[i+1]||{x:100+i*120,y:100};bots.push(makeTank(s.x,s.y,personalities[types[i]],types[i]))}
-  $("roundText").textContent="ROUND "+round;$("alive").textContent=rivals+" RIVALS";$("hp").style.width="100%";
+  for(let i=0;i<rivals;i++)bots.push(makeTank(spots[i+1].x,spots[i+1].y,colors[types[i]],types[i]));
+  $("roundText").textContent="ROUND "+round;$("alive").textContent=rivals+" RIVAL"+(rivals>1?"S":"");
+  $("hp").style.width="100%";
   if(withCountdown)countdown();else transition=false;
 }
-function countdown(){const vals=["3","2","1","GO"],el=$("countdown"),ban=$("banner");ban.textContent="NEW MAZE";ban.classList.add("show");let i=0,delay=$("fast").checked?330:650;const step=()=>{el.textContent=vals[i++];el.className="countAnim";void el.offsetWidth;if(i<vals.length)setTimeout(step,delay);else setTimeout(()=>{ban.classList.remove("show");transition=false},delay)};step()}
-function start(){page("game");$("gamePage").classList.remove("hidden");running=true;paused=false;round=1;stats.rounds++;save();newRound(false);tone(700,.08)}
-function aiUpdate(b,s){
-  if(b.dead)return;b.think-=s*16.67;if(b.think<=0){b.think=100+Math.random()*130;b.path=path(b,player);b.pi=1}
-  let dx=0,dy=0;if(b.path.length&&b.pi<b.path.length){const p=b.path[b.pi];if(Math.hypot(p.x-b.x,p.y-b.y)<25)b.pi++;else{dx=p.x-b.x;dy=p.y-b.y}}else{dx=player.x-b.x;dy=player.y-b.y}
-  // Strong local wall repulsion prevents "AI sees the wall but keeps driving into it".
-  for(const w of walls){const cx=Math.max(w.x,Math.min(b.x,w.x+w.w)),cy=Math.max(w.y,Math.min(b.y,w.y+w.h)),rx=b.x-cx,ry=b.y-cy,dd=Math.hypot(rx,ry);if(dd>0&&dd<95){const f=(95-dd)/95;dx+=rx/dd*f*3;dy+=ry/dd*f*3}}
-  const a=Math.atan2(player.y-b.y,player.x-b.x),side=b.strafe;
-  if(b.type==="hunter"){if(Math.hypot(dx,dy)<80){dx-=Math.cos(a)*2;dy-=Math.sin(a)*2}}
-  if(b.type==="evasive"){dx+=Math.cos(a+Math.PI/2)*side*1.8;dy+=Math.sin(a+Math.PI/2)*side*1.8}
-  if(b.type==="sentinel"){if(los(b,player)){dx-=Math.cos(a)*1.3;dy-=Math.sin(a)*1.3}}
-  if(b.type==="flanker"){dx+=Math.cos(a+Math.PI/2)*side*2.2;dy+=Math.sin(a+Math.PI/2)*side*2.2}
-  if(b.type==="hybrid"){const swirl=Math.sin(performance.now()/480);dx+=Math.cos(a+Math.PI/2)*swirl*1.8;dy+=Math.sin(a+Math.PI/2)*swirl*1.8}
-  move(b,dx,dy,s);
-  b.angle=Math.atan2(player.y-b.y,player.x-b.x);
+function countdown(){
+  const vals=["3","2","1","GO"],el=$("countdown"),ban=$("banner");
+  ban.textContent="NEW MAZE";ban.classList.add("show");
+  let i=0,delay=$("fast").checked?260:520;
+  const step=()=>{el.textContent=vals[i++];el.className="countAnim";void el.offsetWidth;
+    if(i<vals.length)setTimeout(step,delay);
+    else setTimeout(()=>{ban.classList.remove("show");transition=false},delay)};
+  step();
 }
-function record(){if(!training||!player)return;samples.push({t:Date.now(),x:+(player.x/W).toFixed(3),y:+(player.y/H).toFixed(3),vx:+player.vx.toFixed(2),vy:+player.vy.toFixed(2)});if(samples.length>30){const old=JSON.parse(localStorage.getItem("raytanksSamples")||"[]");localStorage.setItem("raytanksSamples",JSON.stringify(old.concat(samples).slice(-6000)));samples=[];$("samples").textContent=old.length+samples.length}}
+function start(){
+  page("game");running=true;paused=false;round=1;stats.rounds++;save();
+  usedMaps.clear();newRound(false);tone(700,.08);
+}
+function aiUpdate(b,s){
+  if(b.think<=0){b.think=120+Math.random()*140;b.path=[]}
+  b.think-=s*16.67;
+  let dx=player.x-b.x,dy=player.y-b.y;
+  /* Simple wall-aware navigation: probe alternatives when forward motion is blocked. */
+  const a=Math.atan2(dy,dx),side=b.strafe;
+  if(b.type==="evasive"){dx+=Math.cos(a+Math.PI/2)*side*90;dy+=Math.sin(a+Math.PI/2)*side*90}
+  if(b.type==="flanker"){dx+=Math.cos(a+Math.PI/2)*side*130;dy+=Math.sin(a+Math.PI/2)*side*130}
+  if(b.type==="sentinel"){dx*=.55;dy*=.55}
+  if(b.type==="hybrid"){dx+=Math.cos(a+Math.PI/2)*Math.sin(performance.now()/500)*80;dy+=Math.sin(a+Math.PI/2)*Math.sin(performance.now()/500)*80}
+  const nx=b.x+(dx/(Math.hypot(dx,dy)||1))*b.spd*s;
+  const ny=b.y+(dy/(Math.hypot(dx,dy)||1))*b.spd*s;
+  if(blocked(b,nx,b.y)||blocked(b,b.x,ny)){
+    const turn=b.strafe>0?Math.PI/2:-Math.PI/2;
+    dx=Math.cos(a+turn)*100;dy=Math.sin(a+turn)*100;
+    b.strafe*=-1;
+  }
+  move(b,dx,dy,s);b.angle=Math.atan2(player.y-b.y,player.x-b.x);
+}
+function record(){
+  if(!training||!player)return;
+  samples.push({t:Date.now(),x:+(player.x/W).toFixed(3),y:+(player.y/H).toFixed(3),vx:+player.vx.toFixed(2),vy:+player.vy.toFixed(2)});
+  if(samples.length>=30){
+    const old=JSON.parse(localStorage.getItem("raytanksSamples")||"[]");
+    const all=old.concat(samples).slice(-6000);localStorage.setItem("raytanksSamples",JSON.stringify(all));
+    samples=[];$("samples").textContent=all.length;
+  }
+}
 function drawTank(t){
-  if(t.dead)return; x.save();x.translate(t.x,t.y);x.rotate(t.angle);
-  // compact, chunky top-down tank silhouette with tracks and a centered body.
-  x.fillStyle=t.color;x.strokeStyle="#000";x.lineWidth=3;
-  x.fillRect(-18,-15,36,30);x.strokeRect(-18,-15,36,30);
-  x.fillStyle="#fff";x.globalAlpha=.22;x.fillRect(-10,-10,20,20);x.globalAlpha=1;
-  x.fillStyle=t.color;x.fillRect(1,-5,29,10);x.strokeRect(1,-5,29,10);
-  x.restore();
+  ctx.save();ctx.translate(t.x,t.y);ctx.rotate(t.angle);
+  ctx.fillStyle="#08090b";ctx.fillRect(-17,-12,34,24);
+  ctx.fillStyle=t.color;ctx.fillRect(-13,-9,26,18);
+  ctx.fillStyle="#090a0c";ctx.fillRect(-5,-4,25,8);
+  ctx.fillStyle="#fff";ctx.globalAlpha=.28;ctx.fillRect(-8,-6,13,4);ctx.globalAlpha=1;
+  ctx.restore();
 }
 function draw(){
-  x.clearRect(0,0,W,H);x.fillStyle="#f5f5f2";x.fillRect(0,0,W,H);
-  // faint arena texture, keeping the classic white-field look.
-  x.strokeStyle="#00000009";x.lineWidth=1;for(let xx=0;xx<W;xx+=40){x.beginPath();x.moveTo(xx,0);x.lineTo(xx,H);x.stroke()}for(let yy=0;yy<H;yy+=40){x.beginPath();x.moveTo(0,yy);x.lineTo(W,yy);x.stroke()}
-  x.fillStyle="#090a0c";walls.forEach(w=>x.fillRect(w.x,w.y,w.w,w.h));
-  bots.forEach(drawTank);drawTank(player);
+  ctx.clearRect(0,0,W,H);ctx.fillStyle="#f6f6f2";ctx.fillRect(0,0,W,H);
+  ctx.fillStyle="#090a0c";
+  walls.forEach(w=>ctx.fillRect(w.x,w.y,w.w,w.h));
+  /* subtle wall edge */
+  ctx.strokeStyle="#000";ctx.lineWidth=1;walls.forEach(w=>ctx.strokeRect(w.x+.5,w.y+.5,w.w-1,w.h-1));
+  bots.forEach(drawTank);if(player)drawTank(player);
 }
-function finish(win){running=false;if(win)stats.wins++;save();$("endTitle").textContent=win?"ROUND CLEARED":"ROUND OVER";$("endSub").textContent=win?"The arena is clear. Fresh maze ready.":"You were boxed in."; $("end").classList.remove("hidden")}
-function update(dt){if(!running||paused||transition)return;const s=Math.min(2,dt/16.67);let dx=(keys.has("d")||keys.has("arrowright")?1:0)-(keys.has("a")||keys.has("arrowleft")?1:0),dy=(keys.has("s")||keys.has("arrowdown")?1:0)-(keys.has("w")||keys.has("arrowup")?1:0);move(player,dx,dy,s);bots.forEach(b=>aiUpdate(b,s));record();
-  // This build focuses on maze/navigation/visual parity. Combat hooks remain deliberately absent here.
-  const close=bots.filter(b=>Math.hypot(b.x-player.x,b.y-player.y)<35).length;
-  if(close===bots.length&&bots.length){finish(true)}
+function finish(win){
+  running=false;if(win)stats.wins++;save();
+  $("endTitle").textContent=win?"ROUND CLEARED":"ROUND OVER";
+  $("endSub").textContent=win?"All rival positions reached. Fresh maze ready.":"Arena stopped.";
+  $("end").classList.remove("hidden");
 }
-function loop(t){const dt=Math.min(40,t-last||16);last=t;update(dt);draw();requestAnimationFrame(loop)}requestAnimationFrame(loop);
+function update(dt){
+  if(!running||paused||transition||!player)return;
+  const s=Math.min(2,dt/16.67);
+  const dx=(keys.has("d")||keys.has("arrowright")?1:0)-(keys.has("a")||keys.has("arrowleft")?1:0);
+  const dy=(keys.has("s")||keys.has("arrowdown")?1:0)-(keys.has("w")||keys.has("arrowup")?1:0);
+  move(player,dx,dy,s);bots.forEach(b=>aiUpdate(b,s));record();
+  if(bots.every(b=>Math.hypot(b.x-player.x,b.y-player.y)<34))finish(true);
+}
+function loop(t){
+  const dt=Math.min(40,t-(last||t-16));last=t;update(dt);draw();requestAnimationFrame(loop)
+}
+updateStatsUI();requestAnimationFrame(loop);
 })();
 </script>
 </body>
