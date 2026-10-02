@@ -1,0 +1,28 @@
+{
+  "rewrites": [
+    {
+      "source": "/Game",
+      "destination": "/play.html"
+    },
+    {
+      "source": "/Game/",
+      "destination": "/play.html"
+    },
+    {
+      "source": "/Game/index.html",
+      "destination": "/play.html"
+    },
+    {
+      "source": "/game",
+      "destination": "/play.html"
+    },
+    {
+      "source": "/game/",
+      "destination": "/play.html"
+    },
+    {
+      "source": "/game/index.html",
+      "destination": "/play.html"
+    }
+  ]
+}
