@@ -1,270 +1,30 @@
-<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>RAYTANKS — Arena V1.1</title>
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>RAY TANKS — AI Arena</title>
 <style>
-:root{--ink:#111;--muted:#6c7075;--paper:#f3f3ef;--panel:#fff;--line:#d8d8d2}
-*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;font-family:Inter,Arial,sans-serif;background:var(--paper);color:var(--ink)}
-button{font:inherit}
-.page{display:none;width:100%;height:100%}.page.active{display:block}
-#home{overflow:auto}
-.home-wrap{min-height:100%;padding:28px 34px 34px;display:flex;flex-direction:column}
-.nav{display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid #111;padding-bottom:16px}
-.brand{font-weight:1000;letter-spacing:-.08em;font-size:28px}.brand span{font-weight:400}
-.navlinks{display:flex;gap:8px}.navlinks button,.ghost{border:1px solid #111;background:transparent;padding:9px 13px;cursor:pointer;font-weight:800}
-.navlinks button:hover,.ghost:hover{background:#111;color:#fff}
-.hero{display:grid;grid-template-columns:1.05fr .95fr;gap:30px;align-items:center;flex:1;max-width:1300px;width:100%;margin:auto}
-.kicker{font-size:12px;font-weight:900;letter-spacing:.2em;color:#666}.hero h1{font-size:clamp(70px,11vw,170px);line-height:.78;letter-spacing:-.1em;margin:18px 0 28px}.hero h1 span{font-weight:300}
-.hero p{max-width:520px;color:#555;font-size:17px;line-height:1.5}.hero-actions{display:flex;gap:10px;margin-top:25px;flex-wrap:wrap}
-.primary{border:2px solid #111;background:#111;color:#fff;padding:14px 21px;font-weight:950;cursor:pointer}.secondary{border:2px solid #111;background:#fff;padding:14px 21px;font-weight:950;cursor:pointer}
-.preview{background:#deded8;border:2px solid #111;min-height:430px;position:relative;overflow:hidden}
-.preview canvas{width:100%;height:100%;display:block}
-.hint{position:absolute;left:14px;bottom:12px;font-size:10px;font-weight:900;letter-spacing:.13em}
-#arena{background:#e9e9e4;position:relative}
-#gameCanvas{display:block;width:100%;height:100%;background:#efefe9}
-.hud{position:absolute;top:15px;left:15px;right:15px;display:flex;justify-content:space-between;pointer-events:none}
-.hudbox{background:rgba(255,255,255,.92);border:2px solid #111;padding:10px 13px;min-width:145px}.hudbox b{display:block;font-size:11px;letter-spacing:.1em}.hudbox strong{font-size:18px}
-.hudright{display:flex;gap:8px}.hud button{pointer-events:auto}
-.iconbtn{border:2px solid #111;background:#fff;padding:10px 12px;font-weight:900;cursor:pointer}
-.center-msg{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none}
-.count{font-size:clamp(60px,12vw,150px);font-weight:1000;letter-spacing:-.08em;text-shadow:5px 5px 0 #fff;display:none}
-.overlay{position:absolute;inset:0;background:rgba(243,243,239,.9);display:none;align-items:center;justify-content:center}.overlay.show{display:flex}
-.modal{background:#fff;border:2px solid #111;padding:28px;max-width:520px;width:calc(100% - 40px)}.modal h2{font-size:42px;letter-spacing:-.06em;margin:0 0 8px}.modal p{color:#666}
-.controls{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:20px 0}.key{border:1px solid #bbb;padding:9px;text-align:center;font-size:11px;font-weight:900}
-#training,#garage,#stats,#settings{padding:34px;overflow:auto}.subpage{max-width:1000px;margin:auto}.subhead{display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid #111;padding-bottom:15px}.subhead h2{font-size:55px;letter-spacing:-.07em;margin:0}.cardgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin-top:20px}.card{background:#fff;border:1px solid #bbb;padding:18px}.card h3{margin:0 0 7px}.muted{color:#777}.personality{display:flex;flex-wrap:wrap;gap:8px;margin-top:15px}.personality button{background:#fff;border:1px solid #aaa;padding:9px 12px;font-weight:800;cursor:pointer}.personality button.sel{background:#111;color:#fff;border-color:#111}
-@media(max-width:800px){.hero{grid-template-columns:1fr}.preview{min-height:300px}.navlinks{display:none}.hero h1{font-size:80px}}
-</style>
-</head>
-<body>
-
-<section id="home" class="page active">
-<div class="home-wrap">
-  <nav class="nav">
-    <div class="brand">RAY<span>TANKS</span></div>
-    <div class="navlinks">
-      <button onclick="showPage('home')">HOME</button><button onclick="startGame()">ARENA</button>
-      <button onclick="showPage('training')">TRAINING</button><button onclick="showPage('garage')">GARAGE</button>
-      <button onclick="showPage('stats')">STATS</button><button onclick="showPage('settings')">SETTINGS</button>
-    </div>
-  </nav>
-  <div class="hero">
-    <div>
-      <div class="kicker">PROCEDURAL ARENA / ROUND 01</div>
-      <h1>RAY<br><span>TANKS</span></h1>
-      <p>A clean original arena focused on tight tank steering, carved mazes, compact silhouettes and a fresh layout every round.</p>
-      <div class="hero-actions"><button class="primary" onclick="startGame()">ENTER ARENA →</button><button class="secondary" onclick="showPage('training')">TRAINING LAB</button></div>
-      <div style="margin-top:25px"><div class="kicker">SOLO RIVAL</div><div class="personality" id="homePersonality"></div></div>
-    </div>
-    <div class="preview"><canvas id="previewCanvas"></canvas><div class="hint">LIVE PROCEDURAL MAZE PREVIEW</div></div>
-  </div>
+*{box-sizing:border-box}html,body{margin:0;height:100%;overflow:hidden;background:#05060a;color:#fff;font-family:Inter,system-ui,Arial}canvas{display:block;width:100%;height:100%}
+#hud{position:absolute;inset:0;pointer-events:none}.top{position:absolute;left:18px;right:18px;top:16px;display:flex;justify-content:space-between}.brand{font-weight:1000;letter-spacing:.15em}.readout{display:flex;gap:8px}.chip{background:#0b0e16d9;border:1px solid #ffffff12;border-radius:12px;padding:9px 12px;color:#8e97aa;font-size:10px}.chip b{color:#fff;font-size:13px}
+#controls{position:absolute;bottom:16px;left:18px;color:#717b91;font-size:11px}.gear{pointer-events:auto;position:absolute;right:18px;bottom:16px;border:1px solid #ffffff15;background:#0d111bd9;color:#fff;border-radius:12px;padding:10px;cursor:pointer}
+#overlay{position:absolute;inset:0;display:grid;place-items:center;background:#03040a99}.panel{width:min(500px,calc(100% - 30px));background:#0c1019f5;border:1px solid #ffffff17;border-radius:22px;padding:25px;box-shadow:0 30px 100px #000b}.panel h1{font-size:34px;margin:0 0 5px;letter-spacing:.05em}.muted{color:#818ba0;font-size:12px;margin-bottom:18px}.btn{width:100%;padding:13px;border-radius:12px;background:#141a27;border:1px solid #ffffff12;color:#fff;font-weight:900;margin-top:8px;cursor:pointer}.primary{background:linear-gradient(135deg,#7558ff,#a25dff);border:0}.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.toggle{display:flex;justify-content:space-between;align-items:center}.on{color:#8f73ff}
+#pause{display:none}.small{font-size:11px;color:#697389}
+</style></head><body><canvas id="c"></canvas><div id="hud"><div class="top"><div class="brand">RAY TANKS</div><div class="readout"><div class="chip">TIME <b id="time">0.0</b></div><div class="chip">AI <b>3</b></div><div class="chip">FPS <b id="fps">--</b></div></div></div><div id="controls">WASD / ARROWS · drive · R restart · ESC pause</div><button class="gear" id="settingsBtn">⚙ SETTINGS</button></div>
+<div id="overlay"><div class="panel" id="homePanel"><h1>AI ARENA</h1><div class="muted">PHYSICS ONLINE · TRAINING MEMORY READY</div><button class="btn primary" id="play">START MATCH</button><div class="grid"><button class="btn" id="custom">CUSTOMIZE</button><button class="btn" id="stats">STATS</button></div><button class="btn" id="back">BACK TO RAY TANKS</button></div>
+<div class="panel" id="settingsPanel" style="display:none"><h1>SETTINGS</h1><div class="muted">MATCH OPTIONS</div><div class="grid"><button class="btn toggle" data-k="audio">AUDIO <b>ON</b></button><button class="btn toggle" data-k="music">MUSIC <b>ON</b></button><button class="btn toggle" data-k="shake">SCREEN SHAKE <b>ON</b></button><button class="btn toggle" data-k="training">AI TRAINING <b>ON</b></button><button class="btn toggle" data-k="skins">TANK SKINS <b>ON</b></button><button class="btn toggle" data-k="effects">FX <b>ON</b></button></div><button class="btn" id="closeSettings">DONE</button></div>
+<div class="panel" id="customPanel" style="display:none"><h1>CUSTOMIZE</h1><div class="muted">YOUR TANK</div><div class="grid"><button class="btn" data-color="#66d9ff">CYAN</button><button class="btn" data-color="#9d7cff">VIOLET</button><button class="btn" data-color="#7df29a">MINT</button><button class="btn" data-color="#ffcf68">GOLD</button></div><button class="btn" id="closeCustom">DONE</button></div>
+<div class="panel" id="statsPanel" style="display:none"><h1>STATS</h1><div class="muted" id="statsText"></div><button class="btn" id="closeStats">DONE</button></div>
 </div>
-</section>
-
-<section id="arena" class="page">
-<canvas id="gameCanvas"></canvas>
-<div class="hud"><div class="hudbox"><b>RAYTANKS / ARENA V1.1</b><strong id="roundLabel">ROUND 01</strong></div><div class="hudright"><div class="hudbox"><b>RIVALS</b><strong id="rivalLabel">1</strong></div><button class="iconbtn" onclick="leaveArena()">EXIT</button></div></div>
-<div class="center-msg"><div id="count" class="count"></div></div>
-<div id="endOverlay" class="overlay"><div class="modal"><div class="kicker">ROUND COMPLETE</div><h2 id="endTitle">CLEAR</h2><p id="endText"></p><button class="primary" onclick="nextRound()">NEW MAZE →</button> <button class="secondary" onclick="leaveArena()">HOME</button></div></div>
-</section>
-
-<section id="training" class="page"><div class="subpage"><div class="subhead"><h2>TRAINING</h2><button class="ghost" onclick="showPage('home')">HOME</button></div><div class="cardgrid"><div class="card"><h3>Movement Recorder</h3><p class="muted">Practice movement through the procedural maze. RAYTANKS stores normalized movement samples locally for future navigation-learning features.</p><button class="primary" onclick="startTraining()">START SESSION</button></div><div class="card"><h3>Stored Samples</h3><p id="sampleCount" class="muted">0 movement samples</p><button class="secondary" onclick="clearSamples()">CLEAR SAMPLES</button></div></div></div></section>
-<section id="garage" class="page"><div class="subpage"><div class="subhead"><h2>GARAGE</h2><button class="ghost" onclick="showPage('home')">HOME</button></div><div class="cardgrid"><div class="card"><h3>RAY-01</h3><p class="muted">Compact standard chassis.</p></div><div class="card"><h3>Future Slots</h3><p class="muted">Skins, effects and chassis variations can plug into this system without changing the maze core.</p></div></div></div></section>
-<section id="stats" class="page"><div class="subpage"><div class="subhead"><h2>STATS</h2><button class="ghost" onclick="showPage('home')">HOME</button></div><div class="cardgrid"><div class="card"><h3>Rounds</h3><p id="roundStat">0</p></div><div class="card"><h3>Mazes Generated</h3><p id="mazeStat">0</p></div><div class="card"><h3>Training Samples</h3><p id="statsSamples">0</p></div></div></div></section>
-<section id="settings" class="page"><div class="subpage"><div class="subhead"><h2>SETTINGS</h2><button class="ghost" onclick="showPage('home')">HOME</button></div><div class="cardgrid"><div class="card"><h3>Controls</h3><p class="muted">W / ↑ drive forward · S / ↓ reverse · A / ← rotate left · D / → rotate right</p></div><div class="card"><h3>Maze Rule</h3><p class="muted">Every round receives a new randomized maze signature. Recent signatures are remembered to avoid immediate repeats.</p></div></div></div></section>
-
+<script src="https://cdn.jsdelivr.net/npm/planck-js@1.4.2/dist/planck.min.js"></script>
 <script>
-const TAU=Math.PI*2;
-const $=id=>document.getElementById(id);
-const pages=[...document.querySelectorAll('.page')];
-const personalities=['Hunter','Ghost','Sentinel','Flanker','Hybrid'];
-let selectedPersonality='Hunter';
-let game=null, keys={}, training=false;
-
-function showPage(id){pages.forEach(p=>p.classList.toggle('active',p.id===id));if(id==='training')refreshCounts()}
-function esc(s){return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-function personalityUI(){
-  const box=$('homePersonality');box.innerHTML='';
-  personalities.forEach(p=>{const b=document.createElement('button');b.textContent=p;b.className=p===selectedPersonality?'sel':'';b.onclick=()=>{selectedPersonality=p;personalityUI()};box.appendChild(b)})
-}
-personalityUI();
-
-const preview=$('previewCanvas'),pctx=preview.getContext('2d');
-function drawPreview(){
-  const w=preview.clientWidth||500,h=preview.clientHeight||430,d=devicePixelRatio||1;
-  preview.width=w*d;preview.height=h*d;pctx.setTransform(d,0,0,d,0,0);pctx.clearRect(0,0,w,h);
-  pctx.fillStyle='#e7e7e1';pctx.fillRect(0,0,w,h);
-  const cols=13,rows=9, m=8, cw=(w-m*2)/cols,ch=(h-m*2)/rows;
-  for(let x=0;x<cols;x++)for(let y=0;y<rows;y++){if((x*17+y*31)%5<2){pctx.fillStyle='#111';pctx.fillRect(m+x*cw,m+y*ch,cw+2,Math.max(5,ch*.13))}}
-  pctx.strokeStyle='#111';pctx.lineWidth=6;pctx.strokeRect(m,m,w-m*2,h-m*2);
-  for(const [x,y,a] of [[2,2,.2],[8,5,2.1],[10,7,4.1]]){pctx.save();pctx.translate(m+x*cw+cw/2,m+y*ch+ch/2);pctx.rotate(a);pctx.fillStyle='#222';pctx.fillRect(-12,-8,24,16);pctx.fillStyle='#555';pctx.fillRect(0,-3,17,6);pctx.restore()}
-}
-addEventListener('resize',drawPreview);drawPreview();
-
-function mulberry32(a){return function(){let t=a+=0x6D2B79F5;t=Math.imul(t^t>>>15,t|1);t^=t+Math.imul(t^t>>>7,t|61);return((t^t>>>14)>>>0)/4294967296}}
-function hashMaze(g){return g.flat().join('')}
-
-function makeMaze(rivals){
-  const sizes={1:[15,11],2:[19,13],3:[23,15],4:[27,17]};
-  const [cw,ch]=sizes[Math.max(1,Math.min(4,rivals))];
-  const seed=(Date.now() ^ Math.floor(Math.random()*0xffffffff))>>>0,rand=mulberry32(seed);
-  const g=Array.from({length:ch},()=>Array(cw).fill(1));
-  const stack=[[1,1]];g[1][1]=0;
-  while(stack.length){
-    const [x,y]=stack[stack.length-1];
-    const dirs=[[2,0],[-2,0],[0,2],[0,-2]];
-    for(let i=dirs.length-1;i>0;i--){const j=Math.floor(rand()*(i+1));[dirs[i],dirs[j]]=[dirs[j],dirs[i]]}
-    let carved=false;
-    for(const [dx,dy] of dirs){const nx=x+dx,ny=y+dy;if(nx>0&&nx<cw-1&&ny>0&&ny<ch-1&&g[ny][nx]===1){g[y+dy/2][x+dx/2]=0;g[ny][nx]=0;stack.push([nx,ny]);carved=true;break}}
-    if(!carved)stack.pop();
-  }
-  // A few deterministic openings keep long runs interesting while preserving connectivity.
-  for(let i=0;i<Math.floor((cw*ch)/24);i++){
-    const x=1+2*Math.floor(rand()*((cw-2)/2)),y=1+2*Math.floor(rand()*((ch-2)/2));
-    const candidates=[[x+1,y],[x-1,y],[x,y+1],[x,y-1]].filter(([a,b])=>a>0&&a<cw-1&&b>0&&b<ch-1&&g[b][a]===1);
-    if(candidates.length){const [a,b]=candidates[Math.floor(rand()*candidates.length)];g[b][a]=0}
-  }
-  return {g,cw,ch,seed,signature:hashMaze(g)};
-}
-const recentKey='raytanks_maze_signatures_v1';
-function freshMaze(rivals){
-  let recent=JSON.parse(localStorage.getItem(recentKey)||'[]'),m;
-  for(let tries=0;tries<30;tries++){m=makeMaze(rivals);if(!recent.includes(m.signature))break}
-  recent=[m.signature,...recent].slice(0,100);localStorage.setItem(recentKey,JSON.stringify(recent));return m;
-}
-function reachableCells(m){
-  const out=[],q=[[1,1]],seen=new Set(['1,1']);
-  while(q.length){const [x,y]=q.shift();out.push([x,y]);for(const [dx,dy] of [[1,0],[-1,0],[0,1],[0,-1]]){const nx=x+dx,ny=y+dy,k=nx+','+ny;if(nx>=0&&nx<m.cw&&ny>=0&&ny<m.ch&&m.g[ny][nx]===0&&!seen.has(k)){seen.add(k);q.push([nx,ny])}}}
-  return out;
-}
-function makeSpawns(m,n){
-  const cells=reachableCells(m), chosen=[];
-  for(let i=0;i<n+1;i++){
-    let best=null,score=-1;
-    for(let tries=0;tries<150;tries++){const c=cells[Math.floor(Math.random()*cells.length)];if(chosen.some(p=>Math.hypot(p[0]-c[0],p[1]-c[1])<Math.max(4,Math.min(m.cw,m.ch)/3)))continue;let s=chosen.length?Math.min(...chosen.map(p=>Math.hypot(p[0]-c[0],p[1]-c[1]))):999; if(s>score){score=s;best=c}}
-    if(best)chosen.push(best);
-  }
-  return chosen;
-}
-
-function startGame(rivals=1){
-  game={rivals,round:1,rounds:0,mazes:0,movedSamples:0,last:performance.now(),counting:false,started:false};
-  showPage('arena');$('rivalLabel').textContent=rivals;newRound(false);
-}
-function newRound(countdown){
-  const m=freshMaze(game.rivals);game.maze=m;game.mazes++;game.rounds++;game.started=false;
-  const cvs=$('gameCanvas');resizeCanvas();
-  const sp=makeSpawns(m,game.rivals),tankR=13;
-  const scale=Math.min(cvs.width/(m.cw+2),cvs.height/(m.ch+2));
-  game.scale=Math.max(30,Math.floor(scale));game.ox=(cvs.width-m.cw*game.scale)/2;game.oy=(cvs.height-m.ch*game.scale)/2;
-  const pos=c=>({x:game.ox+(c[0]+.5)*game.scale,y:game.oy+(c[1]+.5)*game.scale});
-  const pp=pos(sp[0]||[1,1]);
-  game.player={x:pp.x,y:pp.y,a:0,r:tankR,spd:0};
-  game.bots=[];
-  for(let i=1;i<sp.length;i++){const q=pos(sp[i]);game.bots.push({x:q.x,y:q.y,a:Math.random()*TAU,r:tankR,spd:0,phase:Math.random()*10,personality:personalities[(i-1)%personalities.length]})}
-  $('roundLabel').textContent='ROUND '+String(game.round).padStart(2,'0');$('endOverlay').classList.remove('show');
-  if(countdown)runCountdown();else{$('count').style.display='none';game.started=true}
-}
-function runCountdown(){game.counting=true;const c=$('count');c.style.display='block';let n=3;c.textContent=n;const t=setInterval(()=>{n--;if(n<=0){clearInterval(t);c.style.display='none';game.counting=false;game.started=true}else c.textContent=n},650)}
-function resizeCanvas(){const c=$('gameCanvas'),d=devicePixelRatio||1;c.width=innerWidth*d;c.height=innerHeight*d;c.style.width=innerWidth+'px';c.style.height=innerHeight+'px';c.getContext('2d').setTransform(d,0,0,d,0,0)}
-addEventListener('resize',()=>{if(game&&document.getElementById('arena').classList.contains('active'))resizeCanvas()});
-
-function blockedCircle(x,y,r){
-  const m=game.maze,s=game.scale,ox=game.ox,oy=game.oy;
-  const minX=Math.floor((x-r-ox)/s),maxX=Math.floor((x+r-ox)/s),minY=Math.floor((y-r-oy)/s),maxY=Math.floor((y+r-oy)/s);
-  for(let gy=minY;gy<=maxY;gy++)for(let gx=minX;gx<=maxX;gx++){
-    if(gx<0||gy<0||gx>=m.cw||gy>=m.ch||m.g[gy][gx]===1){
-      const rx=ox+gx*s,ry=oy+gy*s,nx=Math.max(rx,Math.min(x,rx+s)),ny=Math.max(ry,Math.min(y,ry+s));
-      if((x-nx)**2+(y-ny)**2<r*r)return true;
-    }
-  }return false;
-}
-function moveTank(t,dt,throttle,turn){
-  // RAYTANKS 1.1 steering: immediate drive, independent rotation, no floaty acceleration.
-  const frame=dt/16.6667;
-  const TURN=0.064;
-  const FORWARD=2.55;
-  const REVERSE=1.92;
-  t.a += turn * TURN * frame;
-  const speed = throttle > 0 ? FORWARD : throttle < 0 ? -REVERSE : 0;
-  const nx=t.x + Math.cos(t.a)*speed*frame;
-  const ny=t.y + Math.sin(t.a)*speed*frame;
-  // Axis-separated collision gives the characteristic tight wall sliding.
-  if(!blockedCircle(nx,t.y,t.r)) t.x=nx;
-  if(!blockedCircle(t.x,ny,t.r)) t.y=ny;
-}
-function botThink(b,dt){
-  const dx=game.player.x-b.x,dy=game.player.y-b.y,desired=Math.atan2(dy,dx);
-  let diff=Math.atan2(Math.sin(desired-b.a),Math.cos(desired-b.a)),turn=Math.max(-1,Math.min(1,diff*2.2));
-  let throttle=1;
-  if(blockedCircle(b.x+Math.cos(b.a)*game.scale*.7,b.y+Math.sin(b.a)*game.scale*.7,b.r+2))turn=diff>=0?1:-1;
-  if(b.personality==='Ghost')turn*=1.35;
-  if(b.personality==='Sentinel')throttle=.65;
-  if(b.personality==='Flanker')turn*=.75;
-  if(b.personality==='Hybrid')turn*=1.15;
-  moveTank(b,dt,throttle,turn*.055);
-}
-function drawTank(ctx,t,isPlayer){
-  ctx.save();
-  ctx.translate(t.x,t.y);
-  ctx.rotate(t.a);
-  const body=isPlayer?'#111':'#555';
-  const body2=isPlayer?'#2b2b2b':'#777';
-  // Compact, original toy-tank silhouette: rounded chassis + two side runners + short turret.
-  ctx.lineJoin='round';
-  ctx.fillStyle=body;
-  ctx.beginPath();
-  ctx.roundRect(-13,-9,26,18,4);
-  ctx.fill();
-  ctx.fillStyle=body2;
-  ctx.fillRect(-11,-10,8,20);
-  ctx.fillRect(3,-10,8,20);
-  ctx.fillStyle=isPlayer?'#444':'#8a8a8a';
-  ctx.beginPath();
-  ctx.roundRect(-4,-6,11,12,3);
-  ctx.fill();
-  ctx.fillStyle=body;
-  ctx.fillRect(3,-2,16,4);
-  ctx.fillStyle='rgba(255,255,255,.18)';
-  ctx.fillRect(-8,-7,4,2);
-  ctx.restore();
-}
-function drawGame(){
-  if(!game)return;const c=$('gameCanvas'),ctx=c.getContext('2d');ctx.clearRect(0,0,innerWidth,innerHeight);ctx.fillStyle='#efefe9';ctx.fillRect(0,0,innerWidth,innerHeight);
-  const m=game.maze,s=game.scale;
-  ctx.fillStyle='#111';
-  for(let y=0;y<m.ch;y++)for(let x=0;x<m.cw;x++)if(m.g[y][x])ctx.fillRect(game.ox+x*s,game.oy+y*s,s+1,s+1);
-  ctx.strokeStyle='#050505';ctx.lineWidth=3;ctx.strokeRect(game.ox,game.oy,m.cw*s,m.ch*s);
-  drawTank(ctx,game.player,true);game.bots.forEach(b=>drawTank(ctx,b,false));
-}
-let last=performance.now();
-let simCarry=0;
-function loop(now){
-  const dt=Math.min(40,now-last);last=now;
-  simCarry+=dt;
-  const step=16.6667;
-  while(simCarry>=step){
-    simCarry-=step;
-    if(game&&game.started&&!game.counting){
-    let th=(keys.w||keys.ArrowUp?1:0)-(keys.s||keys.ArrowDown?1:0),tr=(keys.d||keys.ArrowRight?1:0)-(keys.a||keys.ArrowLeft?1:0);
-    moveTank(game.player,dt,th,tr*.075);
-    if(training&&Math.abs(th)+Math.abs(tr)>0)recordSample(game.player,th,tr);
-      game.bots.forEach(b=>botThink(b,step));
-    }
-  }
-  drawGame();requestAnimationFrame(loop)
-}
-requestAnimationFrame(loop);
-
-addEventListener('keydown',e=>{keys[e.key]=true;if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight',' '].includes(e.key))e.preventDefault()});
-addEventListener('keyup',e=>keys[e.key]=false);
-function leaveArena(){if(game){game=null}showPage('home');refreshCounts()}
-function nextRound(){if(!game)return;game.round++;newRound(true)}
-function startTraining(){training=true;startGame(1)}
-function recordSample(t,th,tr){const a={x:+((t.x-game.ox)/(game.maze.cw*game.scale)).toFixed(4),y:+((t.y-game.oy)/(game.maze.ch*game.scale)).toFixed(4),th,tr,time:Date.now()};const arr=JSON.parse(localStorage.getItem('raytanks_training_v1')||'[]');arr.push(a);localStorage.setItem('raytanks_training_v1',JSON.stringify(arr.slice(-5000)));game.movedSamples++}
-function clearSamples(){localStorage.removeItem('raytanks_training_v1');refreshCounts()}
-function refreshCounts(){const n=JSON.parse(localStorage.getItem('raytanks_training_v1')||'[]').length;$('sampleCount').textContent=n+' movement samples';$('statsSamples').textContent=n;$('roundStat').textContent=game?game.rounds:0;$('mazeStat').textContent=game?game.mazes:0}
-</script>
-</body>
-</html>
+(()=>{const P=planck,V=P.Vec2,c=document.getElementById('c'),x=c.getContext('2d');let world,ps=[],run=false,last=0,acc=0,fps=60,start=0,color='#66d9ff',opts={audio:true,music:true,shake:true,training:true,skins:true,effects:true},stats=JSON.parse(localStorage.getItem('raytanks_stats')||'{"rounds":0,"wins":0,"survival":0}');
+function size(){c.width=innerWidth*devicePixelRatio;c.height=innerHeight*devicePixelRatio}addEventListener('resize',size);size();
+let keys=new Set;onkeydown=e=>{keys.add(e.key.toLowerCase());if(e.key==='Escape')show('homePanel');if(e.key.toLowerCase()==='r'&&run)startGame()};onkeyup=e=>keys.delete(e.key.toLowerCase());
+function wall(a,b,w,h){let q=world.createBody({position:V(a,b)});q.createFixture(P.Box(w/2,h/2),{friction:.8,restitution:.45})}
+function tank(a,b,ang,col,ai){let q=world.createDynamicBody({position:V(a,b),angle:ang});q.createFixture(P.Box(1.05,.72),{density:1.4,friction:.72,restitution:.25});q.setLinearDamping(.8);q.setAngularDamping(3.5);q.setUserData({col,ai});return q}
+function startGame(){world=new P.World(V(0,0));wall(20,-.3,40,.6);wall(20,24.3,40,.6);wall(-.3,12,.6,24);wall(40.3,12,.6,24);ps=[{b:tank(5,5,0,color,0)},{b:tank(35,5,3.1,'#ff668b',1)},{b:tank(35,19,-3.1,'#ffd166',1)},{b:tank(5,19,.2,'#7df29a',1)}];run=true;start=performance.now();document.getElementById('overlay').style.display='none';last=performance.now();loop(last)}
+function step(){ps.forEach((p,i)=>{let q=p.b,a=q.getAngle(),th=0,st=0;if(!p.ai){if(keys.has('w')||keys.has('arrowup'))th=1;if(keys.has('s')||keys.has('arrowdown'))th=-.65;if(keys.has('a')||keys.has('arrowleft'))st=-1;if(keys.has('d')||keys.has('arrowright'))st=1}else{let pos=q.getPosition(),t=Math.atan2(12-pos.y,20-pos.x),d=Math.atan2(Math.sin(t-a),Math.cos(t-a));st=Math.max(-1,Math.min(1,d*2));th=Math.abs(d)<2?1:.2}q.applyForceToCenter(V(Math.cos(a)*th*48,Math.sin(a)*th*48),true);q.applyTorque(st*18,true)});world.step(1/60,8,3)}
+function draw(){let s=Math.min(innerWidth/40,innerHeight/24),ox=(innerWidth-40*s)/2,oy=(innerHeight-24*s)/2;x.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);x.clearRect(0,0,innerWidth,innerHeight);x.fillStyle='#060810';x.fillRect(0,0,innerWidth,innerHeight);x.save();x.translate(ox,oy);x.scale(s,s);x.fillStyle='#0a0e17';x.fillRect(0,0,40,24);x.strokeStyle='#1b2434';x.lineWidth=.06;for(let i=1;i<40;i++){x.beginPath();x.moveTo(i,0);x.lineTo(i,24);x.stroke()}for(let i=1;i<24;i++){x.beginPath();x.moveTo(0,i);x.lineTo(40,i);x.stroke()}x.strokeStyle='#46516a';x.lineWidth=.25;x.strokeRect(.35,.35,39.3,23.3);ps.forEach((p,i)=>{let q=p.b,pos=q.getPosition(),a=q.getAngle(),u=q.getUserData();x.save();x.translate(pos.x,pos.y);x.rotate(a);x.shadowBlur=14;x.shadowColor=u.col;x.fillStyle=u.col;x.beginPath();x.roundRect(-1.05,-.72,2.1,1.44,.2);x.fill();x.shadowBlur=0;x.fillStyle='#070910';x.fillRect(.1,-.23,1.2,.46);x.restore();if(i===0){x.fillStyle='#fff';x.font='700 .48px system-ui';x.textAlign='center';x.fillText('YOU',pos.x,pos.y-1.1)}});x.restore()}
+function loop(t){if(!run)return;let dt=Math.min(.1,(t-last)/1000);last=t;fps=fps*.9+(1/dt)*.1;acc+=dt;while(acc>=1/60){step();acc-=1/60}draw();time.textContent=((t-start)/1000).toFixed(1);document.getElementById('fps').textContent=Math.round(fps);requestAnimationFrame(loop)}
+function show(id){document.querySelectorAll('.panel').forEach(p=>p.style.display='none');document.getElementById(id).style.display='block';document.getElementById('overlay').style.display='grid'}
+play.onclick=startGame;back.onclick=()=>location.href='/';settingsBtn.onclick=()=>show('settingsPanel');closeSettings.onclick=()=>show('homePanel');custom.onclick=()=>show('customPanel');closeCustom.onclick=()=>show('homePanel');stats.onclick=()=>{let s=stats;statsText.textContent=`Rounds: ${s.rounds||0} · Wins: ${s.wins||0} · Survival: ${Math.round(s.survival||0)}s`;show('statsPanel')};closeStats.onclick=()=>show('homePanel');
+document.querySelectorAll('[data-k]').forEach(b=>b.onclick=()=>{let k=b.dataset.k;opts[k]=!opts[k];b.querySelector('b').textContent=opts[k]?'ON':'OFF';b.querySelector('b').className=opts[k]?'on':''});
+document.querySelectorAll('[data-color]').forEach(b=>b.onclick=()=>color=b.dataset.color);
+})();
+</script></body></html>
