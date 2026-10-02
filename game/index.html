@@ -1,139 +1,42 @@
-<!doctype html>
-<html lang="en">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>RAY TANKS — Arena</title>
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>RAY TANKS — PLAY</title>
 <style>
-:root{--purple:#8b5cf6;--bg:#050609;--panel:#0a0d14;--line:#ffffff13;--muted:#7f899d}
-*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:var(--bg);color:#fff;font-family:Inter,system-ui,Arial}canvas{display:block;width:100%;height:100%}
-#hud{position:absolute;inset:0;pointer-events:none}.top{position:absolute;top:15px;left:18px;right:18px;display:flex;justify-content:space-between;align-items:center}.brand{font-weight:1000;letter-spacing:.14em;font-size:15px}.brand span{color:#a66bff}
-.readout{display:flex;gap:6px}.chip{background:#080b12db;border:1px solid var(--line);border-radius:10px;padding:8px 10px;color:#707a8f;font-size:9px;letter-spacing:.08em}.chip b{color:#fff;font-size:12px;margin-left:4px}
-#controls{position:absolute;bottom:17px;left:18px;color:#626c80;font-size:10px;letter-spacing:.04em}
-#settingsBtn{pointer-events:auto;position:absolute;bottom:15px;right:18px;background:#090c13db;border:1px solid var(--line);color:#b2bacb;border-radius:10px;padding:9px 12px;font-size:10px;font-weight:900;cursor:pointer}
-#overlay{position:absolute;inset:0;display:grid;place-items:center;background:#02030896;backdrop-filter:blur(3px)}
-.panel{width:min(510px,calc(100% - 28px));background:#0a0d14f5;border:1px solid #ffffff17;border-radius:22px;padding:27px;box-shadow:0 30px 100px #000b}
-.panel h1{font-size:32px;letter-spacing:.04em;margin:0}.panel .sub{font-size:10px;letter-spacing:.15em;color:#717b90;margin:6px 0 20px}
-.btn{width:100%;padding:13px 14px;margin-top:8px;border-radius:11px;border:1px solid #ffffff10;background:#10141d;color:#fff;font-weight:900;font-size:11px;cursor:pointer;transition:.15s}.btn:hover{background:#171c28;border-color:#ffffff20;transform:translateY(-1px)}
-.primary{border:0;background:linear-gradient(135deg,#7349ff,#a762ff);box-shadow:0 8px 28px #754cff28}.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.toggle{display:flex;justify-content:space-between;align-items:center}.toggle b{color:#9b74ff}.danger{color:#ff819c}
-.section{border-top:1px solid #ffffff0b;margin-top:18px;padding-top:16px}.swatches{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}.swatch{height:45px;border-radius:10px;border:2px solid transparent;cursor:pointer}.swatch.active{border-color:#fff}
-.hidden{display:none!important}.hint{font-size:10px;color:#626c80;line-height:1.6;margin-top:12px}
-</style></head>
-<body>
-<canvas id="c"></canvas>
-<div id="hud"><div class="top"><div class="brand">RAY <span>TANKS</span></div><div class="readout"><div class="chip">TIME <b id="time">0.0</b></div><div class="chip">AI <b>3</b></div><div class="chip">FPS <b id="fps">--</b></div></div></div><div id="controls">WASD / ARROWS · drive · R restart · ESC menu</div><button id="settingsBtn">⚙ SETTINGS</button></div>
-
-<div id="overlay">
-<div class="panel" id="mainPanel">
-<h1>AI ARENA</h1><div class="sub">RAY TANKS // MATCH READY</div>
-<button class="btn primary" id="playBtn">START MATCH</button>
-<div class="grid"><button class="btn" id="customBtn">CUSTOMIZE</button><button class="btn" id="statsBtn">STATS</button></div>
-<button class="btn" id="backBtn">← BACK TO HOME</button>
-</div>
-
-<div class="panel hidden" id="settingsPanel">
-<h1>SETTINGS</h1><div class="sub">MATCH OPTIONS</div>
-<div class="grid">
-<button class="btn toggle" data-option="audio">AUDIO <b>ON</b></button>
-<button class="btn toggle" data-option="music">MUSIC <b>ON</b></button>
-<button class="btn toggle" data-option="shake">SCREEN SHAKE <b>ON</b></button>
-<button class="btn toggle" data-option="training">AI TRAINING <b>ON</b></button>
-<button class="btn toggle" data-option="skins">TANK SKINS <b>ON</b></button>
-<button class="btn toggle" data-option="fx">ARENA FX <b>ON</b></button>
-</div><button class="btn" id="settingsDone">DONE</button>
-</div>
-
-<div class="panel hidden" id="customPanel">
-<h1>CUSTOMIZE</h1><div class="sub">YOUR TANK COLOR</div>
-<div class="swatches">
-<button class="swatch active" data-color="#66d9ff" style="background:#66d9ff"></button>
-<button class="swatch" data-color="#9d7cff" style="background:#9d7cff"></button>
-<button class="swatch" data-color="#7df29a" style="background:#7df29a"></button>
-<button class="swatch" data-color="#ffd166" style="background:#ffd166"></button>
-</div><div class="hint">Your selection is saved locally and used when the next match starts.</div>
-<button class="btn" id="customDone">DONE</button>
-</div>
-
-<div class="panel hidden" id="statsPanel">
-<h1>STATS</h1><div class="sub">LOCAL PROFILE</div><div class="grid">
-<button class="btn">ROUNDS <b id="sRounds">0</b></button><button class="btn">WINS <b id="sWins">0</b></button>
-<button class="btn">SURVIVAL <b id="sSurvival">0s</b></button><button class="btn">BEST <b id="sBest">—</b></button>
-</div><button class="btn" id="statsDone">DONE</button>
-</div>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/planck-js@1.4.2/dist/planck.min.js"></script>
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#05060a;color:#fff;font-family:Inter,system-ui,Arial}canvas{display:block;width:100%;height:100%}
+#hud{position:absolute;inset:0;pointer-events:none}.brand{position:absolute;top:17px;left:18px;font-weight:1000;letter-spacing:.14em;font-size:14px}.brand span{color:#a36bff}.stats{position:absolute;top:15px;right:18px;display:flex;gap:6px}.chip{background:#090c13e8;border:1px solid #ffffff12;border-radius:10px;padding:8px 10px;color:#7b8599;font-size:9px}.chip b{color:#fff;font-size:12px}.help{position:absolute;bottom:16px;left:18px;color:#5f697d;font-size:10px}.menuBtn{position:absolute;right:18px;bottom:14px;pointer-events:auto;background:#090c13e8;color:#fff;border:1px solid #ffffff14;border-radius:10px;padding:9px 12px;font-weight:900;cursor:pointer}
+#screen{position:absolute;inset:0;display:grid;place-items:center;background:#020308a8;backdrop-filter:blur(5px)}.panel{width:min(480px,calc(100% - 28px));background:#0b0e15;border:1px solid #ffffff16;border-radius:20px;padding:25px;box-shadow:0 30px 100px #000}.panel h1{margin:0;font-size:31px}.sub{color:#737d91;font-size:10px;letter-spacing:.14em;margin:6px 0 18px}.btn{width:100%;margin-top:8px;padding:13px;border-radius:11px;background:#11151e;color:#fff;border:1px solid #ffffff12;font-weight:900;cursor:pointer}.primary{border:0;background:linear-gradient(135deg,#7045ff,#a661ff)}.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.hidden{display:none!important}.toggle{display:flex;justify-content:space-between}.toggle b{color:#a16dff}.colors{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.color{height:44px;border-radius:10px;border:2px solid transparent;cursor:pointer}.color.active{border-color:#fff}
+</style></head><body><canvas id="game"></canvas>
+<div id="hud"><div class="brand">RAY <span>TANKS</span></div><div class="stats"><div class="chip">TIME <b id="time">0.0</b></div><div class="chip">FPS <b id="fps">60</b></div></div><div class="help">WASD / ARROWS · DRIVE · R RESTART · ESC MENU</div><button class="menuBtn" id="menu">MENU</button></div>
+<div id="screen"><div class="panel" id="main"><h1>AI ARENA</h1><div class="sub">MATCH READY</div><button class="btn primary" id="start">PLAY NOW</button><div class="grid"><button class="btn" id="custom">CUSTOMIZE</button><button class="btn" id="stats">STATS</button></div><button class="btn" id="home">← HOME</button></div>
+<div class="panel hidden" id="customPanel"><h1>CUSTOMIZE</h1><div class="sub">CHOOSE YOUR TANK</div><div class="colors"><button class="color active" data-c="#66d9ff" style="background:#66d9ff"></button><button class="color" data-c="#a77bff" style="background:#a77bff"></button><button class="color" data-c="#7df29a" style="background:#7df29a"></button><button class="color" data-c="#ffd166" style="background:#ffd166"></button></div><button class="btn" id="customDone">DONE</button></div>
+<div class="panel hidden" id="settingsPanel"><h1>SETTINGS</h1><div class="sub">OPTIONS</div><div class="grid"><button class="btn toggle" data-o="audio">AUDIO <b>ON</b></button><button class="btn toggle" data-o="fx">FX <b>ON</b></button><button class="btn toggle" data-o="training">AI TRAINING <b>ON</b></button><button class="btn toggle" data-o="shake">SCREEN SHAKE <b>ON</b></button></div><button class="btn" id="settingsDone">DONE</button></div>
+<div class="panel hidden" id="statsPanel"><h1>STATS</h1><div class="sub">LOCAL PROFILE</div><div class="grid"><button class="btn">ROUNDS <b id="sr">0</b></button><button class="btn">WINS <b id="sw">0</b></button><button class="btn">SURVIVAL <b id="ss">0s</b></button><button class="btn">BEST <b id="sb">—</b></button></div><button class="btn" id="statsDone">DONE</button></div></div>
 <script>
+(function(){
 'use strict';
-const PL=window.planck, Vec2=PL.Vec2;
-const canvas=document.getElementById('c'),ctx=canvas.getContext('2d');
-const overlay=document.getElementById('overlay');
-const panels={main:document.getElementById('mainPanel'),settings:document.getElementById('settingsPanel'),custom:document.getElementById('customPanel'),stats:document.getElementById('statsPanel')};
-const timeEl=document.getElementById('time'),fpsEl=document.getElementById('fps');
-let world=null,tanks=[],running=false,startTime=0,last=0,accumulator=0,fps=60,raf=0;
-let playerColor=localStorage.getItem('raytanks_color')||'#66d9ff';
-let options=Object.assign({audio:true,music:true,shake:true,training:true,skins:true,fx:true},JSON.parse(localStorage.getItem('raytanks_options')||'{}'));
-let statsData=readStats(),keys=new Set();
-
-function readStats(){try{return Object.assign({rounds:0,wins:0,survival:0,best:0},JSON.parse(localStorage.getItem('raytanks_stats')||'{}'))}catch(e){return{rounds:0,wins:0,survival:0,best:0}}}
-function saveStats(){localStorage.setItem('raytanks_stats',JSON.stringify(statsData))}
-function resize(){const d=Math.min(devicePixelRatio||1,2);canvas.width=innerWidth*d;canvas.height=innerHeight*d}addEventListener('resize',resize);resize();
-
-addEventListener('keydown',e=>{keys.add(e.key.toLowerCase());if(e.key==='Escape'){if(running){pauseToMenu()}else{showPanel('main')}}if(e.key.toLowerCase()==='r'&&running)startMatch()});
-addEventListener('keyup',e=>keys.delete(e.key.toLowerCase()));
-
-function showPanel(name){Object.values(panels).forEach(p=>p.classList.add('hidden'));panels[name].classList.remove('hidden');overlay.style.display='grid'}
-function wall(x,y,w,h){const b=world.createBody({position:Vec2(x,y)});b.createFixture(PL.Box(w/2,h/2),{friction:.8,restitution:.45})}
-function makeTank(x,y,a,color,ai){const b=world.createDynamicBody({position:Vec2(x,y),angle:a});b.createFixture(PL.Box(1.05,.72),{density:1.4,friction:.72,restitution:.25});b.setLinearDamping(.82);b.setAngularDamping(3.4);b.setUserData({color,ai});return b}
-
-function startMatch(){
-if(!PL){alert('Physics engine failed to load. Refresh the page and try again.');return}
-world=new PL.World(Vec2(0,0));
-wall(20,-.35,40,.7);wall(20,24.35,40,.7);wall(-.35,12,.7,24);wall(40.35,12,.7,24);
-tanks=[
-{body:makeTank(5,5,0,playerColor,false),ai:false},
-{body:makeTank(35,5,3.05,'#ff668b',true),ai:true},
-{body:makeTank(35,19,-3.05,'#ffd166',true),ai:true},
-{body:makeTank(5,19,.15,'#7df29a',true),ai:true}
-];
-running=true;startTime=performance.now();last=startTime;accumulator=0;overlay.style.display='none';cancelAnimationFrame(raf);raf=requestAnimationFrame(loop)
-}
-function pauseToMenu(){running=false;showPanel('main')}
-function drive(t,dt){
-const b=t.body,a=b.getAngle();let throttle=0,steer=0;
-if(!t.ai){if(keys.has('w')||keys.has('arrowup'))throttle+=1;if(keys.has('s')||keys.has('arrowdown'))throttle-=.65;if(keys.has('a')||keys.has('arrowleft'))steer-=1;if(keys.has('d')||keys.has('arrowright'))steer+=1}
-else{const p=b.getPosition(),target=Math.atan2(12-p.y,20-p.x),diff=Math.atan2(Math.sin(target-a),Math.cos(target-a));steer=Math.max(-1,Math.min(1,diff*2));throttle=Math.abs(diff)<2.2?1:.2}
-b.applyForceToCenter(Vec2(Math.cos(a)*throttle*48,Math.sin(a)*throttle*48),true);b.applyTorque(steer*18,true)
-}
-function physics(){tanks.forEach(t=>drive(t,1/60));world.step(1/60,8,3)}
-function draw(){
-const s=Math.min(innerWidth/40,innerHeight/24),ox=(innerWidth-40*s)/2,oy=(innerHeight-24*s)/2,d=Math.min(devicePixelRatio||1,2);
-ctx.setTransform(d,0,0,d,0,0);ctx.clearRect(0,0,innerWidth,innerHeight);ctx.fillStyle='#05070c';ctx.fillRect(0,0,innerWidth,innerHeight);
-ctx.save();ctx.translate(ox,oy);ctx.scale(s,s);ctx.fillStyle='#090d15';ctx.fillRect(0,0,40,24);
-ctx.strokeStyle='#172033';ctx.lineWidth=.055;for(let i=1;i<40;i++){ctx.beginPath();ctx.moveTo(i,0);ctx.lineTo(i,24);ctx.stroke()}for(let i=1;i<24;i++){ctx.beginPath();ctx.moveTo(0,i);ctx.lineTo(40,i);ctx.stroke()}
-ctx.strokeStyle='#414d67';ctx.lineWidth=.25;ctx.strokeRect(.35,.35,39.3,23.3);
-tanks.forEach((t,i)=>{const b=t.body,p=b.getPosition(),a=b.getAngle(),u=b.getUserData();ctx.save();ctx.translate(p.x,p.y);ctx.rotate(a);if(options.fx){ctx.shadowBlur=16;ctx.shadowColor=u.color}ctx.fillStyle=u.color;ctx.beginPath();ctx.roundRect(-1.05,-.72,2.1,1.44,.2);ctx.fill();ctx.shadowBlur=0;ctx.fillStyle='#070910';ctx.fillRect(.12,-.23,1.18,.46);ctx.restore();if(i===0){ctx.fillStyle='#fff';ctx.font='800 .46px system-ui';ctx.textAlign='center';ctx.fillText('YOU',p.x,p.y-1.12)}});ctx.restore()
-}
-function finishMatch(){
-running=false;const survived=(performance.now()-startTime)/1000;statsData.rounds++;statsData.survival+=survived;statsData.best=Math.max(statsData.best||0,survived);saveStats();updateStatsUI();showPanel('stats')
-}
-function updateStatsUI(){document.getElementById('sRounds').textContent=statsData.rounds;document.getElementById('sWins').textContent=statsData.wins;document.getElementById('sSurvival').textContent=Math.round(statsData.survival)+'s';document.getElementById('sBest').textContent=statsData.best?Math.round(statsData.best)+'s':'—'}
-function loop(now){
-if(!running)return;const dt=Math.min(.1,(now-last)/1000);last=now;fps=fps*.9+(1/Math.max(dt,.001))*.1;accumulator+=dt;while(accumulator>=1/60){physics();accumulator-=1/60}draw();timeEl.textContent=((now-startTime)/1000).toFixed(1);fpsEl.textContent=Math.round(fps);raf=requestAnimationFrame(loop)
-}
-
-document.getElementById('playBtn').addEventListener('click',startMatch);
-document.getElementById('backBtn').addEventListener('click',()=>location.href='/');
-document.getElementById('settingsBtn').addEventListener('click',()=>showPanel('settings'));
-document.getElementById('settingsDone').addEventListener('click',()=>{localStorage.setItem('raytanks_options',JSON.stringify(options));showPanel('main')});
-document.getElementById('customBtn').addEventListener('click',()=>showPanel('custom'));
-document.getElementById('customDone').addEventListener('click',()=>{localStorage.setItem('raytanks_color',playerColor);showPanel('main')});
-document.getElementById('statsBtn').addEventListener('click',()=>{updateStatsUI();showPanel('stats')});
-document.getElementById('statsDone').addEventListener('click',()=>showPanel('main'));
-
-document.querySelectorAll('[data-option]').forEach(btn=>btn.addEventListener('click',()=>{
-const key=btn.dataset.option;options[key]=!options[key];btn.querySelector('b').textContent=options[key]?'ON':'OFF'
-}));
-document.querySelectorAll('.swatch').forEach(btn=>btn.addEventListener('click',()=>{
-document.querySelectorAll('.swatch').forEach(x=>x.classList.remove('active'));btn.classList.add('active');playerColor=btn.dataset.color
-}));
-document.querySelectorAll('.swatch').forEach(btn=>{if(btn.dataset.color===playerColor)btn.classList.add('active')});
-updateStatsUI();
+var canvas=document.getElementById('game'),ctx=canvas.getContext('2d'),screen=document.getElementById('screen');
+var panels={main:document.getElementById('main'),custom:document.getElementById('customPanel'),settings:document.getElementById('settingsPanel'),stats:document.getElementById('statsPanel')};
+var running=false,keys={},t0=0,last=0,raf=0,color=localStorage.getItem('raytanks_color')||'#66d9ff';
+var opts={audio:true,fx:true,training:true,shake:true},me=null,ais=[];
+var data={rounds:0,wins:0,survival:0,best:0};try{data=Object.assign(data,JSON.parse(localStorage.getItem('raytanks_stats')||'{}'))}catch(e){}
+function resize(){canvas.width=innerWidth*devicePixelRatio;canvas.height=innerHeight*devicePixelRatio}addEventListener('resize',resize);resize();
+onkeydown=function(e){keys[e.key.toLowerCase()]=true;if(e.key==='Escape')show('main');if(e.key.toLowerCase()==='r'&&running)startGame()};
+onkeyup=function(e){keys[e.key.toLowerCase()]=false};
+function show(n){for(var k in panels)panels[k].classList.add('hidden');panels[n].classList.remove('hidden');screen.style.display='grid'}
+function hide(){screen.style.display='none'}
+function pos(x,y,c,a){return{x:x,y:y,c:c,a:a,vx:0,vy:0,spin:0}}
+function startGame(){me=pos(6,6,color,0);ais=[pos(34,6,'#ff668b',3.14),pos(34,18,'#ffd166',-2.7),pos(6,18,'#7df29a',-.3)];running=true;t0=performance.now();last=t0;hide();cancelAnimationFrame(raf);raf=requestAnimationFrame(loop)}
+function update(p,ai,dt){var throttle=0,turn=0;if(!ai){if(keys.w||keys.arrowup)throttle=1;if(keys.s||keys.arrowdown)throttle=-.6;if(keys.a||keys.arrowleft)turn=-1;if(keys.d||keys.arrowright)turn=1}else{var tx=20,ty=12,dx=tx-p.x,dy=ty-p.y,target=Math.atan2(dy,dx),diff=Math.atan2(Math.sin(target-p.a),Math.cos(target-p.a));turn=Math.max(-1,Math.min(1,diff*2));throttle=Math.abs(diff)<2?1:.2}
+p.vx+=Math.cos(p.a)*throttle*18*dt;p.vy+=Math.sin(p.a)*throttle*18*dt;p.a+=turn*3.3*dt;p.vx*=Math.pow(.82,dt*60);p.vy*=Math.pow(.82,dt*60);p.x+=p.vx*dt;p.y+=p.vy*dt;
+if(p.x<1)p.x=1;if(p.x>39)p.x=39;if(p.y<1)p.y=1;if(p.y>23)p.y=23}
+function draw(){var d=devicePixelRatio,s=Math.min(innerWidth/40,innerHeight/24),ox=(innerWidth-40*s)/2,oy=(innerHeight-24*s)/2;ctx.setTransform(d,0,0,d,0,0);ctx.clearRect(0,0,innerWidth,innerHeight);ctx.fillStyle='#05070c';ctx.fillRect(0,0,innerWidth,innerHeight);ctx.save();ctx.translate(ox,oy);ctx.scale(s,s);ctx.fillStyle='#090d15';ctx.fillRect(0,0,40,24);ctx.strokeStyle='#182033';ctx.lineWidth=.06;for(var i=1;i<40;i++){ctx.beginPath();ctx.moveTo(i,0);ctx.lineTo(i,24);ctx.stroke()}for(var j=1;j<24;j++){ctx.beginPath();ctx.moveTo(0,j);ctx.lineTo(40,j);ctx.stroke()}ctx.strokeStyle='#46516a';ctx.lineWidth=.25;ctx.strokeRect(.35,.35,39.3,23.3);[me].concat(ais).forEach(function(p,i){ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.a);ctx.shadowBlur=opts.fx?15:0;ctx.shadowColor=p.c;ctx.fillStyle=p.c;ctx.beginPath();ctx.roundRect(-1.05,-.72,2.1,1.44,.2);ctx.fill();ctx.shadowBlur=0;ctx.fillStyle='#080a10';ctx.fillRect(.1,-.23,1.15,.46);ctx.restore();if(i===0){ctx.fillStyle='#fff';ctx.font='800 .45px system-ui';ctx.textAlign='center';ctx.fillText('YOU',p.x,p.y-1.1)}});ctx.restore()}
+function loop(now){if(!running)return;var dt=Math.min(.033,(now-last)/1000);last=now;update(me,false,dt);ais.forEach(function(a){update(a,true,dt)});draw();document.getElementById('time').textContent=((now-t0)/1000).toFixed(1);raf=requestAnimationFrame(loop)}
+function menu(){running=false;show('main')}
+document.getElementById('start').onclick=startGame;document.getElementById('menu').onclick=menu;document.getElementById('home').onclick=function(){location.href='/'};
+document.getElementById('custom').onclick=function(){show('custom')};document.getElementById('customDone').onclick=function(){localStorage.setItem('raytanks_color',color);show('main')};
+document.getElementById('settingsDone').onclick=function(){localStorage.setItem('raytanks_options',JSON.stringify(opts));show('main')};
+document.getElementById('stats').onclick=function(){document.getElementById('sr').textContent=data.rounds;document.getElementById('sw').textContent=data.wins;document.getElementById('ss').textContent=Math.round(data.survival)+'s';document.getElementById('sb').textContent=data.best?Math.round(data.best)+'s':'—';show('stats')};
+document.getElementById('statsDone').onclick=function(){show('main')};
+document.getElementById('settingsBtn') && document.getElementById('settingsBtn').addEventListener('click',function(){show('settings')});
+document.querySelectorAll('[data-c]').forEach(function(b){b.onclick=function(){document.querySelectorAll('[data-c]').forEach(function(x){x.classList.remove('active')});b.classList.add('active');color=b.getAttribute('data-c')}});
+document.querySelectorAll('[data-o]').forEach(function(b){b.onclick=function(){var k=b.getAttribute('data-o');opts[k]=!opts[k];b.querySelector('b').textContent=opts[k]?'ON':'OFF'}});
+})();
 </script></body></html>
