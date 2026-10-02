@@ -170,6 +170,16 @@ function mkBullet(b){b.body=world.createBody({type:'dynamic',bullet:true,positio
 function stepWorld(){if(!BX||!world)return;world.step(1/60,8,3);
  for(const t of tanks)if(t.body){const p=t.body.getPosition();t.x=p.x*K;t.y=p.y*K;t.body.setLinearVelocity(V(0,0))}}
 document.querySelector('.hint').textContent+=BX?' · Physics: Box2D':' · Physics: basic (Box2D failed to load)';
+function drawTank(t){ctx.save();ctx.translate(t.x,t.y);ctx.rotate(t.a);if(!t.alive)ctx.globalAlpha=.25;const c=t.k.color,O='rgba(0,0,0,.55)';
+ ctx.shadowColor='rgba(0,0,0,.35)';ctx.shadowBlur=9;ctx.shadowOffsetY=3;
+ for(const y of[-15,6]){ctx.fillStyle='#2a2d33';ctx.beginPath();ctx.roundRect(-18,y,36,9,4);ctx.fill();ctx.shadowColor='transparent';ctx.strokeStyle=O;ctx.lineWidth=1.2;ctx.stroke()
+  ctx.strokeStyle='#5b616c';ctx.lineWidth=1.6;for(let x=-14;x<=14;x+=4.5){ctx.beginPath();ctx.moveTo(x,y+1.5);ctx.lineTo(x,y+7.5);ctx.stroke()}}
+ ctx.fillStyle='#31353c';ctx.beginPath();ctx.roundRect(5,-4,25,8,2);ctx.fill();ctx.strokeStyle=O;ctx.lineWidth=1.2;ctx.stroke();
+ ctx.fillStyle='#1c1f24';ctx.fillRect(26,-4.5,5,9);
+ ctx.fillStyle=c;ctx.beginPath();ctx.roundRect(-16,-10,32,20,7);ctx.fill();ctx.strokeStyle=O;ctx.lineWidth=1.6;ctx.stroke();
+ const g=ctx.createLinearGradient(0,-10,0,10);g.addColorStop(0,'rgba(255,255,255,.35)');g.addColorStop(.5,'rgba(255,255,255,0)');g.addColorStop(1,'rgba(0,0,0,.3)');ctx.fillStyle=g;ctx.fill();
+ ctx.fillStyle=c;ctx.beginPath();ctx.arc(-1,0,9.5,0,7);ctx.fill();ctx.stroke();ctx.fillStyle=g;ctx.fill();
+ ctx.fillStyle='rgba(255,255,255,.5)';ctx.beginPath();ctx.arc(-4,-3.5,3,0,7);ctx.fill();ctx.restore()}
 let PT=[];function burst(x,y,c){for(let i=0;i<28;i++){const a=Math.random()*6.28,v=1+Math.random()*4.5;PT.push({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v,l:42,c})}}
 function drawParts(){ctx.save();ctx.translate(P,P);PT=PT.filter(p=>p.l>0);for(const p of PT){p.x+=p.vx;p.y+=p.vy;p.vx*=.95;p.vy*=.95;p.l--;ctx.globalAlpha=p.l/42;ctx.fillStyle=p.c;ctx.beginPath();ctx.arc(p.x,p.y,3.2,0,7);ctx.fill()}ctx.restore()}
 newRound();(function loop(){update();draw();drawParts();requestAnimationFrame(loop)})();
