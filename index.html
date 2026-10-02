@@ -1,43 +1,53 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>RAY TANKS</title>
 <style>
-*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:#05060a;color:#f4f6ff;font-family:Inter,system-ui,Arial;overflow-x:hidden}
-body{background:radial-gradient(circle at 70% 10%,#252044 0,#0b0c14 35%,#05060a 75%)}
-body:before{content:"";position:fixed;inset:0;background:linear-gradient(115deg,transparent 0 48%,#8c68ff08 49% 50%,transparent 51%);pointer-events:none}
-nav{height:76px;padding:0 5vw;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #ffffff0d;backdrop-filter:blur(12px);position:relative;z-index:2}
-.logo{font-weight:1000;letter-spacing:.16em;font-size:20px}.logo i{font-style:normal;color:#8d6aff}
-nav a{color:#9ba3b8;text-decoration:none;margin-left:25px;font-size:13px;font-weight:700}nav a:hover{color:#fff}
-main{min-height:calc(100vh - 76px);display:grid;place-items:center;text-align:center;padding:60px 20px}
-.hero{max-width:1050px}.eyebrow{font-size:12px;letter-spacing:.28em;color:#8d6aff;font-weight:900;margin-bottom:18px}
-h1{font-size:clamp(62px,13vw,150px);line-height:.8;margin:0;font-weight:1000;letter-spacing:-.075em;text-shadow:0 0 50px #795cff25}
-.tag{font-size:clamp(17px,2.3vw,25px);color:#aab1c4;margin:28px auto 35px;max-width:700px}
-.actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
-button{font:inherit;font-weight:900;color:#fff;background:#121622;border:1px solid #ffffff18;border-radius:13px;padding:15px 27px;cursor:pointer;min-width:150px}
-button:hover{transform:translateY(-2px);background:#191e2d}
-.primary{border:0;background:linear-gradient(135deg,#7659ff,#a05cff);box-shadow:0 10px 40px #7659ff35}
-.features{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:38px}
-.pill{font-size:11px;color:#747e96;border:1px solid #ffffff0c;border-radius:99px;padding:8px 12px;background:#ffffff04}
-#panel{position:fixed;inset:0;background:#020308dd;display:none;place-items:center;z-index:5;padding:20px}
-.modal{width:min(520px,100%);background:#0c0f18;border:1px solid #ffffff16;border-radius:22px;padding:28px;box-shadow:0 30px 100px #000}
-.modal h2{margin:0 0 7px;font-size:28px}.modal p{color:#8d96aa;line-height:1.6}
-.close{float:right;min-width:auto;padding:8px 12px}
-.statgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.stat{background:#111520;border-radius:13px;padding:15px;text-align:left}.stat b{display:block;font-size:24px}.stat span{font-size:11px;color:#7f899e}
-footer{position:fixed;bottom:15px;left:0;right:0;text-align:center;color:#555e72;font-size:10px;letter-spacing:.1em}
-</style></head>
+:root{--bg:#050609;--panel:#0a0c12;--line:#ffffff12;--muted:#7f8799;--white:#f7f7fb;--purple:#8b5cf6;--purple2:#b36bff}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--bg);color:var(--white);font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Arial,sans-serif}
+body{overflow-x:hidden;background:radial-gradient(900px 600px at 50% 35%,#171327 0,#090a10 45%,#050609 78%)}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.45;background-image:linear-gradient(#ffffff03 1px,transparent 1px),linear-gradient(90deg,#ffffff03 1px,transparent 1px);background-size:72px 72px;mask-image:linear-gradient(to bottom,#000,transparent 75%)}
+nav{height:82px;display:flex;align-items:center;justify-content:space-between;padding:0 5vw;border-bottom:1px solid var(--line);position:relative;z-index:3;background:#0506099c;backdrop-filter:blur(18px)}
+.logo{font-size:20px;font-weight:1000;letter-spacing:.13em}.logo span{color:var(--purple2)}
+.links{display:flex;gap:28px}.links a{font-size:11px;letter-spacing:.16em;font-weight:900;color:#747d91;text-decoration:none}.links a:hover{color:#fff}
+main{min-height:calc(100vh - 82px);display:flex;align-items:center;justify-content:center;padding:70px 20px}
+.hero{text-align:center;width:min(1050px,100%);position:relative}
+.kicker{display:inline-flex;align-items:center;gap:9px;padding:8px 12px;border:1px solid #9c76ff25;background:#8b5cf60b;border-radius:999px;color:#a985ff;font-size:10px;font-weight:900;letter-spacing:.2em}
+.dot{width:6px;height:6px;border-radius:50%;background:#a978ff;box-shadow:0 0 14px #9c65ff}
+h1{margin:22px 0 0;font-size:clamp(72px,14vw,166px);line-height:.78;letter-spacing:-.08em;font-weight:1000;text-shadow:0 0 70px #8b5cf62c}
+h1 .ray{color:#fff}h1 .tanks{color:transparent;-webkit-text-stroke:1px #ffffffb8;text-shadow:0 0 50px #9a6aff24}
+.tag{max-width:650px;margin:28px auto 32px;color:#8992a6;font-size:15px;line-height:1.7}
+.actions{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
+button{font:inherit;color:#fff;font-weight:900;cursor:pointer;border-radius:12px;border:1px solid #ffffff12;background:#0d1017;padding:14px 24px;transition:.16s}
+button:hover{transform:translateY(-2px);border-color:#ffffff25;background:#151923}
+.primary{border:0;background:linear-gradient(135deg,#7448ff,#a461ff);box-shadow:0 10px 38px #794cff2c;min-width:175px}
+.pills{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:35px}.pill{font-size:9px;letter-spacing:.13em;color:#687186;border:1px solid #ffffff0b;border-radius:999px;padding:8px 11px;background:#ffffff03}
+footer{position:fixed;bottom:17px;left:0;right:0;text-align:center;color:#3f4656;font-size:9px;letter-spacing:.2em}
+.modalbg{display:none;position:fixed;inset:0;background:#000b;backdrop-filter:blur(12px);z-index:20;place-items:center;padding:18px}.modal{width:min(470px,100%);background:#0b0e15;border:1px solid #ffffff16;border-radius:20px;padding:24px;box-shadow:0 35px 120px #000}
+.modal h2{margin:0;font-size:24px}.modal p{color:#7f899c;font-size:12px}.close{float:right;padding:6px 10px;min-width:auto}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.stat{background:#10141d;border:1px solid #ffffff09;border-radius:13px;padding:14px}.stat b{font-size:23px;display:block}.stat small{color:#687186;font-size:9px;letter-spacing:.1em}
+</style>
+</head>
 <body>
-<nav><div class="logo">RAY <i>TANKS</i></div><div><a href="#features">FEATURES</a><a href="#" id="statsLink">STATS</a><a href="/game/">PLAY</a></div></nav>
+<nav><div class="logo">RAY <span>TANKS</span></div><div class="links"><a href="/game/">PLAY</a><a href="#about">ARENA</a><a href="#" id="statsOpen">STATS</a></div></nav>
 <main><section class="hero">
-<div class="eyebrow">RAY TANKS // AI ARENA</div>
-<h1>RAY<br>TANKS</h1>
-<div class="tag">A fast arcade arena built around physics, evasive AI, customization and pure game feel.</div>
-<div class="actions"><button class="primary" onclick="location.href='/game/'">PLAY NOW</button><button onclick="openStats()">STATS</button></div>
-<div class="features" id="features"><span class="pill">PHYSICS ARENA</span><span class="pill">AI OPPONENTS</span><span class="pill">CUSTOMIZATION</span><span class="pill">PROCEDURAL AUDIO</span><span class="pill">TRAINING MEMORY</span></div>
+<div class="kicker"><i class="dot"></i> AI ARENA · PHYSICS ONLINE</div>
+<h1><span class="ray">RAY</span><br><span class="tanks">TANKS</span></h1>
+<p class="tag">A fast arcade arena built around tight physics, evasive AI, customization and satisfying game feel.</p>
+<div class="actions"><button class="primary" id="playBtn">PLAY ARENA</button><button id="statsBtn">VIEW STATS</button></div>
+<div class="pills"><span class="pill">BOX2D PHYSICS</span><span class="pill">AI TRAINING</span><span class="pill">CUSTOMIZATION</span><span class="pill">GAME FEEL</span></div>
 </section></main>
 <footer>RAY TANKS · ORIGINAL ARCADE PROJECT</footer>
-<div id="panel"><div class="modal"><button class="close" onclick="closeStats()">×</button><h2>RAY TANKS STATS</h2><p>Your local arena progress.</p><div class="statgrid"><div class="stat"><b id="rounds">0</b><span>ROUNDS</span></div><div class="stat"><b id="wins">0</b><span>WINS</span></div><div class="stat"><b id="survival">0s</b><span>SURVIVAL TIME</span></div><div class="stat"><b id="best">—</b><span>BEST RUN</span></div></div></div></div>
+<div class="modalbg" id="modal"><div class="modal"><button class="close" id="close">×</button><h2>YOUR STATS</h2><p>Saved locally on this device.</p><div class="grid"><div class="stat"><b id="rounds">0</b><small>ROUNDS</small></div><div class="stat"><b id="wins">0</b><small>WINS</small></div><div class="stat"><b id="survival">0s</b><small>SURVIVAL</small></div><div class="stat"><b id="best">—</b><small>BEST RUN</small></div></div></div></div>
 <script>
-function get(){try{return JSON.parse(localStorage.getItem('raytanks_stats')||'{"rounds":0,"wins":0,"survival":0,"best":0}')}catch(e){return{rounds:0,wins:0,survival:0,best:0}}}
-function openStats(){let s=get();rounds.textContent=s.rounds||0;wins.textContent=s.wins||0;survival.textContent=Math.round(s.survival||0)+'s';best.textContent=s.best?Math.round(s.best)+'s':'—';panel.style.display='grid'}
-function closeStats(){panel.style.display='none'}statsLink.onclick=e=>{e.preventDefault();openStats()}
-</script></body></html>
+const modal=document.getElementById('modal');
+function readStats(){try{return JSON.parse(localStorage.getItem('raytanks_stats')||'{}')}catch(e){return{}}}
+function openStats(){const s=readStats();document.getElementById('rounds').textContent=s.rounds||0;document.getElementById('wins').textContent=s.wins||0;document.getElementById('survival').textContent=Math.round(s.survival||0)+'s';document.getElementById('best').textContent=s.best?Math.round(s.best)+'s':'—';modal.style.display='grid'}
+document.getElementById('playBtn').addEventListener('click',()=>location.href='/game/');
+document.getElementById('statsBtn').addEventListener('click',openStats);
+document.getElementById('statsOpen').addEventListener('click',e=>{e.preventDefault();openStats()});
+document.getElementById('close').addEventListener('click',()=>modal.style.display='none');
+modal.addEventListener('click',e=>{if(e.target===modal)modal.style.display='none'});
+</script>
+</body></html>
