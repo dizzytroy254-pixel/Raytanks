@@ -1,30 +1,139 @@
-<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>RAY TANKS — AI Arena</title>
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>RAY TANKS — Arena</title>
 <style>
-*{box-sizing:border-box}html,body{margin:0;height:100%;overflow:hidden;background:#05060a;color:#fff;font-family:Inter,system-ui,Arial}canvas{display:block;width:100%;height:100%}
-#hud{position:absolute;inset:0;pointer-events:none}.top{position:absolute;left:18px;right:18px;top:16px;display:flex;justify-content:space-between}.brand{font-weight:1000;letter-spacing:.15em}.readout{display:flex;gap:8px}.chip{background:#0b0e16d9;border:1px solid #ffffff12;border-radius:12px;padding:9px 12px;color:#8e97aa;font-size:10px}.chip b{color:#fff;font-size:13px}
-#controls{position:absolute;bottom:16px;left:18px;color:#717b91;font-size:11px}.gear{pointer-events:auto;position:absolute;right:18px;bottom:16px;border:1px solid #ffffff15;background:#0d111bd9;color:#fff;border-radius:12px;padding:10px;cursor:pointer}
-#overlay{position:absolute;inset:0;display:grid;place-items:center;background:#03040a99}.panel{width:min(500px,calc(100% - 30px));background:#0c1019f5;border:1px solid #ffffff17;border-radius:22px;padding:25px;box-shadow:0 30px 100px #000b}.panel h1{font-size:34px;margin:0 0 5px;letter-spacing:.05em}.muted{color:#818ba0;font-size:12px;margin-bottom:18px}.btn{width:100%;padding:13px;border-radius:12px;background:#141a27;border:1px solid #ffffff12;color:#fff;font-weight:900;margin-top:8px;cursor:pointer}.primary{background:linear-gradient(135deg,#7558ff,#a25dff);border:0}.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.toggle{display:flex;justify-content:space-between;align-items:center}.on{color:#8f73ff}
-#pause{display:none}.small{font-size:11px;color:#697389}
-</style></head><body><canvas id="c"></canvas><div id="hud"><div class="top"><div class="brand">RAY TANKS</div><div class="readout"><div class="chip">TIME <b id="time">0.0</b></div><div class="chip">AI <b>3</b></div><div class="chip">FPS <b id="fps">--</b></div></div></div><div id="controls">WASD / ARROWS · drive · R restart · ESC pause</div><button class="gear" id="settingsBtn">⚙ SETTINGS</button></div>
-<div id="overlay"><div class="panel" id="homePanel"><h1>AI ARENA</h1><div class="muted">PHYSICS ONLINE · TRAINING MEMORY READY</div><button class="btn primary" id="play">START MATCH</button><div class="grid"><button class="btn" id="custom">CUSTOMIZE</button><button class="btn" id="stats">STATS</button></div><button class="btn" id="back">BACK TO RAY TANKS</button></div>
-<div class="panel" id="settingsPanel" style="display:none"><h1>SETTINGS</h1><div class="muted">MATCH OPTIONS</div><div class="grid"><button class="btn toggle" data-k="audio">AUDIO <b>ON</b></button><button class="btn toggle" data-k="music">MUSIC <b>ON</b></button><button class="btn toggle" data-k="shake">SCREEN SHAKE <b>ON</b></button><button class="btn toggle" data-k="training">AI TRAINING <b>ON</b></button><button class="btn toggle" data-k="skins">TANK SKINS <b>ON</b></button><button class="btn toggle" data-k="effects">FX <b>ON</b></button></div><button class="btn" id="closeSettings">DONE</button></div>
-<div class="panel" id="customPanel" style="display:none"><h1>CUSTOMIZE</h1><div class="muted">YOUR TANK</div><div class="grid"><button class="btn" data-color="#66d9ff">CYAN</button><button class="btn" data-color="#9d7cff">VIOLET</button><button class="btn" data-color="#7df29a">MINT</button><button class="btn" data-color="#ffcf68">GOLD</button></div><button class="btn" id="closeCustom">DONE</button></div>
-<div class="panel" id="statsPanel" style="display:none"><h1>STATS</h1><div class="muted" id="statsText"></div><button class="btn" id="closeStats">DONE</button></div>
+:root{--purple:#8b5cf6;--bg:#050609;--panel:#0a0d14;--line:#ffffff13;--muted:#7f899d}
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:var(--bg);color:#fff;font-family:Inter,system-ui,Arial}canvas{display:block;width:100%;height:100%}
+#hud{position:absolute;inset:0;pointer-events:none}.top{position:absolute;top:15px;left:18px;right:18px;display:flex;justify-content:space-between;align-items:center}.brand{font-weight:1000;letter-spacing:.14em;font-size:15px}.brand span{color:#a66bff}
+.readout{display:flex;gap:6px}.chip{background:#080b12db;border:1px solid var(--line);border-radius:10px;padding:8px 10px;color:#707a8f;font-size:9px;letter-spacing:.08em}.chip b{color:#fff;font-size:12px;margin-left:4px}
+#controls{position:absolute;bottom:17px;left:18px;color:#626c80;font-size:10px;letter-spacing:.04em}
+#settingsBtn{pointer-events:auto;position:absolute;bottom:15px;right:18px;background:#090c13db;border:1px solid var(--line);color:#b2bacb;border-radius:10px;padding:9px 12px;font-size:10px;font-weight:900;cursor:pointer}
+#overlay{position:absolute;inset:0;display:grid;place-items:center;background:#02030896;backdrop-filter:blur(3px)}
+.panel{width:min(510px,calc(100% - 28px));background:#0a0d14f5;border:1px solid #ffffff17;border-radius:22px;padding:27px;box-shadow:0 30px 100px #000b}
+.panel h1{font-size:32px;letter-spacing:.04em;margin:0}.panel .sub{font-size:10px;letter-spacing:.15em;color:#717b90;margin:6px 0 20px}
+.btn{width:100%;padding:13px 14px;margin-top:8px;border-radius:11px;border:1px solid #ffffff10;background:#10141d;color:#fff;font-weight:900;font-size:11px;cursor:pointer;transition:.15s}.btn:hover{background:#171c28;border-color:#ffffff20;transform:translateY(-1px)}
+.primary{border:0;background:linear-gradient(135deg,#7349ff,#a762ff);box-shadow:0 8px 28px #754cff28}.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.toggle{display:flex;justify-content:space-between;align-items:center}.toggle b{color:#9b74ff}.danger{color:#ff819c}
+.section{border-top:1px solid #ffffff0b;margin-top:18px;padding-top:16px}.swatches{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}.swatch{height:45px;border-radius:10px;border:2px solid transparent;cursor:pointer}.swatch.active{border-color:#fff}
+.hidden{display:none!important}.hint{font-size:10px;color:#626c80;line-height:1.6;margin-top:12px}
+</style></head>
+<body>
+<canvas id="c"></canvas>
+<div id="hud"><div class="top"><div class="brand">RAY <span>TANKS</span></div><div class="readout"><div class="chip">TIME <b id="time">0.0</b></div><div class="chip">AI <b>3</b></div><div class="chip">FPS <b id="fps">--</b></div></div></div><div id="controls">WASD / ARROWS · drive · R restart · ESC menu</div><button id="settingsBtn">⚙ SETTINGS</button></div>
+
+<div id="overlay">
+<div class="panel" id="mainPanel">
+<h1>AI ARENA</h1><div class="sub">RAY TANKS // MATCH READY</div>
+<button class="btn primary" id="playBtn">START MATCH</button>
+<div class="grid"><button class="btn" id="customBtn">CUSTOMIZE</button><button class="btn" id="statsBtn">STATS</button></div>
+<button class="btn" id="backBtn">← BACK TO HOME</button>
 </div>
+
+<div class="panel hidden" id="settingsPanel">
+<h1>SETTINGS</h1><div class="sub">MATCH OPTIONS</div>
+<div class="grid">
+<button class="btn toggle" data-option="audio">AUDIO <b>ON</b></button>
+<button class="btn toggle" data-option="music">MUSIC <b>ON</b></button>
+<button class="btn toggle" data-option="shake">SCREEN SHAKE <b>ON</b></button>
+<button class="btn toggle" data-option="training">AI TRAINING <b>ON</b></button>
+<button class="btn toggle" data-option="skins">TANK SKINS <b>ON</b></button>
+<button class="btn toggle" data-option="fx">ARENA FX <b>ON</b></button>
+</div><button class="btn" id="settingsDone">DONE</button>
+</div>
+
+<div class="panel hidden" id="customPanel">
+<h1>CUSTOMIZE</h1><div class="sub">YOUR TANK COLOR</div>
+<div class="swatches">
+<button class="swatch active" data-color="#66d9ff" style="background:#66d9ff"></button>
+<button class="swatch" data-color="#9d7cff" style="background:#9d7cff"></button>
+<button class="swatch" data-color="#7df29a" style="background:#7df29a"></button>
+<button class="swatch" data-color="#ffd166" style="background:#ffd166"></button>
+</div><div class="hint">Your selection is saved locally and used when the next match starts.</div>
+<button class="btn" id="customDone">DONE</button>
+</div>
+
+<div class="panel hidden" id="statsPanel">
+<h1>STATS</h1><div class="sub">LOCAL PROFILE</div><div class="grid">
+<button class="btn">ROUNDS <b id="sRounds">0</b></button><button class="btn">WINS <b id="sWins">0</b></button>
+<button class="btn">SURVIVAL <b id="sSurvival">0s</b></button><button class="btn">BEST <b id="sBest">—</b></button>
+</div><button class="btn" id="statsDone">DONE</button>
+</div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/planck-js@1.4.2/dist/planck.min.js"></script>
 <script>
-(()=>{const P=planck,V=P.Vec2,c=document.getElementById('c'),x=c.getContext('2d');let world,ps=[],run=false,last=0,acc=0,fps=60,start=0,color='#66d9ff',opts={audio:true,music:true,shake:true,training:true,skins:true,effects:true},stats=JSON.parse(localStorage.getItem('raytanks_stats')||'{"rounds":0,"wins":0,"survival":0}');
-function size(){c.width=innerWidth*devicePixelRatio;c.height=innerHeight*devicePixelRatio}addEventListener('resize',size);size();
-let keys=new Set;onkeydown=e=>{keys.add(e.key.toLowerCase());if(e.key==='Escape')show('homePanel');if(e.key.toLowerCase()==='r'&&run)startGame()};onkeyup=e=>keys.delete(e.key.toLowerCase());
-function wall(a,b,w,h){let q=world.createBody({position:V(a,b)});q.createFixture(P.Box(w/2,h/2),{friction:.8,restitution:.45})}
-function tank(a,b,ang,col,ai){let q=world.createDynamicBody({position:V(a,b),angle:ang});q.createFixture(P.Box(1.05,.72),{density:1.4,friction:.72,restitution:.25});q.setLinearDamping(.8);q.setAngularDamping(3.5);q.setUserData({col,ai});return q}
-function startGame(){world=new P.World(V(0,0));wall(20,-.3,40,.6);wall(20,24.3,40,.6);wall(-.3,12,.6,24);wall(40.3,12,.6,24);ps=[{b:tank(5,5,0,color,0)},{b:tank(35,5,3.1,'#ff668b',1)},{b:tank(35,19,-3.1,'#ffd166',1)},{b:tank(5,19,.2,'#7df29a',1)}];run=true;start=performance.now();document.getElementById('overlay').style.display='none';last=performance.now();loop(last)}
-function step(){ps.forEach((p,i)=>{let q=p.b,a=q.getAngle(),th=0,st=0;if(!p.ai){if(keys.has('w')||keys.has('arrowup'))th=1;if(keys.has('s')||keys.has('arrowdown'))th=-.65;if(keys.has('a')||keys.has('arrowleft'))st=-1;if(keys.has('d')||keys.has('arrowright'))st=1}else{let pos=q.getPosition(),t=Math.atan2(12-pos.y,20-pos.x),d=Math.atan2(Math.sin(t-a),Math.cos(t-a));st=Math.max(-1,Math.min(1,d*2));th=Math.abs(d)<2?1:.2}q.applyForceToCenter(V(Math.cos(a)*th*48,Math.sin(a)*th*48),true);q.applyTorque(st*18,true)});world.step(1/60,8,3)}
-function draw(){let s=Math.min(innerWidth/40,innerHeight/24),ox=(innerWidth-40*s)/2,oy=(innerHeight-24*s)/2;x.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);x.clearRect(0,0,innerWidth,innerHeight);x.fillStyle='#060810';x.fillRect(0,0,innerWidth,innerHeight);x.save();x.translate(ox,oy);x.scale(s,s);x.fillStyle='#0a0e17';x.fillRect(0,0,40,24);x.strokeStyle='#1b2434';x.lineWidth=.06;for(let i=1;i<40;i++){x.beginPath();x.moveTo(i,0);x.lineTo(i,24);x.stroke()}for(let i=1;i<24;i++){x.beginPath();x.moveTo(0,i);x.lineTo(40,i);x.stroke()}x.strokeStyle='#46516a';x.lineWidth=.25;x.strokeRect(.35,.35,39.3,23.3);ps.forEach((p,i)=>{let q=p.b,pos=q.getPosition(),a=q.getAngle(),u=q.getUserData();x.save();x.translate(pos.x,pos.y);x.rotate(a);x.shadowBlur=14;x.shadowColor=u.col;x.fillStyle=u.col;x.beginPath();x.roundRect(-1.05,-.72,2.1,1.44,.2);x.fill();x.shadowBlur=0;x.fillStyle='#070910';x.fillRect(.1,-.23,1.2,.46);x.restore();if(i===0){x.fillStyle='#fff';x.font='700 .48px system-ui';x.textAlign='center';x.fillText('YOU',pos.x,pos.y-1.1)}});x.restore()}
-function loop(t){if(!run)return;let dt=Math.min(.1,(t-last)/1000);last=t;fps=fps*.9+(1/dt)*.1;acc+=dt;while(acc>=1/60){step();acc-=1/60}draw();time.textContent=((t-start)/1000).toFixed(1);document.getElementById('fps').textContent=Math.round(fps);requestAnimationFrame(loop)}
-function show(id){document.querySelectorAll('.panel').forEach(p=>p.style.display='none');document.getElementById(id).style.display='block';document.getElementById('overlay').style.display='grid'}
-play.onclick=startGame;back.onclick=()=>location.href='/';settingsBtn.onclick=()=>show('settingsPanel');closeSettings.onclick=()=>show('homePanel');custom.onclick=()=>show('customPanel');closeCustom.onclick=()=>show('homePanel');stats.onclick=()=>{let s=stats;statsText.textContent=`Rounds: ${s.rounds||0} · Wins: ${s.wins||0} · Survival: ${Math.round(s.survival||0)}s`;show('statsPanel')};closeStats.onclick=()=>show('homePanel');
-document.querySelectorAll('[data-k]').forEach(b=>b.onclick=()=>{let k=b.dataset.k;opts[k]=!opts[k];b.querySelector('b').textContent=opts[k]?'ON':'OFF';b.querySelector('b').className=opts[k]?'on':''});
-document.querySelectorAll('[data-color]').forEach(b=>b.onclick=()=>color=b.dataset.color);
-})();
+'use strict';
+const PL=window.planck, Vec2=PL.Vec2;
+const canvas=document.getElementById('c'),ctx=canvas.getContext('2d');
+const overlay=document.getElementById('overlay');
+const panels={main:document.getElementById('mainPanel'),settings:document.getElementById('settingsPanel'),custom:document.getElementById('customPanel'),stats:document.getElementById('statsPanel')};
+const timeEl=document.getElementById('time'),fpsEl=document.getElementById('fps');
+let world=null,tanks=[],running=false,startTime=0,last=0,accumulator=0,fps=60,raf=0;
+let playerColor=localStorage.getItem('raytanks_color')||'#66d9ff';
+let options=Object.assign({audio:true,music:true,shake:true,training:true,skins:true,fx:true},JSON.parse(localStorage.getItem('raytanks_options')||'{}'));
+let statsData=readStats(),keys=new Set();
+
+function readStats(){try{return Object.assign({rounds:0,wins:0,survival:0,best:0},JSON.parse(localStorage.getItem('raytanks_stats')||'{}'))}catch(e){return{rounds:0,wins:0,survival:0,best:0}}}
+function saveStats(){localStorage.setItem('raytanks_stats',JSON.stringify(statsData))}
+function resize(){const d=Math.min(devicePixelRatio||1,2);canvas.width=innerWidth*d;canvas.height=innerHeight*d}addEventListener('resize',resize);resize();
+
+addEventListener('keydown',e=>{keys.add(e.key.toLowerCase());if(e.key==='Escape'){if(running){pauseToMenu()}else{showPanel('main')}}if(e.key.toLowerCase()==='r'&&running)startMatch()});
+addEventListener('keyup',e=>keys.delete(e.key.toLowerCase()));
+
+function showPanel(name){Object.values(panels).forEach(p=>p.classList.add('hidden'));panels[name].classList.remove('hidden');overlay.style.display='grid'}
+function wall(x,y,w,h){const b=world.createBody({position:Vec2(x,y)});b.createFixture(PL.Box(w/2,h/2),{friction:.8,restitution:.45})}
+function makeTank(x,y,a,color,ai){const b=world.createDynamicBody({position:Vec2(x,y),angle:a});b.createFixture(PL.Box(1.05,.72),{density:1.4,friction:.72,restitution:.25});b.setLinearDamping(.82);b.setAngularDamping(3.4);b.setUserData({color,ai});return b}
+
+function startMatch(){
+if(!PL){alert('Physics engine failed to load. Refresh the page and try again.');return}
+world=new PL.World(Vec2(0,0));
+wall(20,-.35,40,.7);wall(20,24.35,40,.7);wall(-.35,12,.7,24);wall(40.35,12,.7,24);
+tanks=[
+{body:makeTank(5,5,0,playerColor,false),ai:false},
+{body:makeTank(35,5,3.05,'#ff668b',true),ai:true},
+{body:makeTank(35,19,-3.05,'#ffd166',true),ai:true},
+{body:makeTank(5,19,.15,'#7df29a',true),ai:true}
+];
+running=true;startTime=performance.now();last=startTime;accumulator=0;overlay.style.display='none';cancelAnimationFrame(raf);raf=requestAnimationFrame(loop)
+}
+function pauseToMenu(){running=false;showPanel('main')}
+function drive(t,dt){
+const b=t.body,a=b.getAngle();let throttle=0,steer=0;
+if(!t.ai){if(keys.has('w')||keys.has('arrowup'))throttle+=1;if(keys.has('s')||keys.has('arrowdown'))throttle-=.65;if(keys.has('a')||keys.has('arrowleft'))steer-=1;if(keys.has('d')||keys.has('arrowright'))steer+=1}
+else{const p=b.getPosition(),target=Math.atan2(12-p.y,20-p.x),diff=Math.atan2(Math.sin(target-a),Math.cos(target-a));steer=Math.max(-1,Math.min(1,diff*2));throttle=Math.abs(diff)<2.2?1:.2}
+b.applyForceToCenter(Vec2(Math.cos(a)*throttle*48,Math.sin(a)*throttle*48),true);b.applyTorque(steer*18,true)
+}
+function physics(){tanks.forEach(t=>drive(t,1/60));world.step(1/60,8,3)}
+function draw(){
+const s=Math.min(innerWidth/40,innerHeight/24),ox=(innerWidth-40*s)/2,oy=(innerHeight-24*s)/2,d=Math.min(devicePixelRatio||1,2);
+ctx.setTransform(d,0,0,d,0,0);ctx.clearRect(0,0,innerWidth,innerHeight);ctx.fillStyle='#05070c';ctx.fillRect(0,0,innerWidth,innerHeight);
+ctx.save();ctx.translate(ox,oy);ctx.scale(s,s);ctx.fillStyle='#090d15';ctx.fillRect(0,0,40,24);
+ctx.strokeStyle='#172033';ctx.lineWidth=.055;for(let i=1;i<40;i++){ctx.beginPath();ctx.moveTo(i,0);ctx.lineTo(i,24);ctx.stroke()}for(let i=1;i<24;i++){ctx.beginPath();ctx.moveTo(0,i);ctx.lineTo(40,i);ctx.stroke()}
+ctx.strokeStyle='#414d67';ctx.lineWidth=.25;ctx.strokeRect(.35,.35,39.3,23.3);
+tanks.forEach((t,i)=>{const b=t.body,p=b.getPosition(),a=b.getAngle(),u=b.getUserData();ctx.save();ctx.translate(p.x,p.y);ctx.rotate(a);if(options.fx){ctx.shadowBlur=16;ctx.shadowColor=u.color}ctx.fillStyle=u.color;ctx.beginPath();ctx.roundRect(-1.05,-.72,2.1,1.44,.2);ctx.fill();ctx.shadowBlur=0;ctx.fillStyle='#070910';ctx.fillRect(.12,-.23,1.18,.46);ctx.restore();if(i===0){ctx.fillStyle='#fff';ctx.font='800 .46px system-ui';ctx.textAlign='center';ctx.fillText('YOU',p.x,p.y-1.12)}});ctx.restore()
+}
+function finishMatch(){
+running=false;const survived=(performance.now()-startTime)/1000;statsData.rounds++;statsData.survival+=survived;statsData.best=Math.max(statsData.best||0,survived);saveStats();updateStatsUI();showPanel('stats')
+}
+function updateStatsUI(){document.getElementById('sRounds').textContent=statsData.rounds;document.getElementById('sWins').textContent=statsData.wins;document.getElementById('sSurvival').textContent=Math.round(statsData.survival)+'s';document.getElementById('sBest').textContent=statsData.best?Math.round(statsData.best)+'s':'—'}
+function loop(now){
+if(!running)return;const dt=Math.min(.1,(now-last)/1000);last=now;fps=fps*.9+(1/Math.max(dt,.001))*.1;accumulator+=dt;while(accumulator>=1/60){physics();accumulator-=1/60}draw();timeEl.textContent=((now-startTime)/1000).toFixed(1);fpsEl.textContent=Math.round(fps);raf=requestAnimationFrame(loop)
+}
+
+document.getElementById('playBtn').addEventListener('click',startMatch);
+document.getElementById('backBtn').addEventListener('click',()=>location.href='/');
+document.getElementById('settingsBtn').addEventListener('click',()=>showPanel('settings'));
+document.getElementById('settingsDone').addEventListener('click',()=>{localStorage.setItem('raytanks_options',JSON.stringify(options));showPanel('main')});
+document.getElementById('customBtn').addEventListener('click',()=>showPanel('custom'));
+document.getElementById('customDone').addEventListener('click',()=>{localStorage.setItem('raytanks_color',playerColor);showPanel('main')});
+document.getElementById('statsBtn').addEventListener('click',()=>{updateStatsUI();showPanel('stats')});
+document.getElementById('statsDone').addEventListener('click',()=>showPanel('main'));
+
+document.querySelectorAll('[data-option]').forEach(btn=>btn.addEventListener('click',()=>{
+const key=btn.dataset.option;options[key]=!options[key];btn.querySelector('b').textContent=options[key]?'ON':'OFF'
+}));
+document.querySelectorAll('.swatch').forEach(btn=>btn.addEventListener('click',()=>{
+document.querySelectorAll('.swatch').forEach(x=>x.classList.remove('active'));btn.classList.add('active');playerColor=btn.dataset.color
+}));
+document.querySelectorAll('.swatch').forEach(btn=>{if(btn.dataset.color===playerColor)btn.classList.add('active')});
+updateStatsUI();
 </script></body></html>
